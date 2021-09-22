@@ -280,81 +280,8 @@
 .chat-center-2-listMessage{
     padding: 20px 10px 10px 10px;
 }
-.chat-center-2-itemMessage{
-    width: 80%;
-    display: flex;
-    margin-top: 10px;
-}
-.chat-center-2-itemMessage-img{
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-}
-.chat-center-2-itemMessage-img img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-.chat-center-2-itemMessage-text {
-    display: flex;
-    flex-direction: column;
-}
-.chat-center-2-itemMessage-text p{
-    /* width: 100%; */
-    max-inline-size: 500px;
-    overflow-wrap: break-word;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: rgb(202, 198, 198);
-}
-.chat-center-2-itemMessage-text span{
-    font-size:12px;
-}
-.chat-center-2-itemMessage-infoMessage{
-    width: 50px;
-    display: none;
-    color:rgb(107, 107, 107);
-}
-.chat-center-2-itemMessage:hover .chat-center-2-itemMessage-infoMessage{
-    display: flex;
-}
-.chat-center-2-itemMessage-infoMessage i{
-    padding: 7px;
-    cursor: pointer;
-}
-.chat-center-2-itemMessage-sender{
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-}
-.chat-center-2-itemMessage-sender-infoMessage{
-    width: 50px;
-    display: none;
-    margin-right: 5px;
-}
-.chat-center-2-itemMessage-sender:hover .chat-center-2-itemMessage-sender-infoMessage{
-    display:flex;
-}
-.chat-center-2-itemMessage-sender-infoMessage i{
-    padding: 7px;
-    cursor: pointer;
-    color:rgb(107, 107, 107);
-}
-.chat-center-2-itemMessage-sender-text p{
-    /* width: 100%; */
-    max-inline-size: 500px;
-    overflow-wrap: break-word;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: rgb(68, 157, 199);
-    color:#fff;
-}
-.chat-center-2-itemMessage-sender-text span{
-    float: right;
-    font-size:12px;
-}
+
+
 /* chat center 3 */
 .chat-center-3{
     position: absolute;

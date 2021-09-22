@@ -6,6 +6,8 @@ const userRouter = require("./routers/userRouter");
 const postRouter = require("./routers/postRouter");
 const authRouter = require("./routers/authRouter");
 const commentRouter = require("./routers/commentRouter");
+const messageRouter = require("./routers/messageRouter");
+const conversationRouter = require("./routers/conversationRouter");
 const multer = require("multer");
 
 const app = express();
@@ -43,7 +45,9 @@ app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/comment", commentRouter);
+app.use("/api/messages", messageRouter);
+app.use("/api/conversations", conversationRouter);
 
-app.listen(8801, () => {
-  console.log("server is running on port 8801");
+app.listen(8800, () => {
+  console.log("server is running on port 8800");
 });
