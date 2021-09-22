@@ -1,0 +1,48 @@
+.all-user{
+    margin-top: 50px;
+}
+
+.all-user-left{
+    width: 320px;
+    min-width: 250px;
+    position: fixed;
+}
+.all-user-container{
+    margin-left: 320px;
+    /* background-color: gray; */
+    width: calc(100vw - 320px);
+}
+
+.all-user-container-input{
+    width: 100%;
+    text-align: center;
+    padding: 40px 20px 40px 20px;
+}
+.all-user-container-input input{
+    width: 30%;
+    padding: 10px 20px 5px 20px;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid gray;
+}
+.all-user-container-input button{
+    padding: 10px;
+    width: 100px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    margin-left: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    color: white;
+    background-color: rgb(48, 98, 131);
+}
+
+.all-user-container-listUser{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px 20px 20px 50px;
+}
+

@@ -1,0 +1,424 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700&family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300&display=swap');
+
+.post{
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    margin-top: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    -webkit-box-shadow: 0px 0px 3px 0px #000000af; 
+    box-shadow: 0px 0px 3px 0px #000000b0;
+    font-family: 'Noto Sans SC', sans-serif;
+    padding: 10px;
+}
+
+/* thông tin phần tác giả */
+
+.post-infoAuthor{
+    display: flex;
+    position: relative;
+}
+.post-infoAuthor-avatar{
+    margin-right: 15px;
+}
+.post-infoAuthor-avatar img{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.post-infoAuthor-nameAuthor{
+    display: flex;
+    flex-direction: column;
+}
+.post-infoAuthor-nameAuthor b{
+    font-size: 14px;
+}
+.post-infoAuthor-nameAuthor b:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+.post-infoAuthor-nameAuthor span{
+    font-size: 12px;
+    color: gray;
+}
+
+.post-infoAuthor-menu{
+    position: absolute;
+    right: 0px;
+}
+.post-infoAuthor-menu>i{
+    padding: 10px;
+    border-radius: 50%;
+    background-color: rgb(255, 255, 255);
+    color: rgb(116, 115, 115);
+    cursor: pointer;
+}
+.post-infoAuthor-menu>i:hover{
+    background-color: rgb(230, 230, 230);
+}
+.post-infoAuthor-menu-content{
+    width: 150px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    right: 10px;
+    top: 25px;
+    padding: 5px 5px;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+.post-infoAuthor-menu-content:hover{
+    display: flex;
+}
+.post-infoAuthor-menu i:hover~.post-infoAuthor-menu-content{
+    display: flex;
+}
+.post-infoAuthor-menu-content span{
+    cursor: pointer;
+    padding: 10px 10px 10px 15px;
+    border-radius: 10px;
+    color: rgb(85, 84, 84);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+.post-infoAuthor-menu-content span i{
+    margin-right: 5px;
+}
+.post-infoAuthor-menu-content span:hover{
+    background-color: rgb(204, 204, 219);
+}
+
+/* CSS đoạn nội dung */
+
+.post-textContent{
+    margin-top: 10px; 
+}
+.post-textContent-body{
+    max-height: 500px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+.post-textContent-body::-webkit-scrollbar{
+    width: 3px;
+}
+.post-textContent-body::-webkit-scrollbar-track{
+    background-color: aliceblue;
+}
+.post-textContent-body::-webkit-scrollbar-thumb{
+    background-color: rgb(192, 190, 190);
+}
+.post-textContent-body h2{
+    font-size: 18px;
+}
+.post-textContent-body span{
+    font-size: 14px;
+    font-weight: 300;
+}
+.post-textContent-hashtag{
+    margin-top: 10px;
+}
+.post-textContent-hashtag a{
+    margin-left: 3px;
+    color: rgb(49, 91, 209);
+    text-decoration: none;
+}
+.post-textContent-hashtag a:hover{
+    text-decoration: underline;
+}
+
+
+
+/* CSS hình ảnh đăng lên */
+.post-listImage{
+    width: 100%;
+    height: 500px;
+    margin-top: 20px;
+}
+
+.post-listImage-slide{
+    width: 100%;
+    height: 100%;
+}
+.post-listImage-slide .slick-prev{
+    left: 20px;
+    z-index: 10;
+}
+.post-listImage-slide .slick-next{
+    right: 20px;
+    z-index: 10;
+}
+.post-listImage-slide .slick-dots{
+    bottom: 0px;
+}
+
+.post-listImage-slide button::before{
+    color: black;
+}
+.post-listImage-slide-item{
+    width: 100%;
+    height: 100%;
+    
+}
+.post-listImage-slide-item img{
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+/* CSS like-dislike-comment */
+
+.post-like-dislike-comments{
+    margin-top: 20px;
+    padding: 5px 0px;
+    width: 100%;
+    border-top: 1px solid rgba(143, 142, 142, 0.747);
+    border-bottom: 1px solid rgba(143, 142, 142, 0.747);
+    display: flex;
+    justify-content: space-around;
+}
+
+.post-common{
+    cursor: pointer;
+    height: 90%;
+    border-radius: 8px;
+    padding: 5px 50px;
+}
+.post-common:hover{
+    background-color: rgb(212, 209, 209);
+}
+.post-common i{
+    font-size: 18px;
+}
+.post-common span{
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+/* CSS writeComment */
+
+.post-writeComment{
+    margin-top: 20px;
+    width: 100%;
+    display:  flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.post-writeComment-avatar{
+    
+    height: 40px;
+    width: 40px;
+}
+.post-writeComment-avatar img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.post-writeComment-input{
+    width: 85%;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.post-writeComment-input input{
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    background-color: rgb(233, 230, 230);
+}
+.post-writeComment-emoji{
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+.post-writeComment-emoji:hover{
+    background-color: rgb(206, 204, 204);
+}
+.post-writeComment-emoji i{
+    color: rgb(97, 97, 95);
+    font-size: 24px;
+}
+.post-writeComment-picker{
+    position: absolute;
+    top: -330px;
+    left: -230px;
+    z-index: 1000;
+}
+
+/* CSS list comment */
+
+.post-listComment{
+    margin-top: 20px;
+    border-top: 1px solid gray;
+    width: 100%;
+    max-height: 500px;
+    overflow-y: scroll;
+    padding: 20px 10px 0px 10px;
+}
+.post-listComment::-webkit-scrollbar{
+    width: 3px;
+}
+.post-listComment::-webkit-scrollbar-track{
+    background-color: rgb(241, 237, 237);
+}
+.post-listComment::-webkit-scrollbar-thumb{
+    background-color: rgb(197, 196, 196);
+}
+.post-itemComment{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.post-itemComment-avatar{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.post-itemComment-avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.post-itemComment-body{
+    max-width: 75%;
+}
+.post-itemComment-body-top{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    max-width: 100%; 
+    min-width: 180px;
+    padding: 5px 15px;
+    background-color: rgb(235, 230, 230);
+    border-radius: 10px;
+}
+.post-itemComment-body-top b{
+    font-size: 12px;
+    cursor: pointer;
+}
+.post-itemComment-body-top b:hover{
+    text-decoration: underline;
+}
+.post-itemComment-body-top span{
+    width: 100%;
+    font-size: 14px;
+    font-weight: 300;
+    color: rgb(61, 61, 61);
+}
+.post-itemComment-body-bottom{
+    max-width: 100%;
+    display: flex;
+    position: relative;
+}
+.post-itemComment-body-bottom p{
+    font-size: 12px;
+    color: rgb(83, 83, 83);
+    padding-right: 20px;
+    padding-left: 15px;
+}
+.post-itemComment-body-bottom p:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+.post-itemComment-body-bottom span{
+    font-size: 12px;
+    color: rgb(83, 83, 83);
+}
+.post-itemComment-body-bottom .countLike{
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+}
+
+.post-itemComment-menu{
+    position: relative;
+    margin-left: 5px;
+    
+}
+.post-itemComment-menu i{
+    padding: 8px 13px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3 ease;
+}
+.post-itemComment-menu i:hover{
+    background-color: rgb(235, 232, 232);
+}
+.post-itemComment-menu i{
+    color: gray;
+}
+.post-itemComment-menu-content{
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    width: 90px;
+    top: 0px;
+    right: -70px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 2px 2px rgba(0,0,0,0.2);
+}
+.post-itemComment-menu i:hover~.post-itemComment-menu-content{
+    display: flex;
+}
+.post-itemComment-menu-content:hover{
+    display: flex;
+}
+.post-itemComment-menu-content span{
+    font-size: 12px;
+    cursor: pointer;
+    padding: 5px 0px 5px 8px;
+    border-radius: 5px;
+    color: rgb(63, 62, 62);
+    transition: all 0.3s ease;
+}
+.post-itemComment-menu-content span:hover{
+    background-color: rgb(217, 221, 224);
+}
+
+/* CSS post modal */
+.post-modal{
+    position: fixed;
+    z-index: 10001;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.post-modal-Image{
+    height: 80%;
+    max-width: 90%;
+    position: relative;
+}
+.post-modal-close{
+    position: absolute;
+    right: 0px;
+    top: -10px;
+    padding: 10px;
+    cursor: pointer;
+}
+.post-modal-close i{
+    font-size: 30px;
+    color: white;
+}
+.post-modal-Image img{
+    height: 100%;
+    max-width: 90%;
+    object-fit: cover;
+    z-index: 10002;
+}

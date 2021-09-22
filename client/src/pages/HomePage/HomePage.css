@@ -1,0 +1,27 @@
+
+.homePage{
+    margin-top: 50px;
+    display: flex;
+    height: calc(100vh - 50px);
+}
+
+.homePage-left{
+    width: 320px;
+    min-width: 250px;
+    position: fixed;
+}
+
+.homePage-center{
+    position: absolute;
+    left: 320px;
+    width: calc(100vw - 640px);
+    display: flex;
+    justify-content: center;
+}
+
+.homePage-right{
+    width: 320px;
+    min-width: 250px;
+    position: fixed;
+    right: 0px;
+}
