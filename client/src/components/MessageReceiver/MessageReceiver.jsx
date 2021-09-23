@@ -20,9 +20,9 @@ function MessageReceiver({message}) {
             <div className="chat-center-2-itemMessage-img">
                 <img src={avatar} alt="image"/>
             </div>
-            <div className="chat-center-2-itemMessage-text">
+            <div className="chat-center-2-itemMessage-text" title={formatTime(message.createdAt)}>
                 <p>{message.content}</p>
-                <span title={formatTime(message.createdAt)}>{format(message.createdAt)}</span>
+                {/* <span >{format(message.createdAt)}</span> */}
             </div>
             <div className="chat-center-2-itemMessage-infoMessage">
                 <i className="fas fa-reply"></i>

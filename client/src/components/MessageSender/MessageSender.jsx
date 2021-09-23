@@ -20,9 +20,9 @@ function MessageSender({message}) {
                 <i className="fas fa-reply"></i>
                 <i className="fas fa-times"></i>
             </div>
-            <div className="chat-center-2-itemMessage-sender-text">
+            <div className="chat-center-2-itemMessage-sender-text" title={formatTime(message.createdAt)}>
                 <p>{message.content}</p>
-                <span title={formatTime(message.createdAt)}>{format(message.createdAt)}</span>
+                {/* <span title={formatTime(message.createdAt)}>{format(message.createdAt)}</span> */}
             </div>
         </div>
     )
