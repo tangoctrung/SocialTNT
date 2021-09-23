@@ -41,6 +41,9 @@ function App() {
               <Route path="/chat" exact>
                   <Chat />
               </Route>
+              <Route path="/chat/:id" exact>
+                  <Chat />
+              </Route>
           </Switch>
       </Router>
     </div>

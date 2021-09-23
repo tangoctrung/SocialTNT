@@ -1,8 +1,19 @@
 import React from 'react'
+import { format } from 'timeago.js';
 import "./MessageSender.css";
 
+function formatTime(time) {
+    const date = new Date(time);
+    const h = date.getHours();
+    const m = date.getMinutes();
+    const d = date.getDate();
+    const mon = date.getMonth() + 1;
+    const y = date.getFullYear();
 
-function MessageSender(props) {
+    return h+":" +m  + " " +d + "-"+ mon + "-" +y;
+}
+
+function MessageSender({message}) {
     return (
         <div className="chat-center-2-itemMessage-sender">
             <div className="chat-center-2-itemMessage-sender-infoMessage">
@@ -10,8 +21,8 @@ function MessageSender(props) {
                 <i className="fas fa-times"></i>
             </div>
             <div className="chat-center-2-itemMessage-sender-text">
-                <p>If the box needs to be a fixed size, or you are keen to ensure that long words can't overflow, then the overflow-wrap property can help. This property will break a word once it is too long to fit on a line by itself.</p>
-                <span title="10:03 20-09-2021">5 minutes ago</span>
+                <p>{message.content}</p>
+                <span title={formatTime(message.createdAt)}>{format(message.createdAt)}</span>
             </div>
         </div>
     )

@@ -196,6 +196,14 @@
     min-width: 400px;
     position: relative;
 }
+.chat-text{
+    position: absolute;
+    font-size: 64px;
+    top: 30%;
+    width: 100%;
+    text-align: center;
+    color: rgb(138, 135, 135);
+}
 .chat-center-1{
     width: 100%;
     height: 70px;

@@ -8,10 +8,40 @@ import avatar3 from "../../image/avatar3.jpg";
 import avatar4 from "../../image/avatar4.jpg";
 import MessageSender from 'components/MessageSender/MessageSender';
 import MessageReceiver from 'components/MessageReceiver/MessageReceiver';
+import { useEffect } from 'react';
+import { Context } from 'context/Context';
+import { useContext } from 'react';
+import axios from 'axios';
+import Conversation from 'components/Conversation/Conversation';
+import { Link } from 'react-router-dom';
 
 function Chat() {
     const [isOpenChatMember, setIsOpenChatMember] = useState(true);
     const [settingChat, setSettingChat] = useState(0);
+    const [conversations, setConversations] = useState([]);
+    const [messages, setMessages] = useState([]);
+    const [currentChat, setCurrentChat] = useState(null);
+    const { user } = useContext(Context);
+    useEffect(() => {
+       const FetchUser = async () => {
+            const res = await axios.get(`/conversations/${user._id}`);
+            setConversations(res.data);
+       }
+       FetchUser();
+    }, [user._id]);
+    useEffect(()=> {
+        console.log(currentChat);
+        const FetchMessage = async () => {
+            try{
+                const res = await axios.get(`/messages/${currentChat?._id}`);
+                setMessages(res.data);
+            } catch(e){
+                console.log(e);
+            }
+        };
+        FetchMessage();
+    }, [currentChat])
+
     return (
         <div className="chat">
             
@@ -29,20 +59,13 @@ function Chat() {
                 </div>
                 <div className="chat-left-4">
                     {isOpenChatMember && <div className="chat-left-4-member">
-
-                        <div className="chat-left-4-member-item">
-                            <div className="chat-left-4-member-item-img">
-                                <img src={avatar} alt="image" />
-                                <i className="fas fa-circle"></i>
+                        {conversations && conversations.map((conversation, index) => (
+                            <div onClick={()=> setCurrentChat(conversation)}>
+                                <Link to={`/chat/${conversation?._id}`} style={{textDecoration: 'none', color: 'black'}} >
+                                    <Conversation key={index} conversation={conversation} currentUser={user} />
+                                </Link>
                             </div>
-                            <div className="chat-left-4-member-item-text">
-                                <h3>John Smith</h3>
-                                <p>what are you doing?<span> 10 minutes</span></p>
-                            </div>
-                            <div className="chat-left-4-member-item-noti">
-                                <i className="fas fa-circle"></i>
-                            </div>
-                        </div>
+                        ))}
                                         
                     </div>}
                     {!isOpenChatMember && <div className="chat-left-4-group">
@@ -65,9 +88,10 @@ function Chat() {
                     </div>}
                 </div>
             </div>
-            
+          
             <div className="chat-center">
-                <div className="chat-center-1">
+                {currentChat ? <>
+                    <div className="chat-center-1">
                     <div className="chat-center-1-infoUser">
                         <div className="chat-center-1-infoUser-img">
                             <img src={avatar} alt="image" />
@@ -82,7 +106,7 @@ function Chat() {
                         <i className="fas fa-video"></i>
                     </div>
                 </div>
-                <div className="chat-center-2">
+                    <div className="chat-center-2">
                     <div className="chat-center-2-container">
                         <div className="chat-center-2-infoUser">
                             <img src={avatar} alt="image"/>
@@ -90,16 +114,21 @@ function Chat() {
                             <p>Tham gia từ <b>3 năm</b> trước.</p>
                         </div>
                         <div className="chat-center-2-listMessage">
-                            <MessageSender />
-                            <MessageSender />
+                            {messages && messages.map((message, index) => 
+                                <div key={index}>
+                                {message.senderId === user._id ? <MessageSender message={message} /> : <MessageReceiver message={message} />}
+                                </div>
+                            )}
+                            
+                            {/* <MessageSender />
+                            
                             <MessageReceiver />
-                            <MessageReceiver />
                             <MessageSender />
-                            <MessageReceiver />
+                            <MessageReceiver /> */}
                         </div>
                     </div>
                 </div>
-                <div className="chat-center-3">
+                    <div className="chat-center-3">
                     <div className="chat-center-3-micro">
                         <i className="fas fa-microphone" title="Gửi voice chat"></i>
                     </div>
@@ -113,8 +142,11 @@ function Chat() {
                         <i className="fas fa-smile" title="Gửi biểu tượng cảm xúc"></i>
                     </div>
                 </div>
+                </> : <span className="chat-text">Chọn cuộc hội thoại để bắt đầu nhắn tin.</span>
+                
+                }
             </div>
-            
+           
             <div className="chat-right">
                 <div className="chat-right-1">
                     <div className="chat-right-1-img">
