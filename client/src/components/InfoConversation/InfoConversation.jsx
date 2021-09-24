@@ -12,12 +12,12 @@ function InfoConversation ({currentChat}) {
     const [friend, setFriend] = useState(null);
     const { user } = useContext(Context);
     const PF = "http://localhost:8800/images/";
+
     useEffect(() => {
         const friendId = currentChat && currentChat.members.find((m) => m !== user._id);
         const getUser = async () => {
             try {
                 const res = await axios.get(`/users/profile/${friendId}`);
-                console.log(res.data);
                 setFriend(res.data);
             } catch (err) {
                 console.log(err);

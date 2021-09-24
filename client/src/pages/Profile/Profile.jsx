@@ -163,9 +163,11 @@ function Profile() {
                                                             {isFollow ? "Đang theo dõi" : "Theo dõi"}
                                                         </div>
                                                         
-                                                        <div className="profile-content-Chat">
-                                                            <i className="fab fa-facebook-messenger"></i>
-                                                            <span>Nhắn tin</span>
+                                                        <div  className="profile-content-Chat" >
+                                                            <Link to={`/chat/`} style={{textDecoration: "none", color: "rgb(190, 69, 69)"}} >
+                                                                <i className="fab fa-facebook-messenger"></i>
+                                                                <span>Nhắn tin</span>
+                                                            </Link>
                                                         </div>
                                                   </div>
                         }

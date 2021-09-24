@@ -35,14 +35,14 @@ function App() {
               <Route path="/register" exact>
                   <Register />
               </Route>
-              <Route path="/alluser" exact>
-                  <AllUser />
+              <Route path="/alluser" exact>            
+                  {user ? <AllUser /> : <Login />} 
               </Route>
               <Route path="/chat" exact>
-                  <Chat />
+                {user ? <Chat /> : <Login />} 
               </Route>
               <Route path="/chat/:id" exact>
-                  <Chat />
+                {user ? <Chat /> : <Login />} 
               </Route>
           </Switch>
       </Router>

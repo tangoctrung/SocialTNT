@@ -25,11 +25,11 @@ function Chat() {
 
     useEffect(() => {
        const FetchUser = async () => {
-            const res = await axios.get(`/conversations/${user._id}`);
+            const res = await axios.get(`/conversations/${user && user._id}`);
             setConversations(res.data);
        }
        FetchUser();
-    }, [user._id]);
+    }, [user && user._id]);
     useEffect(()=> {
         const FetchMessage = async () => {
             try{

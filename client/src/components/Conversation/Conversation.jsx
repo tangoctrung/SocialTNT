@@ -9,7 +9,7 @@ function Conversation({conversation, currentUser}) {
     const [friend, setFriend] = useState(null);
     const PF = "http://localhost:8800/images/";
     useEffect(() => {
-        const friendId = conversation.members.find((m) => m !== currentUser._id);
+        const friendId = conversation.members.find((m) => m !== currentUser?._id);
         const getUser = async () => {
         try {
             const res = await axios.get(`/users/profile/${friendId}`);

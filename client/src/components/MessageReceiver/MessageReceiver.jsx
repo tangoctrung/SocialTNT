@@ -14,11 +14,11 @@ function formatTime(time) {
     return h+":" +m  + " " +d + "-"+ mon + "-" +y;
 }
 
-function MessageReceiver({message}) {
+function MessageReceiver({message, friendAvatar}) {
     return (
         <div className="chat-center-2-itemMessage">
             <div className="chat-center-2-itemMessage-img">
-                <img src={avatar} alt="image"/>
+                <img src={friendAvatar} alt="image"/>
             </div>
             <div className="chat-center-2-itemMessage-text" title={formatTime(message.createdAt)}>
                 <p>{message.content}</p>

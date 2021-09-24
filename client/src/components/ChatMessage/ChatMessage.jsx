@@ -10,21 +10,54 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useRef } from 'react';
 import EmojiPicker from 'emoji-picker-react';
+import { io } from "socket.io-client";
 
 function ChatMessage({messages, currentChat, setMessages}) {
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [friend, setFriend] = useState(null);
     const { user } = useContext(Context);
     const [newMessage, setNewMessage] = useState("");
+    const [arrivalMessage, setArrivalMessage] = useState(null);
     const listMessageRef = useRef();
     const inputChatRef = useRef();
+    const socket = useRef(io("ws://localhost:8900"))
     const PF = "http://localhost:8800/images/";
+
+
     useEffect(() => {
-        const friendId = currentChat.members.find((m) => m !== user._id);
+        socket.current = io("ws://localhost:8900");
+        socket.current.on("getMessage", data => {
+            setArrivalMessage({
+                sender: data.senderId,
+                content: data.content,
+                createdAt: Date.now(),
+            })
+        })
+    }, [])
+
+    useEffect(() => {
+        arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
+        setMessages((prev) => [...prev, arrivalMessage])
+    }, [arrivalMessage])
+
+    useEffect(() => {
+        socket.current.emit("addUser", user?._id);
+        socket.current.on("getUser", users => {
+            console.log(users);
+        })
+    }, [user])
+
+    useEffect(() => {
+        socket && socket.current.on("welcome", message => {
+            console.log(message);
+        })
+    }, [socket]);
+
+    useEffect(() => {
+        const friendId = currentChat.members.find((m) => m !== user?._id);
         const getUser = async () => {
             try {
                 const res = await axios.get(`/users/profile/${friendId}`);
-                console.log(res.data);
                 setFriend(res.data);
             } catch (err) {
                 console.log(err);
@@ -32,7 +65,7 @@ function ChatMessage({messages, currentChat, setMessages}) {
         };
         getUser();
     }, [currentChat])
-    
+
     useEffect(() => {
         listMessageRef.current?.scrollIntoView({behavior: "smooth"});
     }, [messages])
@@ -40,10 +73,16 @@ function ChatMessage({messages, currentChat, setMessages}) {
     const handleSubmitFormSendMessage = async (e) => {
         e.preventDefault();
         const message = {
-            senderId: user._id,
+            senderId: user?._id,
             conversationId: currentChat._id,
             content: newMessage
         }
+        const receivedId = currentChat.members.find(member => member !== user?._id)
+        socket.current.emit('sendMessage', {
+            senderId: user?._id,
+            receivedId,
+            content: newMessage,
+        });
         if (newMessage){
             const res = await axios.post(`/messages/`, message);
             setMessages([...messages, res.data]);
@@ -83,7 +122,7 @@ function ChatMessage({messages, currentChat, setMessages}) {
                     <div className="chat-center-2-listMessage">
                         {messages && messages.map((message, index) => 
                             <div key={index} ref={listMessageRef}>
-                            {message.senderId === user._id ? <MessageSender message={message} /> : <MessageReceiver message={message} />}
+                            {message.senderId === user?._id ? <MessageSender message={message} /> : <MessageReceiver message={message} friendAvatar={friend && friend.avatar}  />}
                             </div>
                         )}              
                     </div>
