@@ -9,6 +9,7 @@ import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import PostSmall from 'components/PostSmall/PostSmall';
 import {storage} from '../../firebase';
+import ReactTooltip from 'react-tooltip';
 
 function Profile() {
     const [dataUser, setDateUser] = useState({});
@@ -34,7 +35,7 @@ function Profile() {
     const searchURL = useLocation();
     const paramID = searchURL.pathname.split("/")[2];
     const [avatarUrl, setAvatarUrl] = useState("");
-    
+    const [chat, setChat] = useState();
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`/users/profile/${paramID}`);
@@ -66,6 +67,14 @@ function Profile() {
         fetchPost();
     }, [paramID])
     
+    useEffect(() => {
+        const fetchChat = async () => {
+            const res = await axios.get(`/conversations/find/${user?._id}/${paramID}`);
+            setChat(res.data);
+        }
+        fetchChat();
+    }, [paramID, user]);
+
     const handleSubmitUpdateUser = async (e) => {
         e.preventDefault();
         dispatch({type: "UPDATE_START"});
@@ -145,6 +154,10 @@ function Profile() {
         fetchFollow();
     }
 
+    const handleClickChat = () => {
+        
+
+    }
 
     return (
         <div className="profile">
@@ -163,8 +176,8 @@ function Profile() {
                                                             {isFollow ? "Đang theo dõi" : "Theo dõi"}
                                                         </div>
                                                         
-                                                        <div  className="profile-content-Chat" >
-                                                            <Link to={`/chat/`} style={{textDecoration: "none", color: "rgb(190, 69, 69)"}} >
+                                                        <div  className="profile-content-Chat" onClick={handleClickChat}>
+                                                            <Link to={`/chat/${chat?._id}`} style={{textDecoration: "none", color: "rgb(190, 69, 69)"}} >
                                                                 <i className="fab fa-facebook-messenger"></i>
                                                                 <span>Nhắn tin</span>
                                                             </Link>
@@ -179,7 +192,7 @@ function Profile() {
                         <div className="profile-content-infoUser">
                             <div className="profile-content-title">
                                 <p>Thông tin người dùng</p>
-                                {dataUser._id === user._id && <i className="far fa-edit" title="Chỉnh sửa thông tin cá nhân" onClick={handleOpenModalEditUser}></i>}                            
+                                {dataUser._id === user._id && <><i className="far fa-edit" data-tip="Chỉnh sửa thông tin cá nhân" onClick={handleOpenModalEditUser}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>}                            
                             </div>
                             <div className="profile-content-infoUser-container">
                                 <span><i className="fas fa-birthday-cake"></i>Ngày sinh: {dataUser.date ? <b>{dataUser.date}</b> : <i>Chưa cập nhật</i>}</span> <br/>

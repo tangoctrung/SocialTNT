@@ -3,16 +3,12 @@ import { useState } from 'react';
 import "./Chat.css";
 import avatar from "../../image/avatar.jpg";
 import avatar1 from "../../image/avatar1.jpg";
-import avatar2 from "../../image/avatar2.jpg";
-import avatar3 from "../../image/avatar3.jpg";
-import avatar4 from "../../image/avatar4.jpg";
-
+import { useLocation} from 'react-router';
 import { useEffect } from 'react';
 import { Context } from 'context/Context';
 import { useContext } from 'react';
 import axios from 'axios';
 import Conversation from 'components/Conversation/Conversation';
-import { Link } from 'react-router-dom';
 import ChatMessage from 'components/ChatMessage/ChatMessage';
 import InfoConversation from 'components/InfoConversation/InfoConversation';
 
@@ -22,6 +18,8 @@ function Chat() {
     const [messages, setMessages] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
     const { user } = useContext(Context);
+    const  [chatId, setChatId] = useState();
+    const location = useLocation();
 
     useEffect(() => {
        const FetchUser = async () => {
@@ -30,6 +28,20 @@ function Chat() {
        }
        FetchUser();
     }, [user && user._id]);
+
+    useEffect(() => {
+        setChatId(location.pathname.split("/")[2]);
+        console.log(chatId);
+        const fetchDataChat = async () => {
+            const res = await axios.get(`/conversations/chat/${chatId && chatId}`);
+            setCurrentChat(res.data);
+            console.log(res.data);
+        }
+        fetchDataChat();
+    }, [location, chatId]);
+    console.log(chatId);
+    console.log(currentChat);
+
     useEffect(()=> {
         const FetchMessage = async () => {
             try{
@@ -60,9 +72,7 @@ function Chat() {
                     {isOpenChatMember && <div className="chat-left-4-member">
                         {conversations && conversations.map((conversation, index) => (
                             <div onClick={()=> setCurrentChat(conversation)}>
-                                <Link to={`/chat/${conversation?._id}`} style={{textDecoration: 'none', color: 'black'}} >
                                     <Conversation key={index} conversation={conversation} currentUser={user} />
-                                </Link>
                             </div>
                         ))}
                                         

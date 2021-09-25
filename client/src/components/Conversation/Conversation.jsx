@@ -1,5 +1,6 @@
 import React from 'react'
 import "./Conversation.css";
+import { Link } from 'react-router-dom';
 import avatar from "../../image/avatar.jpg";
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -21,19 +22,22 @@ function Conversation({conversation, currentUser}) {
         getUser();
     }, [conversation, currentUser])
     return (
-        <div className="chat-left-4-member-item">
-            <div className="chat-left-4-member-item-img">
-                <img src={friend ? (friend.avatar) : (PF + "noAvatar.png")} alt="image" />
-                <i className="fas fa-circle"></i>
+        <Link to={`/chat/${conversation?._id}`} style={{textDecoration: 'none', color: 'black'}} >
+            <div className="chat-left-4-member-item">
+                <div className="chat-left-4-member-item-img">
+                    <img src={friend ? (friend.avatar) : (PF + "noAvatar.png")} alt="image" />
+                    <i className="fas fa-circle"></i>
+                </div>
+                <div className="chat-left-4-member-item-text">
+                    <h3>{friend ? friend.username : ""}</h3>
+                    <p>what are you doing?<span> 10 minutes</span></p>
+                </div>
+                <div className="chat-left-4-member-item-noti">
+                    <i className="fas fa-circle"></i>
+                </div>
             </div>
-            <div className="chat-left-4-member-item-text">
-                <h3>{friend ? friend.username : ""}</h3>
-                <p>what are you doing?<span> 10 minutes</span></p>
-            </div>
-            <div className="chat-left-4-member-item-noti">
-                <i className="fas fa-circle"></i>
-            </div>
-        </div>
+        </Link>
+
     );
 };
 

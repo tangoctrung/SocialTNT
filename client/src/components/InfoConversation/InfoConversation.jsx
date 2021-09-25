@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useContext } from 'react';
 import { Context } from 'context/Context';
+import { Link } from 'react-router-dom';
 
 function InfoConversation ({currentChat}) {
     const [settingChat, setSettingChat] = useState(0);
@@ -29,14 +30,26 @@ function InfoConversation ({currentChat}) {
         <div>
             <div className="chat-right-1">
                     <div className="chat-right-1-img">
-                        <img src={friend ? friend.avatar : (PF + "noAvatar.png")} alt="image"/>
+                        {friend && <Link 
+                         to={`/profile/${friend && friend._id}`} 
+                         style={{textDecoration: "none", color: "black"}}
+                        >
+                            <img src={friend ? friend.avatar : (PF + "noAvatar.png")} alt="image"/>
+                        </Link>}
                     </div>
                     <div className="chat-right-1-info">
-                        <p>{friend ? friend.username : ""}</p>                      
+                        {friend && <Link 
+                         to={`/profile/${friend && friend._id}`} 
+                         style={{textDecoration: "none", color: "black"}}
+                        >
+                            <p>{friend ? friend.username : ""}</p>   
+                        </Link> }                  
                     </div>
                 </div>
             <div className="chat-right-2">
-                <div className="chat-right-2-selection">
+                {friend && 
+                <>
+                    <div className="chat-right-2-selection">
                     <div className="chat-right-2-selection-1">
                         <div className={settingChat !== 1 ? "chat-right-2-list-1" : "chat-right-2-list-1 isActive"} onClick={()=> setSettingChat(1)}>
                             <i className="fas fa-film"></i>  
@@ -62,17 +75,17 @@ function InfoConversation ({currentChat}) {
                         </div>
                     </div>
                 </div>
-                <div className="chat-right-2-content">
-                    <img  style={{height: "150px"}} src={avatar} />
-                    <img  style={{height: "150px"}} src={avatar} />
-                    <img  style={{height: "150px"}} src={avatar} />
-                    <img  style={{height: "150px"}} src={avatar} />
-                    <img  style={{height: "150px"}} src={avatar} />
-                    <img  style={{height: "150px"}} src={avatar} />
-                    <img  style={{height: "150px"}} src={avatar} />
-
-                </div>
-                
+                    <div className="chat-right-2-content">
+                        <img  style={{height: "150px"}} src={avatar} />
+                        <img  style={{height: "150px"}} src={avatar} />
+                        <img  style={{height: "150px"}} src={avatar} />
+                        <img  style={{height: "150px"}} src={avatar} />
+                        <img  style={{height: "150px"}} src={avatar} />
+                        <img  style={{height: "150px"}} src={avatar} />
+                        <img  style={{height: "150px"}} src={avatar} />
+                    </div>
+                </>
+                }
             </div>
         </div>
     )

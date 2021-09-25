@@ -10,23 +10,22 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useRef } from 'react';
 import EmojiPicker from 'emoji-picker-react';
-import { io } from "socket.io-client";
+import { Link } from 'react-router-dom';
 
 function ChatMessage({messages, currentChat, setMessages}) {
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [friend, setFriend] = useState(null);
-    const { user } = useContext(Context);
+    const { user, socket } = useContext(Context);
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const listMessageRef = useRef();
     const inputChatRef = useRef();
-    const socket = useRef(io("ws://localhost:8900"))
     const PF = "http://localhost:8800/images/";
 
 
+
     useEffect(() => {
-        socket.current = io("ws://localhost:8900");
-        socket.current.on("getMessage", data => {
+        socket?.on("getMessage", data => {
             setArrivalMessage({
                 sender: data.senderId,
                 content: data.content,
@@ -40,21 +39,9 @@ function ChatMessage({messages, currentChat, setMessages}) {
         setMessages((prev) => [...prev, arrivalMessage])
     }, [arrivalMessage])
 
-    useEffect(() => {
-        socket.current.emit("addUser", user?._id);
-        socket.current.on("getUser", users => {
-            console.log(users);
-        })
-    }, [user])
 
     useEffect(() => {
-        socket && socket.current.on("welcome", message => {
-            console.log(message);
-        })
-    }, [socket]);
-
-    useEffect(() => {
-        const friendId = currentChat.members.find((m) => m !== user?._id);
+        const friendId = currentChat?.members.find((m) => m !== user?._id);
         const getUser = async () => {
             try {
                 const res = await axios.get(`/users/profile/${friendId}`);
@@ -78,7 +65,7 @@ function ChatMessage({messages, currentChat, setMessages}) {
             content: newMessage
         }
         const receivedId = currentChat.members.find(member => member !== user?._id)
-        socket.current.emit('sendMessage', {
+        socket?.emit('sendMessage', {
             senderId: user?._id,
             receivedId,
             content: newMessage,
@@ -100,11 +87,11 @@ function ChatMessage({messages, currentChat, setMessages}) {
             <div className="chat-center-1">
                 <div className="chat-center-1-infoUser">
                     <div className="chat-center-1-infoUser-img">
-                        <img src={friend ? friend.avatar : (PF + "noAvatar.png")} alt="image" />
+                        <Link to={`/profile/${friend ? friend._id : ""}`} style={{textDecoration: "none", color: "black"}}><img src={friend ? friend.avatar : (PF + "noAvatar.png")} alt="image" /></Link>
                         <i className="fas fa-circle"></i>
                     </div>
                     <div className="chat-center-1-infoUser-name">
-                        <b>{friend && friend.username}</b> <br/>
+                        <Link to={`/profile/${friend ? friend._id : ""}`} style={{textDecoration: "none", color: "black"}}><b>{friend && friend.username}</b> <br/></Link>
                         <span>Đang hoạt động</span>
                     </div>
                 </div>

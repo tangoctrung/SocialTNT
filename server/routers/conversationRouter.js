@@ -19,16 +19,27 @@ router.post("/", async (req, res) => {
 
 // LẤY CUỘC TRÒ CHUYỆN CỦA 1 USER
   
-  router.get("/:userId", async (req, res) => {
-    try {
-      const conversation = await Conversation.find({
-        members: { $in: [req.params.userId] },
-      });
-      res.status(200).json(conversation);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  });
+router.get("/:userId", async (req, res) => {
+  try {
+    const conversation = await Conversation.find({
+      members: { $in: [req.params.userId] },
+    });
+    res.status(200).json(conversation);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// LẤY CUỘC TRÒ CHUYỆN CO ID
+
+router.get("/chat/:conversationId", async (req, res) => {
+  try {
+    const conversation = await Conversation.findById(req.params.conversationId);
+    res.status(200).json(conversation);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
   
   
 // LẤY CUỘC TRÒ CHUYỆN CỦA 2 NGƯỜI
@@ -38,7 +49,19 @@ router.post("/", async (req, res) => {
       const conversation = await Conversation.findOne({
         members: { $all: [req.params.firstUserId, req.params.secondUserId] },
       });
-      res.status(200).json(conversation)
+      if (conversation) {
+        res.status(200).json(conversation)
+      } else {
+        const newConversation = new Conversation({
+          members: [req.params.firstUserId, req.params.secondUserId],
+        });
+        try {
+          const savedConversation = await newConversation.save();
+          res.status(200).json(savedConversation);
+        } catch (err) {
+          res.status(500).json(err);
+        }
+      }
     } catch (err) {
       res.status(500).json(err);
     }

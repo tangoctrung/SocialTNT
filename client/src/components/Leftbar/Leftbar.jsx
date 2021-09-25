@@ -17,6 +17,10 @@ function Leftbar() {
                     <i className="fas fa-home"></i>
                     <span>Trang chủ</span>
                 </Link>
+                <Link to="/" style={{textDecoration: "none"}} className="leftbar-item">
+                    <i className="fas fa-bell"></i>
+                    <span>Thông báo</span>
+                </Link>
                 <Link to="/alluser" style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-user-friends"></i>
                     <span>Người dùng</span>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Context } from 'context/Context';
 import axios from 'axios';
 import { format } from "timeago.js";
+import ReactTooltip from 'react-tooltip';
 
 // hàm đảo ngược mảng
 function reserveArr (arr) {
@@ -95,35 +96,24 @@ function Navbar() {
                 <div className="navbar-center">
                     {user && <>
                                 <Link to="/" className="navbar-center-home">
-                                    <i className="fas fa-home" title="Trang chủ"></i>
+                                    <><i className="fas fa-home" data-tip="Trang chủ"></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                                 </Link>
                                 <div className="navbar-center-find">
-                                    {!isSearch && <i className="fas fa-search" title="Tìm kiếm" onClick={handleClickOpenFind}></i>}
-                                    {isSearch && <i class="fas fa-times" title="Tắt tìm kiếm" onClick={handleClickCloseFind}></i>}
+                                    {!isSearch && <><i className="fas fa-search" data-tip="Tìm kiếm" onClick={handleClickOpenFind}></i> <ReactTooltip place="bottom" type="dark" effect="solid"/></>}
+                                    {isSearch && <><i class="fas fa-times" data-tip="Tắt tìm kiếm" onClick={handleClickCloseFind}></i><ReactTooltip place="left" type="dark" effect="solid"/></>}
                                     <form className="navbar-center-form" style={{width: isSearch ? "350px" : "30px"}} onSubmit={handleSubmitFind}>
                                         <input ref={inputRef} onChange={handleChangeFind} placeholder="Tìm kiếm người dùng hoặc bài viết theo hashtag"/>
                                     </form>
                                 </div>
                                 <Link to={`/profile/${user._id}`} className="navbar-center-noti">
-                                    <i className="fas fa-user-plus" title="Trang cá nhân"></i>
+                                    <><i className="fas fa-user-plus" data-tip="Trang cá nhân"></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                                 </Link>
                             </>}
                     
                 </div>
 
                 <div className="navbar-right">
-                    {user && <>
-                                <div className="navbar-right-icon">
-                                    <div className="navbar-right-requestFriend">
-                                        <i className="fas fa-user-friends" title="Lời mời kết bạn"></i>
-                                    </div>
-                                    <div className="navbar-right-message">
-                                        <i className="fab fa-facebook-messenger" title="Tin nhắn"></i>
-                                    </div>
-                                    <div className="navbar-right-noti">
-                                        <i className="fas fa-bell" title="Thông báo"></i>
-                                    </div>
-                                </div>
+                    {user && <>                               
                                 <div className="navbar-right-profile">
                                     <div className="navbar-right-img">
                                         <img src={user.avatar ? (user.avatar) : (PF + "noAvatar.png")} alt="image" />
