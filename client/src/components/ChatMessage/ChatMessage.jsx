@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useRef } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import { Link } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 
 function ChatMessage({messages, currentChat, setMessages}) {
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
@@ -23,7 +24,7 @@ function ChatMessage({messages, currentChat, setMessages}) {
     const PF = "http://localhost:8800/images/";
 
 
-
+    // lấy tin nhắn
     useEffect(() => {
         socket?.on("getMessage", data => {
             setArrivalMessage({
@@ -34,12 +35,13 @@ function ChatMessage({messages, currentChat, setMessages}) {
         })
     }, [])
 
+    // thêm tin nhắn nhận dc vào messages
     useEffect(() => {
         arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
         setMessages((prev) => [...prev, arrivalMessage])
     }, [arrivalMessage])
 
-
+    // lấy thông tin của bạn bè trong currentChat
     useEffect(() => {
         const friendId = currentChat?.members.find((m) => m !== user?._id);
         const getUser = async () => {
@@ -53,10 +55,12 @@ function ChatMessage({messages, currentChat, setMessages}) {
         getUser();
     }, [currentChat])
 
+    // lăn chuột đến cuối hộp chat
     useEffect(() => {
         listMessageRef.current?.scrollIntoView({behavior: "smooth"});
     }, [messages])
 
+    // gửi tin nhắn
     const handleSubmitFormSendMessage = async (e) => {
         e.preventDefault();
         const message = {
@@ -73,15 +77,21 @@ function ChatMessage({messages, currentChat, setMessages}) {
         if (newMessage){
             const res = await axios.post(`/messages/`, message);
             setMessages([...messages, res.data]);
+            await axios.put(`/conversations/${currentChat?._id}`, {
+                messageLast: newMessage,
+                senderId: user?._id
+            })          
             setNewMessage("");
         }
     }
 
+    // thêm emoji
     const onEmojiClick = (event, data) => {
         let m = newMessage;
         m += data.emoji;
         setNewMessage(m)
     }
+    
     return (
         <div>
             <div className="chat-center-1">
@@ -117,11 +127,11 @@ function ChatMessage({messages, currentChat, setMessages}) {
             </div>
             <div className="chat-center-3">
                 <div className="chat-center-3-micro chat-center-3-itemIcon">
-                    <i className="fas fa-microphone" title="Gửi voice chat"></i>
+                    <><i className="fas fa-microphone" data-tip="Gửi voice chat"></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                 </div>
                 <div className="chat-center-3-file chat-center-3-itemIcon">
                     <label htmlFor="chooseFileToSend">
-                        <i className="fas fa-paperclip" title="Gửi ảnh, video, file"></i>
+                        <><i className="fas fa-paperclip" data-tip="Gửi ảnh, video, file"></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                     </label>
                     <input type="file" id="chooseFileToSend" style={{display: "none"}} multiple />
                 </div>
@@ -135,7 +145,7 @@ function ChatMessage({messages, currentChat, setMessages}) {
                     />
                 </form>
                 <div className="chat-center-3-emoji chat-center-3-itemIcon">
-                    <i className="fas fa-smile" title="Gửi biểu tượng cảm xúc" onClick={()=> setIsOpenEmoji(!isOpenEmoji)}></i>
+                    <><i className="fas fa-smile" data-tip="Gửi biểu tượng cảm xúc" onClick={()=> setIsOpenEmoji(!isOpenEmoji)}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                     {isOpenEmoji && <div className="chat-center-3-picker">
                         <EmojiPicker onEmojiClick={onEmojiClick} />
                     </div>}

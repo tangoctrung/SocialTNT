@@ -14,6 +14,7 @@ import { useRef } from 'react';
 
 function Post({post}) {
     const [isOpenModal, setIsOpenModal] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [imageModal, setImageModal] = useState();
     const [avatarAuthor, setAvatarAuthor] = useState("");
@@ -24,7 +25,7 @@ function Post({post}) {
     const [totalLike, setTotalLike] = useState(post ? post.likes.length : 0);
     const [totalDislike, setTotalDislike] = useState(post ? post.dislikes.length : 0);
     const PF = "http://localhost:8800/images/";
-    const { user } = useContext(Context);
+    const { user, dispatch } = useContext(Context);
     const inputCommentRef = useRef();
     const settings = {
         dots: true,
@@ -38,6 +39,7 @@ function Post({post}) {
         const setLike = () => {
             setIsLiked(post ? post.likes.includes(user._id) : false);
             setIsDisliked(post ? post.dislikes.includes(user._id) : false);
+            setIsSaved(user?.postSaved?.includes(post?._id));
         }
         setLike();
 
@@ -57,7 +59,7 @@ function Post({post}) {
         fetchAuthorPost();
         
         return(()=> fetchAuthorPost());
-    }, [post && post.userId])
+    }, [post && post])
 
     // LIKE POST
     const handleLikePost = async () => {
@@ -131,6 +133,24 @@ function Post({post}) {
         inputCommentRef.current.focus();
     }
 
+    // SAVE / UNSAVE POST
+    const handleSaveOrUnSavePost = () => {
+        const fetchPost = async () => {
+            await axios.put(`/users/savepost`, {
+                userId: user?._id,
+                postId: post?._id
+            });
+            if (isSaved) {
+                dispatch({ type: "UNSAVEPOST", payload: post?._id });
+            } else {
+                dispatch({ type: "SAVEPOST", payload: post?._id });
+            }
+        }
+        fetchPost();
+        setIsSaved(!isSaved);
+    }
+
+
     return (
         <div className="post">
             <div className="post-infoAuthor">
@@ -148,7 +168,8 @@ function Post({post}) {
                             <span><i className="fas fa-pen"></i> Chỉnh sửa</span>
                             <span><i className="fas fa-trash"></i> Xóa bài viết</span>
                         </>}
-                        <span><i className="fas fa-bookmark"></i> Lưu bài viết</span>
+                        {!isSaved && <span onClick={handleSaveOrUnSavePost}><i className="fas fa-bookmark"></i> Lưu bài viết</span>}
+                        {isSaved && <span onClick={handleSaveOrUnSavePost}><i className="far fa-bookmark"></i> Bỏ lưu bài viết</span>}
                         <span><i className="fas fa-question-circle"></i> Báo cáo</span>
                     </div>
                 </div>
@@ -162,7 +183,7 @@ function Post({post}) {
                 <hr />
                 <div className="post-textContent-hashtag">
                     { post &&
-                        post.hashtags.map((hashtag, index) => <a key={index} href="">#{hashtag}</a>)
+                        post.hashtags.map((hashtag, index) => <Link to={`/postcondition?hashtag=${hashtag}`} key={index} href="">#{hashtag}</Link>)
                     }         
                 </div>
             </div>

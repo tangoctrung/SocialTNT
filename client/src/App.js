@@ -10,6 +10,8 @@ import { useContext } from 'react';
 import { Context } from 'context/Context';
 import AllUser from 'pages/AllUser/AllUser';
 import Chat from 'pages/Chat/Chat';
+import PostSaved from 'pages/PostSaved/PostSaved';
+import PostCondition from 'pages/PostCondition/PostCondition';
 
 function App() {
     const {user} = useContext(Context);
@@ -43,6 +45,12 @@ function App() {
               </Route>
               <Route path="/chat/:id" exact>
                 {user ? <Chat /> : <Login />} 
+              </Route>
+              <Route path="/postsaved" exact>
+                {user ? <PostSaved /> : <Login />} 
+              </Route>
+              <Route path="/postcondition" exact>
+                {user ? <PostCondition /> : <Login />} 
               </Route>
           </Switch>
       </Router>

@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/Users");
-
+const Post = require("../models/Posts");
 
 // TÌM KIẾM NGƯỜI DÙNG THEO USERNAME OR EMAIL
 router.get('/', async (req, res) => {
@@ -171,6 +171,38 @@ router.put("/deleteSearchHistory", async (req, res) => {
   }
 });
 
+// SAVE / UNSAVE POST
+
+router.put("/savepost/", async (req, res) => {
+  try {
+    const user = await User.findById(req.body.userId);
+    if (!user.postSaved.includes(req.body.postId)) {
+      await user.updateOne({ $push: { postSaved: req.body.postId } });
+      res.status(200).json("The post has been saved");
+    } else {
+      await user.updateOne({ $pull: { postSaved: req.body.postId } });
+      res.status(200).json("The post has been unsaved");
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// GET ALL POST SAVED
+
+router.get("/savepost/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const posts = await Promise.all(
+      user.postSaved.map((postId) => {
+        return Post.findById(postId);
+      })
+    );
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 
 module.exports = router;

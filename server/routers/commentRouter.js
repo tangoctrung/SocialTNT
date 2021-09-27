@@ -27,5 +27,21 @@ router.get("/post/:id", async (req, res) => {
     }
 })
 
+// LIKE/UNLIKE COMMENT
+router.put("/likecomment", async (req, res) => {
+    try {
+      const comment = await Comment.findById(req.body.commentId);
+      if (!comment.likes.includes(req.body.userId)) {
+        await comment.updateOne({ $push: { likes: req.body.userId } });
+        res.status(200).json("The comment has been like");
+      } else {
+        await comment.updateOne({ $pull: { likes: req.body.userId } });
+        res.status(200).json("The comment has been unlike");
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
 
 module.exports = router;

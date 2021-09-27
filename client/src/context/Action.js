@@ -38,6 +38,16 @@ export const Unfollow = (userId) => ({
     payload: userId,
 });
 
+export const SavePost = (postId) => ({
+    type: "SAVEPOST",
+    payload: postId,
+});
+  
+export const UnSavePost = (postId) => ({
+    type: "UNSAVEPOST",
+    payload: postId,
+});
+
 export const SearchHistory = (history) => ({
     type: "SEARCH_HISTORY",
     payload: history,
@@ -60,10 +70,3 @@ export const SearchFailure = () => ({
     type: "SEARCH_FAILURE",
 });
 
-export const LoadingPostStart = () => ({
-    type: "LOADING_POST_START",
-});
-
-export const LoadingPostSuccess = () => ({
-    type: "LOADING_POST_SUCCESS",
-});

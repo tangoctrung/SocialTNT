@@ -9,10 +9,12 @@ import { Context } from 'context/Context';
 import { useContext } from 'react';
 
 function Comment({comment}) {
+    const { user } = useContext(Context);
     const [avatarComment, setAvatarComment] = useState("");
+    const [isLikeComment, setIsLikeComment] = useState(comment.likes?.includes(user?._id));
+    const [totalLikeComment, setTotalLikeComment] = useState(comment?.likes?.length)
     const [nameComment, setNameComment] = useState("");
     const PF = "http://localhost:8800/images/";
-    const { user } = useContext(Context);
     useEffect(() => {
         const fetchUserComment = async () => {
             const resComment = await axios.get(`/users/profile/${comment.userId}`);
@@ -24,6 +26,20 @@ function Comment({comment}) {
         return( () => fetchUserComment());
 
     }, [comment.userId])
+
+    // LIKE/UNLIKE COMMENT
+    const handleLikedComment = () => {
+        const fetchLikedComment = async () => {
+            await axios.put(`/comment/likecomment`, {
+                commentId: comment?._id,
+                userId: user?._id
+            });
+        }
+        fetchLikedComment();
+        setTotalLikeComment(!isLikeComment ? totalLikeComment + 1 : totalLikeComment - 1);
+        setIsLikeComment(!isLikeComment);
+    }
+
     return (
         <div className="post-itemComment">                   
             <Link to={`/profile/${comment ? comment.userId : ""}`} className="post-itemComment-avatar">
@@ -37,7 +53,10 @@ function Comment({comment}) {
                 <div className="post-itemComment-body-bottom">
                     <p>Trả lời</p>
                     <span>{format(comment.createdAt)}</span>
-                    <span className="countLike">4 <i className="far fa-heart"></i></span>
+                    <span className="countLike" onClick={handleLikedComment}>
+                        {totalLikeComment}
+                        {!isLikeComment ? <i className="far fa-heart"></i> : <i className="fas fa-heart" style={{color: "red"}}></i>}
+                    </span>
                 </div>
             </div> 
             <div className="post-itemComment-menu">

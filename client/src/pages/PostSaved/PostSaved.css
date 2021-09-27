@@ -1,0 +1,64 @@
+.postSaved{
+    margin-top: 50px;
+    display: flex;
+}
+.postSaved-left{
+    max-width: 420px;
+    position: fixed;
+
+}
+.postSaved-Content{
+    margin-left: 320px;
+    width: calc(100vw - 420px);
+    display: flex;
+    flex-direction: column;
+}
+.postSaved-content-right>h2{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    font-size: 32px;
+    font-weight: bold;
+    color:rgb(180, 179, 179);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.postSaved-content-left{
+    width: calc(100vw - 840px);
+    display: flex;
+    justify-content: center;
+}
+.postSaved-content-left-container{
+    width: calc(100vw - 840px - 300px);
+    margin-left: 200px;
+}
+.postSaved-content-right{
+    position: fixed;
+    right: 0;
+    height: calc(100vh - 60px);
+    overflow-y: scroll;
+    width: 420px;
+}
+.postSaved-content-right::-webkit-scrollbar{
+    width: 8px;
+}
+.postSaved-content-right::-webkit-scrollbar-track{
+    border-radius: 10px;
+    background-color: rgb(226, 222, 222);
+}
+.postSaved-content-right::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: rgb(102, 101, 101);
+}
+.postSaved-top-content-item{
+    margin-bottom: 20px;
+}
+
+.postsave-text{
+    font-size: 48px;
+    width: 100%;
+    text-align: center;
+    margin-top: 100px;
+    color: gray;
+    font-weight: bold;
+
+}

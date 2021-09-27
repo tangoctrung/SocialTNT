@@ -60,7 +60,24 @@ const Reducer = (state, action) => {
                 ),
                 },
             };
-        
+        case "SAVEPOST":
+            return {
+            ...state,
+            user: {
+                ...state.user,
+                postSaved: [...state.user.postSaved, action.payload],
+            },
+            };
+        case "UNSAVEPOST":
+            return {
+                ...state,
+                user: {
+                ...state.user,
+                postSaved: state.user.postSaved.filter(
+                    (post) => post !== action.payload
+                ),
+                },
+            };
         case "SEARCH_HISTORY":
             return {
                 ...state,
@@ -101,22 +118,6 @@ const Reducer = (state, action) => {
                 isFetching: false,
                 error: true,
             };
-        
-        case "LOADING_POST_START": 
-            return {
-                ...state,
-                isLoadPost: true,  
-                error: false,            
-            };
-        
-        case "LOADING_POST_SUCCESS": 
-            return {
-                ...state,
-                isLoadPost: false,
-                error: false, 
-            };       
-        default:
-            return state;
     }
 };
 

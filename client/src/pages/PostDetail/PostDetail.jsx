@@ -17,7 +17,8 @@ function PostDetail() {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [imageModal, setImageModal] = useState(null);
-    const { user } = useContext(Context);
+    const [isSaved, setIsSaved] = useState(false);
+    const { user, dispatch } = useContext(Context);
     const [isLiked, setIsLiked] = useState(false);
     const [isDisliked, setIsDisliked] = useState(false);
     const [totalLike, setTotalLike] = useState(0);
@@ -57,6 +58,7 @@ function PostDetail() {
             setTotalDislike(resPost.data.dislikes && resPost.data.dislikes.length);
             setIsLiked(resPost.data.likes && resPost.data.likes.includes(user?._id));
             setIsDisliked(resPost.data.dislikes && resPost.data.dislikes.includes(user?._id));
+            setIsSaved(user?.postSaved?.includes(postId));
 
             // API GET COMMENT
             const resComment = await axios.get(`/comment/post/${postId}`);
@@ -135,6 +137,25 @@ function PostDetail() {
         inputCommentRef.current.value = "";
         inputCommentRef.current.focus();
     }
+
+    // SAVE / UNSAVE POST
+    const handleSaveOrUnSavePost = () => {
+        const fetchPost = async () => {
+            await axios.put(`/users/savepost`, {
+                userId: user?._id,
+                postId: post?._id
+            });
+            if (isSaved) {
+                dispatch({ type: "UNSAVEPOST", payload: post?._id });
+            } else {
+                dispatch({ type: "SAVEPOST", payload: post?._id });
+            }
+        }
+        fetchPost();
+        setIsSaved(!isSaved);
+    }
+
+
     return (
         <div className="post-detail">
             <div className="postdetail">
@@ -158,7 +179,8 @@ function PostDetail() {
                                 <span><i className="fas fa-pen"></i> Chỉnh sửa</span>
                                 <span><i className="fas fa-trash"></i> Xóa bài viết</span>
                             </>}
-                            <span><i className="fas fa-bookmark"></i> Lưu bài viết</span>
+                            {!isSaved && <span onClick={handleSaveOrUnSavePost}><i className="fas fa-bookmark"></i> Lưu bài viết</span>}
+                            {isSaved && <span onClick={handleSaveOrUnSavePost}><i className="far fa-bookmark"></i> Bỏ lưu bài viết</span>}
                             <span><i className="fas fa-question-circle"></i> Báo cáo</span>
                         </div>
                     </div>

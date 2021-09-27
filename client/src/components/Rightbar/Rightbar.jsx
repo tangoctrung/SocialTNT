@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import "./Rightbar.css";
-import Avatar from "../../image/avatar.jpg";
-import Avatar1 from "../../image/avatar1.jpg";
-import Avatar2 from "../../image/avatar2.jpg";
-import Avatar3 from "../../image/avatar3.jpg";
-import Avatar4 from "../../image/avatar4.jpg";
 import FriendOnline from '../FriendOnline/FriendOnline';
+import ReactTooltip from 'react-tooltip';
+import { useEffect } from 'react';
+import { Context } from 'context/Context';
+import { useContext } from 'react';
 
 function Rightbar() {
+    const { socket } = useContext(Context);
+    const [listFriendOnline, setListFriendOnline] = useState([]);
     const [isShowInputFindFriend, setIsShowInputFindFriend] = useState(false);
+    useEffect(() => {
+        socket?.on("getUser", users => {
+            setListFriendOnline(users);
+        });
+    }, [socket]);
+    console.log(listFriendOnline);
     const handleClickSearchFriend = () => {
         setIsShowInputFindFriend(true);
     }
@@ -20,7 +27,7 @@ function Rightbar() {
             <form className="rightbar-form-find">
                 {!isShowInputFindFriend && <>
                     <span>Bạn bè đang hoạt động</span>
-                    <i className="fas fa-search" title="Tìm kiếm bạn bè để nhắn tin" onClick={handleClickSearchFriend}></i>
+                    <><i className="fas fa-search" data-tip="Tìm kiếm bạn bè để nhắn tin" onClick={handleClickSearchFriend}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                 </>}
                 
                 {isShowInputFindFriend && <div className="form-input">
@@ -30,21 +37,9 @@ function Rightbar() {
                 
             </form>
             <div className="rightbar-listFriendOnline">
-                <FriendOnline Avatar={Avatar} Name={"Tạ Ngọc Trung"} FriendTo={1} From={"Kim Bảng, Hà Nam"}/>
-                <FriendOnline Avatar={Avatar1} Name={"Anna Trần"} FriendTo={2} From={"Cầu Giấy, Hà Nội"}/>
-                <FriendOnline Avatar={Avatar2} Name={"Kevin Nguyễn"} FriendTo={4} From={"Tuyên Quang"}/>
-                <FriendOnline Avatar={Avatar3} Name={"Trần Công Thành"} FriendTo={1} From={"Thành phố Hồ Chí Minh"}/>
-                <FriendOnline Avatar={Avatar4} Name={"John Smith"} FriendTo={3} From={"New York, America"}/> 
-                <FriendOnline Avatar={Avatar} Name={"Tạ Ngọc Trung"} FriendTo={1} From={"Kim Bảng, Hà Nam"}/>
-                <FriendOnline Avatar={Avatar1} Name={"Anna Trần"} FriendTo={2} From={"Cầu Giấy, Hà Nội"}/>
-                <FriendOnline Avatar={Avatar2} Name={"Kevin Nguyễn"} FriendTo={4} From={"Tuyên Quang"}/>
-                <FriendOnline Avatar={Avatar3} Name={"Trần Công Thành"} FriendTo={1} From={"Thành phố Hồ Chí Minh"}/>
-                <FriendOnline Avatar={Avatar4} Name={"John Smith"} FriendTo={3} From={"New York, America"}/> 
-                <FriendOnline Avatar={Avatar} Name={"Tạ Ngọc Trung"} FriendTo={1} From={"Kim Bảng, Hà Nam"}/>
-                <FriendOnline Avatar={Avatar1} Name={"Anna Trần"} FriendTo={2} From={"Cầu Giấy, Hà Nội"}/>
-                <FriendOnline Avatar={Avatar2} Name={"Kevin Nguyễn"} FriendTo={4} From={"Tuyên Quang"}/>
-                <FriendOnline Avatar={Avatar3} Name={"Trần Công Thành"} FriendTo={1} From={"Thành phố Hồ Chí Minh"}/>
-                <FriendOnline Avatar={Avatar4} Name={"John Smith"} FriendTo={3} From={"New York, America"}/>  
+                {listFriendOnline && listFriendOnline.map ((friendOnline, index) => (
+                    <FriendOnline key={index} friendId={friendOnline.userId} />
+                ))}
             </div>
         </div>
     );

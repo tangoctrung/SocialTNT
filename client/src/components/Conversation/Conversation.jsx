@@ -1,15 +1,22 @@
 import React from 'react'
 import "./Conversation.css";
 import { Link } from 'react-router-dom';
-import avatar from "../../image/avatar.jpg";
 import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
+import { format } from 'timeago.js';
 
-function Conversation({conversation, currentUser}) {
+
+function Conversation({conversation, currentUser, infoMessageLast, setInfoMessageLast}) {
     const [friend, setFriend] = useState(null);
     const PF = "http://localhost:8800/images/";
+
+
     useEffect(() => {
+        setInfoMessageLast({
+            messageLast: conversation?.messageLast,
+            senderId: conversation?.senderId
+        })
         const friendId = conversation.members.find((m) => m !== currentUser?._id);
         const getUser = async () => {
         try {
@@ -30,7 +37,12 @@ function Conversation({conversation, currentUser}) {
                 </div>
                 <div className="chat-left-4-member-item-text">
                     <h3>{friend ? friend.username : ""}</h3>
-                    <p>what are you doing?<span> 10 minutes</span></p>
+                    {conversation?.senderId === currentUser?._id 
+                        && conversation?.messageLast 
+                        && <p><b>You:</b> {conversation?.messageLast.length > 30 ? conversation?.messageLast.slice(0, 30) + "..." : conversation?.messageLast} - <span>{format(conversation.updatedAt)}</span></p>}
+                    {conversation?.senderId !== currentUser?._id 
+                        && conversation?.messageLast 
+                        && <p>{conversation?.messageLast.length > 35 ? conversation?.messageLast.slice(0, 35) + "..." : conversation?.messageLast}  - <span>{format(conversation.updatedAt)}</span></p>}                 
                 </div>
                 <div className="chat-left-4-member-item-noti">
                     <i className="fas fa-circle"></i>

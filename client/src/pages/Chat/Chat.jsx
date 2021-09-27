@@ -11,16 +11,19 @@ import axios from 'axios';
 import Conversation from 'components/Conversation/Conversation';
 import ChatMessage from 'components/ChatMessage/ChatMessage';
 import InfoConversation from 'components/InfoConversation/InfoConversation';
+import ReactTooltip from 'react-tooltip';
 
 function Chat() {
     const [isOpenChatMember, setIsOpenChatMember] = useState(true);
     const [conversations, setConversations] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [infoMessageLast, setInfoMessageLast] = useState({});
     const [currentChat, setCurrentChat] = useState(null);
     const { user } = useContext(Context);
     const  [chatId, setChatId] = useState();
     const location = useLocation();
 
+    // GET ALL CONVERSATIONS OF USER
     useEffect(() => {
        const FetchUser = async () => {
             const res = await axios.get(`/conversations/${user && user._id}`);
@@ -28,20 +31,19 @@ function Chat() {
        }
        FetchUser();
     }, [user && user._id]);
-
+    console.log(infoMessageLast);
+    // NẾU ĐƯỜNG DẪN CÓ ID CỦA CUỘC NÓI CHUYỆN THÌ LẤY CUỘC NCH ĐÓ
     useEffect(() => {
         setChatId(location.pathname.split("/")[2]);
         console.log(chatId);
         const fetchDataChat = async () => {
             const res = await axios.get(`/conversations/chat/${chatId && chatId}`);
             setCurrentChat(res.data);
-            console.log(res.data);
         }
         fetchDataChat();
     }, [location, chatId]);
-    console.log(chatId);
-    console.log(currentChat);
 
+    // LẤY TIN NHẮN CỦA MỘT CUỘC TRÒ CHUYỆN
     useEffect(()=> {
         const FetchMessage = async () => {
             try{
@@ -59,7 +61,7 @@ function Chat() {
             <div className="chat-left">
                 <div className="chat-left-1">
                     <h2>Chat</h2>
-                    <i className="far fa-users-medical" title="Tạo nhóm chat"></i>
+                    <><i className="far fa-users-medical" data-tip="Tạo nhóm chat"></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                 </div>
                 <div className="chat-left-2">
                     <input type="text" placeholder="Tìm kiếm theo tên người dùng hoặc nhóm chat" />
@@ -72,7 +74,7 @@ function Chat() {
                     {isOpenChatMember && <div className="chat-left-4-member">
                         {conversations && conversations.map((conversation, index) => (
                             <div onClick={()=> setCurrentChat(conversation)}>
-                                    <Conversation key={index} conversation={conversation} currentUser={user} />
+                                    <Conversation key={index} conversation={conversation} currentUser={user} infoMessageLast={infoMessageLast} setInfoMessageLast={setInfoMessageLast} />
                             </div>
                         ))}
                                         
@@ -99,7 +101,8 @@ function Chat() {
             </div>
           
             <div className="chat-center">
-                {currentChat ? <ChatMessage messages={messages} currentChat={currentChat} setMessages={setMessages} /> : <span className="chat-text">Chọn cuộc hội thoại để bắt đầu nhắn tin.</span>
+                {currentChat ? <ChatMessage messages={messages} currentChat={currentChat} setMessages={setMessages} infoMessageLast={infoMessageLast} setInfoMessageLast={setInfoMessageLast}/> 
+                : <span className="chat-text">Chọn cuộc hội thoại để bắt đầu nhắn tin.</span>
                 
                 }
             </div>

@@ -76,13 +76,13 @@ function InfoConversation ({currentChat}) {
                     </div>
                 </div>
                     <div className="chat-right-2-content">
+                        {/* <img  style={{height: "150px"}} src={avatar} />
                         <img  style={{height: "150px"}} src={avatar} />
                         <img  style={{height: "150px"}} src={avatar} />
                         <img  style={{height: "150px"}} src={avatar} />
                         <img  style={{height: "150px"}} src={avatar} />
                         <img  style={{height: "150px"}} src={avatar} />
-                        <img  style={{height: "150px"}} src={avatar} />
-                        <img  style={{height: "150px"}} src={avatar} />
+                        <img  style={{height: "150px"}} src={avatar} /> */}
                     </div>
                 </>
                 }

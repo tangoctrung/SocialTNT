@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import "./Leftbar.css";
 import { Context } from 'context/Context';
 import { Link } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 
 function Leftbar() {
     const PF = "http://localhost:8800/images/";
@@ -33,10 +34,10 @@ function Leftbar() {
                     <i className="fas fa-book"></i>
                     <span>Bài viết hot</span>
                 </div>
-                <div className="leftbar-item">
+                <Link to="/postSaved" style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-bookmark"></i>
                     <span>Đã lưu</span>
-                </div>
+                </Link>
         
             </div>
             <div className="leftbar-bottom">

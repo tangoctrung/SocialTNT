@@ -74,6 +74,10 @@ const UserSchema = new mongoose.Schema({
     searchHistorys: {
         type: Array,
         required: false,
+    },
+    postSaved: {
+        type: Array,
+        default: [],
     }
 
 }, {timestamps: true});

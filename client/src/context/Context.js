@@ -7,7 +7,6 @@ const INITIAL_STATE = {
   isFetching: false,
   isLoadPost: false,
   socket : io("ws://localhost:8900"),
-  isLoadingProfile: false,
   error: false,
 };
 
@@ -16,10 +15,7 @@ export const Context = createContext(INITIAL_STATE);
 export const ContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(Reducer, INITIAL_STATE);
   useEffect(() => {
-    state.socket?.emit("addUser", state.user?._id);
-    state.socket?.on("getUser", users => {
-        console.log(users);
-    })
+    state.socket?.emit("addUser", state.user?._id); 
   }, [state.user])
   useEffect(()=> {
     localStorage.setItem("user", JSON.stringify(state.user));
