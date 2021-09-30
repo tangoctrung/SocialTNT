@@ -31,7 +31,7 @@ function PostSaved() {
                 <div className="postSaved-content-left">
                     <div className="postSaved-content-left-container">
                         {postSave && <Post post={postSave}/>}
-                        {!postSave && <p className="postsave-text"> Chọn bài viết đã lưu để xem chi tiết ở đây</p>}
+                        {posts?.length !== 0 && !postSave && <p className="postsave-text"> Chọn bài viết đã lưu để xem chi tiết ở đây</p>}
                         {posts?.length === 0 && <p className="postsave-text">Chưa có bài viết nào được lưu.</p>}
                     </div>
                 </div>

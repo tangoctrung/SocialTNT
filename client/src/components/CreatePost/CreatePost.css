@@ -100,7 +100,7 @@
 
 .createPost-content-container{
     position: relative;
-    width: 550px;
+    width: 600px;
     height: 700px;
     background-color: white;
     cursor: default;
@@ -198,6 +198,7 @@
 .createPost-content-camera i{
     color: rgb(197, 46, 46);
 }
+
 .createPost-content-emoji i{
     color: rgb(192, 192, 28);
 }

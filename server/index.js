@@ -6,6 +6,7 @@ const userRouter = require("./routers/userRouter");
 const postRouter = require("./routers/postRouter");
 const authRouter = require("./routers/authRouter");
 const commentRouter = require("./routers/commentRouter");
+const replyCommentRouter = require("./routers/replyCommentRouter");
 const messageRouter = require("./routers/messageRouter");
 const conversationRouter = require("./routers/conversationRouter");
 const multer = require("multer");
@@ -45,6 +46,7 @@ app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/comment", commentRouter);
+app.use("/api/replycomment", replyCommentRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/conversations", conversationRouter);
 

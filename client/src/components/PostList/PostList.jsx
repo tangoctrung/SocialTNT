@@ -24,7 +24,6 @@ function PostList() {
         <div className="PostList">
             {posts  && posts.map((post, index) => <Post post={post} key={index}/> )} 
             {posts.length === 0  && <div>Bạn chưa có bài viết nào liên quan</div>}  
-            <div className="PostList-fetching"> <div className="spinner-3"></div><p>LOADING...</p></div>                                   
         </div>
     );
 }

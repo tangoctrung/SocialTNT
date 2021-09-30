@@ -119,12 +119,9 @@ function Post({post}) {
         }
         
         let newComments = [...comments];
-        console.log(comments);
         newComments.unshift(dataComment);
         const comment1 = [...newComments];
-        console.log(comment1);
         setComments(comment1); 
-        console.log(comments);
         try{
             await axios.post(`/comment/`, dataComment);
         }catch(err){}

@@ -113,13 +113,13 @@ function CreatePost() {
                         <i className="fas fa-photo-video"></i>
                         <span>Ảnh/Video</span>
                     </div>
-                    <div className="createPost-info-bottom-item createPost-info-bottom-camera">
-                        <i className="fas fa-camera"></i>
-                        <span>Chụp ảnh</span>
-                    </div>
                     <div className="createPost-info-bottom-item createPost-info-bottom-emoji">
                         <i className="fas fa-grin-alt"></i>
                         <span>Cảm xúc</span>
+                    </div>
+                    <div className="createPost-info-bottom-item createPost-info-bottom-camera">
+                        <i className="fas fa-camera"></i>
+                        <span>Chụp ảnh</span>
                     </div>
                 </div>
             </div>
@@ -146,13 +146,13 @@ function CreatePost() {
                                 <span>Ảnh/Video</span>
                                 <input type="file" id="chooseFile" name="chooseImagePost" onChange={handleUploadImages} style={{display: "none"}} multiple accept="image/*,video/*"/>
                             </label>
-                            <div className="createPost-content-camera createPost-content-item1">
-                                <i className="fas fa-camera"></i>
-                                <span>Chụp ảnh</span>
-                            </div>
                             <div className="createPost-content-emoji createPost-content-item1">
                                 <i className="fas fa-grin-alt"></i>
                                 <span>Cảm xúc</span>
+                            </div>
+                            <div className="createPost-content-camera createPost-content-item1">
+                                <i className="fas fa-camera"></i>
+                                <span>Chụp ảnh</span>
                             </div>
                         </div>
                         <div className="createPost-content-containerImage">
