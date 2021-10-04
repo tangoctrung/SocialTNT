@@ -1,0 +1,23 @@
+GET http://localhost:8800/api/replycomment/comment/61482e3308758546ccf67f1e HTTP/1.1
+
+
+###
+
+
+GET http://localhost:8800/api/posts/profile/6140a06b3fee095588756d69 HTTP/1.1
+
+
+###
+
+GET http://localhost:8800/api/comment/post/614806d408758546ccf66c70 HTTP/1.1
+
+###
+
+POST http://localhost:8800/api/comment/ HTTP/1.1
+content-type: application/json
+
+{
+    "writerId": "6140a06b3fee095588756d69",
+    "postId": "6157ab694510f40ac805fbe9",
+    "content": "xinh" 
+}

@@ -95,8 +95,10 @@
 .post-itemComment-menu-content{
     display: none;
     flex-direction: column;
+    padding: 5px 5px;
     position: absolute;
     width: 90px;
+    z-index: 10;
     top: 0px;
     right: -70px;
     border-radius: 10px;

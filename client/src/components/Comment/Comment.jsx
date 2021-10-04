@@ -15,36 +15,25 @@ function Comment({ comment }) {
   const { user } = useContext(Context);
   const [isOpenReplyComment, setIsOpenReplyComment] = useState(false);
   const [isOpenEmoji, setIsOpenEmoji] = useState(false);
-  const [avatarComment, setAvatarComment] = useState("");
-  const [isLikeComment, setIsLikeComment] = useState(
-    comment.likes?.includes(user?._id)
-  );
-  const [totalLikeComment, setTotalLikeComment] = useState(
-    comment?.likes?.length
-  );
+  const [isLikeComment, setIsLikeComment] = useState(false);
+  const [totalLikeComment, setTotalLikeComment] = useState(0);
   const [replyComments, setReplyComments] = useState([]);
   const [nameComment, setNameComment] = useState("");
   const inputCommentRef = useRef();
   const [nameReply, setNameReply] = useState("");
   const PF = "http://localhost:8800/images/";
+  const commentRef = useRef();
 
   useEffect(() => {
-    const fetchUserComment = async () => {
-      const resComment = await axios.get(`/users/profile/${comment.userId}`);
-      setAvatarComment(resComment.data.avatar);
-      setNameComment(resComment.data.username);
-    };
-    fetchUserComment();
-
-    
-    return () => fetchUserComment();
-  }, [comment.userId]);
-
-  useEffect(() => {
+    // console.log("render");
+    // console.log(comment);
+    setNameComment(comment?.writerId?.username);
+    setIsLikeComment(comment?.likes?.includes(user?._id));
+    setTotalLikeComment(comment?.likes?.length);
     const fetchReplyComment = async () => {
         const resReplyComment = await axios.get(`/replycomment/comment/${comment?._id}`);
         setReplyComments(resReplyComment.data);
-        console.log(resReplyComment.data);
+        // console.log(resReplyComment.data);
     }
     fetchReplyComment();
   }, [])
@@ -71,8 +60,10 @@ function Comment({ comment }) {
 
   // KHI NGƯỜI DÙNG ẤN NÚT TRẢ LỜI
   const handleClickReply = (nameComment) => {
+    
     setIsOpenReplyComment(!isOpenReplyComment);
     setNameReply(nameComment + ": ");
+    
   };
 
   // REPLY COMMENT
@@ -105,24 +96,24 @@ function Comment({ comment }) {
     
   };
   return (
-    <div className="comment-container">
+    <div className="comment-container" >
       <div className="post-itemComment">
         <Link
-          to={`/profile/${comment ? comment.userId : ""}`}
+          to={`/profile/${comment ? comment.writerId?._id : ""}`}
           className="post-itemComment-avatar"
         >
           <img
-            src={avatarComment ? avatarComment : PF + "noAvatar.png"}
+            src={comment ? comment.writerId?.avatar : PF + "noAvatar.png"}
             alt="Avatar"
           />
         </Link>
         <div className="post-itemComment-body">
           <div className="post-itemComment-body-top">
             <Link
-              to={`/profile/${comment ? comment.userId : ""}`}
+              to={`/profile/${comment ? comment.writerId?._id : ""}`}
               style={{ textDecoration: "none", color: "black" }}
             >
-              <b>{nameComment ? nameComment : ""}</b>
+              <b>{comment ? comment.writerId?.username : ""}</b>
             </Link>
             <span>{comment.content}</span>
           </div>
@@ -142,7 +133,7 @@ function Comment({ comment }) {
         <div className="post-itemComment-menu">
           <i className="fas fa-ellipsis-v"></i>
           <div className="post-itemComment-menu-content">
-            {comment.userId === user._id && (
+            {comment.writerId?._id === user._id && (
               <>
                 <span>Chỉnh sửa</span>
                 <span>Xóa</span>
@@ -153,8 +144,9 @@ function Comment({ comment }) {
         </div>
       </div>
 
-      <div className="post-listReplyComment">
+      <div className="post-listReplyComment" ref={commentRef}>
           {replyComments && replyComments.map((replyComment, index) => (
+            <div >
               <ReplyComment
                 key={index}
                 replyComment={replyComment}
@@ -162,6 +154,8 @@ function Comment({ comment }) {
                 setIsOpenReplyComment={setIsOpenReplyComment}
                 handleClickReply = {handleClickReply}
               />
+
+            </div>
           ))}
       </div>
 

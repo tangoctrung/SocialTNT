@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import "./Profile.css";
-
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Post from '../../components/Post/Post';
 import CreatePost from '../../components/CreatePost/CreatePost';
 import { Context } from 'context/Context';
@@ -36,6 +36,8 @@ function Profile() {
     const paramID = searchURL.pathname.split("/")[2];
     const [avatarUrl, setAvatarUrl] = useState("");
     const [chat, setChat] = useState();
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [imageModal, setImageModal] = useState();
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`/users/profile/${paramID}`);
@@ -44,12 +46,14 @@ function Profile() {
         fetchUser();
         const fetchDataFollowers = async()=>{
             const res1 = await axios.get(`/users/profile/followers/${paramID}`);
-            setFollowers(res1.data)
+            setFollowers(res1.data);
+            console.log(res1.data);
         }
         fetchDataFollowers();
         const fetchDataFollowings = async()=>{
             const res2 = await axios.get(`/users/profile/followings/${paramID}`);
             setFollowings(res2.data);
+          console.log(res2.data);
         }
         fetchDataFollowings();
         setIsFollow(user.following.includes(paramID));
@@ -63,6 +67,7 @@ function Profile() {
                   return new Date(p2.createdAt) - new Date(p1.createdAt);
                 })
               );
+            console.log(res3.data);
         }
         fetchPost();
     }, [paramID])
@@ -99,16 +104,7 @@ function Profile() {
         } catch(error){
             dispatch({type: "UPDATE_FAILURE"});
         }
-        // if (file) {
-            // const data = new FormData();
-            // const filename = Date.now() + file.name;
-            // data.append("name", filename);
-            // data.append("file", file);
-            // infoUserCurrent.avatar = filename;
-            // try {
-            //   await axios.post("/upload", data);
-            // } catch (err) {}        
-        // }              
+            
     }
     const handleChooseAvatarProfile = (e) => {
         const file1 = e.target.files[0];
@@ -163,9 +159,9 @@ function Profile() {
         <div className="profile">
             <div className="profile-content">
                 <div className="profile-content-top">
-                    <img src={dataUser.cover ? (PF + dataUser.cover) : (PF + "cover.jpg")} alt="Image" />
+                    <img src={dataUser.cover ? (PF + dataUser.cover) : (PF + "cover.jpg")} alt="Image" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser.cover ? dataUser.cover : "")}}/>
                     <div className="profile-content-avatar">
-                        <img src={dataUser.avatar ? (dataUser.avatar) : (PF + "noAvatar.png")} alt="avatar" />
+                        <img src={dataUser.avatar ? (dataUser.avatar) : (PF + "noAvatar.png")} alt="avatar" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser.avatar ? dataUser.avatar : "")}}/>
                         <h2>{dataUser.username}</h2>
                         {dataUser.nickname && <p>{"(" + dataUser.nickname + ")"}</p>}           
                     </div>
@@ -280,6 +276,20 @@ function Profile() {
                 </div>
             </div>
 
+            {isOpenModal && <div className="post-modal">                                                    
+                                <div className="post-modal-content" onClick={()=> setIsOpenModal(false)}></div>
+                                <div className="post-modal-Image">
+                                    <TransformWrapper style={{width: '100%', height: '100%'}}>
+                                        <TransformComponent style={{width: '100%', height: '100%'}}>
+                                            <img src={imageModal} />
+                                        </TransformComponent>
+                                    </TransformWrapper>
+                                    <div className="post-modal-close" onClick={()=> setIsOpenModal(false)}>
+                                        <i className="fas fa-times-circle"></i>
+                                    </div>
+                                </div>      
+                            </div>
+                }
             {isModalEdit && <div className="modalEdit">
                 <div className="modalEdit-content">
                     <i className="fas fa-times" onClick={()=> setIsModalEdit(false)}></i>

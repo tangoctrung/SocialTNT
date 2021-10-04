@@ -4,8 +4,8 @@ const Comment = require("../models/Comments");
 // CREATE COMMENT
 
 router.post("/", async (req, res) => {
-    const {userId, postId, content} = req.body;
-    const newComment = new Comment({userId, postId, content});
+    const {writerId, postId, content} = req.body;
+    const newComment = new Comment({writerId, postId, content});
     try {
         const savedComment = await newComment.save();
         res.status(200).json(savedComment);
@@ -18,14 +18,23 @@ router.post("/", async (req, res) => {
 // GET ALL COMMENT OF POST
 
 router.get("/post/:id", async (req, res) => {
-    const postId = req.params.id;
-    try {
-        const comments = await Comment.find({postId: postId});
-        res.status(200).json(comments);
-    } catch (err) {
-        res.status(500).json(err);
-    }
-})
+  // const commentId = req.params.id;
+  //   try {
+  //       const replyComments = await ReplyComment.find({commentId: commentId}).populate('userId', [
+  //           'username', 'avatar'
+  //       ]);
+  //       res.status(200).json(replyComments);
+  //   } catch (err) {
+  //       res.status(500).json(err);
+  //   }
+  const postId = req.params.id;
+  try {
+    const comments = await Comment.find({postId: postId}).populate('writerId', ['username', 'avatar']);
+    res.status(200).json(comments);
+  } catch (err) {
+      res.status(500).json(err);
+  }
+});
 
 // LIKE/UNLIKE COMMENT
 router.put("/likecomment", async (req, res) => {

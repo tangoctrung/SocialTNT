@@ -20,9 +20,6 @@ router.post("/", async (req, res) => {
 router.get("/comment/:id", async (req, res) => {
     const commentId = req.params.id;
     try {
-        // const posts = await Post.find({ user: req.userId }).populate('user', [
-		// 	'username'
-		// ])
         const replyComments = await ReplyComment.find({commentId: commentId}).populate('userId', [
             'username', 'avatar'
         ]);

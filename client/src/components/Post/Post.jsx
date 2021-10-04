@@ -11,19 +11,22 @@ import { Link } from 'react-router-dom';
 import { Context } from 'context/Context';
 import { useContext } from 'react';
 import { useRef } from 'react';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import ModalEditPost from 'components/ModalEditPost/ModalEditPost';
 
 function Post({post}) {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [imageModal, setImageModal] = useState();
-    const [avatarAuthor, setAvatarAuthor] = useState("");
-    const [nameAuthor, setNameAuthor] = useState("");
+    const [changeComment, setChangeComment] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [comments, setComments] = useState([]);
     const [isDisliked, setIsDisliked] = useState(false);
-    const [totalLike, setTotalLike] = useState(post ? post.likes.length : 0);
-    const [totalDislike, setTotalDislike] = useState(post ? post.dislikes.length : 0);
+    const [totalLike, setTotalLike] = useState();
+    const [totalDislike, setTotalDislike] = useState();
+    const [isOpenModalEditPost, setIsOpenModalEditPost] = useState(false);
+    const [isDeletePost, setIsDeletePost] = useState(false);
     const PF = "http://localhost:8800/images/";
     const { user, dispatch } = useContext(Context);
     const inputCommentRef = useRef();
@@ -32,26 +35,28 @@ function Post({post}) {
         infinite: true,
         speed: 500,
         slidesToShow: 1,
-        slidesToScroll: 1
+        slidesToScroll: 1,
+        autoplay: true,
     };
 
     useEffect(() => {
         const setLike = () => {
-            setIsLiked(post ? post.likes.includes(user._id) : false);
-            setIsDisliked(post ? post.dislikes.includes(user._id) : false);
+            setTotalLike(post?.likes?.length);
+            setTotalDislike(post?.dislikes?.length);
+            setIsLiked(post?.likes?.includes(user._id));
+            setIsDisliked(post?.dislikes?.includes(user._id));
             setIsSaved(user?.postSaved?.includes(post?._id));
         }
         setLike();
 
         return (()=> setLike());
-    }, [user._id, post.likes, post.dislikes]);
+    }, [user._id, post?.likes, post?.dislikes]);
 
     useEffect(() => {
         const fetchAuthorPost = async () => {
-            const res = await axios.get(`/users/profile/${post.userId}`);
-            setAvatarAuthor(res.data.avatar);
-            setNameAuthor(res.data.username);
-            const resComment = await axios.get(`/comment/post/${post._id}`);
+            const resComment = await axios.get(`/comment/post/${post?._id}`);
+            console.log(resComment.data);
+            console.log("comment");
             setComments(resComment.data.sort((p1, p2) => {
                 return new Date(p2.createdAt) - new Date(p1.createdAt);
               }));
@@ -59,7 +64,7 @@ function Post({post}) {
         fetchAuthorPost();
         
         return(()=> fetchAuthorPost());
-    }, [post && post])
+    }, [post?._id, changeComment])
 
     // LIKE POST
     const handleLikePost = async () => {
@@ -112,20 +117,31 @@ function Post({post}) {
     // COMMENT POST
     const handleSubmitComment = async (e) => {
         e.preventDefault();
-        let dataComment = {
-            userId: user ? user._id : "",
+        // let dataComment = {
+        //     writerId: {
+        //        _id: user ? user._id : "",
+        //        avatar: user ? user.avatar : "",
+        //        username: user ? user.username : "",
+        //     },
+        //     likes: [],
+        //     postId: post ? post._id : "",
+        //     content: inputCommentRef.current.value,
+        //     createdAt: new Date().now,
+        // }
+        let dataComment_Post = {
+            writerId:  user ? user._id : "",             
             postId: post ? post._id : "",
             content: inputCommentRef.current.value,
         }
         
-        let newComments = [...comments];
-        newComments.unshift(dataComment);
-        const comment1 = [...newComments];
-        setComments(comment1); 
+        // let newComments = [...comments];
+        // newComments.unshift(dataComment);
+        // const comment1 = [...newComments];
+        // setComments(comment1);
         try{
-            await axios.post(`/comment/`, dataComment);
+            await axios.post(`/comment/`, dataComment_Post);
+            setChangeComment(!changeComment);
         }catch(err){}
-
         inputCommentRef.current.value = "";
         inputCommentRef.current.focus();
     }
@@ -147,23 +163,28 @@ function Post({post}) {
         setIsSaved(!isSaved);
     }
 
+    // DELETE POST
+    const handleDeletePost = async () => {
+        await axios.delete(`/posts/${post?._id}`);
+        window.location.reload();
+    }
 
     return (
         <div className="post">
             <div className="post-infoAuthor">
-                <Link to={`/profile/${post ? post.userId : ""}`} className="post-infoAuthor-avatar">
-                    <img src={avatarAuthor ? (avatarAuthor) : (PF + "noAvatar.png")} alt="Avatar" />
+                <Link to={`/profile/${post ? post.authorId._id : ""}`} className="post-infoAuthor-avatar">
+                    <img src={post?.authorId.avatar ? (post?.authorId.avatar) : (PF + "noAvatar.png")} alt="Avatar" />
                 </Link>
                 <div className="post-infoAuthor-nameAuthor">
-                    <Link to={`/profile/${post ? post.userId : ""}`} style={{ textDecoration: "none", color: "black" }}><b>{nameAuthor}</b></Link>
-                    <span title={post ? new Date(post.createdAt).toDateString() : ""} >{post ? format(post.createdAt) : ""}</span>
+                    <Link to={`/profile/${post ? post?.authorId._id : ""}`} style={{ textDecoration: "none", color: "black" }}><b>{post?.authorId.username}</b></Link>
+                    <span title={post ? new Date(post?.createdAt).toDateString() : ""} >{post ? format(post?.createdAt) : ""}</span>
                 </div>
                 <div className="post-infoAuthor-menu">
                     <i className="fas fa-ellipsis-h"></i>
                     <div className="post-infoAuthor-menu-content">
-                        {user._id === post.userId && <>
-                            <span><i className="fas fa-pen"></i> Chỉnh sửa</span>
-                            <span><i className="fas fa-trash"></i> Xóa bài viết</span>
+                        {user._id === post?.authorId._id && <>
+                            <span onClick={() => setIsOpenModalEditPost(true)} ><i className="fas fa-pen"></i> Chỉnh sửa</span>
+                            <span onClick={() => setIsDeletePost(true)} ><i className="fas fa-trash"></i> Xóa bài viết</span>
                         </>}
                         {!isSaved && <span onClick={handleSaveOrUnSavePost}><i className="fas fa-bookmark"></i> Lưu bài viết</span>}
                         {isSaved && <span onClick={handleSaveOrUnSavePost}><i className="far fa-bookmark"></i> Bỏ lưu bài viết</span>}
@@ -177,22 +198,26 @@ function Post({post}) {
                     <h2>{post ? post.title : ""}</h2>
                     <span>{post ? post.body : ""}</span>
                 </div>
-                <hr />
-                <div className="post-textContent-hashtag">
-                    { post &&
-                        post.hashtags.map((hashtag, index) => <Link to={`/postcondition?hashtag=${hashtag}`} key={index} href="">#{hashtag}</Link>)
-                    }         
-                </div>
+                {post?.hashtags?.length>=1 && 
+                    <>
+                        <hr />
+                        <div className="post-textContent-hashtag">
+                            { post &&
+                                post.hashtags.map((hashtag, index) => <Link to={`/postcondition?hashtag=${hashtag}`} key={index} href="">#{hashtag}</Link>)
+                            }         
+                        </div> 
+                    </>
+                }
             </div>
             
-            <div className="post-listImage">
+            {post?.images?.length > 0 && <div className="post-listImage">
                 <Slider {...settings} className="post-listImage-slide">
                     {post && post.images.map((image, index) => <div className="post-listImage-slide-item" key={index} onClick={()=> {setIsOpenModal(true); setImageModal(image)}}>
                                                             <img src={image} />
                                                        </div>)}
                     
                 </Slider>
-            </div>
+            </div>}
             
             <div className="post-like-dislike-comments">
                 <div className="post-common post-like" onClick={handleLikePost}>
@@ -225,6 +250,9 @@ function Post({post}) {
             </form>
             
             <div className="post-listComment">      
+                {
+                    console.log(comments)
+                }
                 {comments && comments.map( (comment, index) => (
                     <Comment key={index} comment={comment} />                  
                 ))}        
@@ -232,14 +260,39 @@ function Post({post}) {
             </div>
             
             {isOpenModal && <div className="post-modal">                                                    
+                                <div className="post-modal-content" onClick={()=> setIsOpenModal(false)}></div>
                                 <div className="post-modal-Image">
-                                    <img src={imageModal} />
+                                    <TransformWrapper style={{width: '100%', height: '100%'}}>
+                                        <TransformComponent style={{width: '100%', height: '100%'}}>
+                                            <img src={imageModal} />
+                                        </TransformComponent>
+                                    </TransformWrapper>
                                     <div className="post-modal-close" onClick={()=> setIsOpenModal(false)}>
-                                        <i className="far fa-times-circle"></i>
+                                        <i className="fas fa-times-circle"></i>
                                     </div>
                                 </div>      
                             </div>
                 }
+            {isOpenModalEditPost && <div className="post-modal-edit"> 
+                <div className="post-modal-edit-container">
+                    <div className="post-modal-edit-close" onClick={() => setIsOpenModalEditPost(false)}>
+                        <i className="fas fa-times" ></i>
+                    </div>
+                    <ModalEditPost post={post} />
+                </div>
+            </div>}
+            
+            {isDeletePost && <div className="post-modal-deletePost">
+                                <div className="post-modal-content" onClick={()=> setIsDeletePost(false)}></div>
+                                <div className="post-modal-deletePost-info">
+                                    <p>Bạn có muốn xóa bài viết này không?</p>
+                                    <div className="list-button">
+                                        <button onClick={handleDeletePost}>Xóa</button>
+                                        <button onClick={()=> setIsDeletePost(false)}>Không</button>
+                                    </div>
+                                </div>
+                            </div>
+            }
         </div>
     );
 }

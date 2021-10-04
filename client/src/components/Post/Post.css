@@ -65,6 +65,7 @@
     display: none;
     flex-direction: column;
     position: absolute;
+    z-index: 10;
     right: 10px;
     top: 25px;
     padding: 5px 5px;
@@ -122,6 +123,7 @@
 }
 .post-textContent-hashtag a{
     margin-left: 3px;
+    font-size: 14px;
     color: rgb(49, 91, 209);
     text-decoration: none;
 }
@@ -212,8 +214,8 @@
 
 .post-writeComment-avatar{
     
-    height: 40px;
-    width: 40px;
+    height: 35px;
+    width: 35px;
 }
 .post-writeComment-avatar img{
     height: 100%;
@@ -284,30 +286,123 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.post-modal-content{
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100vw;
+    height: 100vh;
 }
 .post-modal-Image{
     height: 80%;
     max-width: 90%;
     position: relative;
 }
+
 .post-modal-close{
     position: absolute;
     right: 0px;
-    top: -10px;
-    padding: 10px;
+    top: 0px;
     cursor: pointer;
 }
 .post-modal-close i{
     font-size: 30px;
     color: white;
+    transition: all 0.3s ease;
+}
+.post-modal-close i:hover{
+    color:rgb(180, 58, 58);
 }
 .post-modal-Image img{
     height: 100%;
-    max-width: 90%;
+    max-width: 100%;
     object-fit: cover;
     z-index: 10002;
+}
+.transform-component-module_wrapper__1_Fgj, .transform-component-module_content__2jYgh{
+    width: 100% !important;
+    height: 100% !important;
+}
+
+
+.post-modal-edit, .post-modal-deletePost{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+}
+.post-modal-edit-container{
+    position: relative;
+    width: 600px;
+    height: 700px;
+    background-color: white;
+    cursor: default;
+    border-radius: 10px;
+}
+.post-modal-edit-close{
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    padding: 5px 13px;
+    border-radius: 50%;
+    font-size: 24px;
+    color: rgb(255, 16, 16);
+    cursor: pointer;
+    background-color: rgb(241, 238, 238);
+}
+.post-modal-edit-close:hover{
+    background-color: rgb(199, 195, 195);
+}
+
+
+.post-modal-deletePost-info{
+    position: relative;
+    width: 400px;
+    height: 200px;
+    background-color: white;
+    cursor: default;
+    border-radius: 10px;
+}
+.post-modal-deletePost-info>p{
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+.list-button{
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.list-button button{
+    padding: 15px 40px;
+    font-size: 20px;
+    cursor: pointer;
+    outline: none;
+    border: 2px solid #000;
+    border-radius: 30px;
+    transition: all 0.5s ease;
+    background-color: transparent;
+}
+/* .list-button button:first-child{
+    background-color: rgb(202, 44, 44);
+}
+.list-button button:last-child{
+    background-color: rgb(28, 145, 28);
+} */
+.list-button button:hover{
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgb(255, 255, 255);
 }

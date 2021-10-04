@@ -3,6 +3,8 @@ import "./CreatePost.css";
 import { Context } from 'context/Context';
 import axios from 'axios';
 import {storage} from '../../firebase';
+import Picker from 'emoji-picker-react';
+import { useRef } from 'react';
 
 function formatTime (date) {
     var hour = new Date(date).getHours(); 
@@ -19,14 +21,13 @@ function CreatePost() {
     const PF = "http://localhost:8800/images/";
     const { user} = useContext(Context);
     const [images, setImages] = useState([]);
-
+    const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [titlePost, setTitlePost] = useState("");
     const [bodyPost, setBodyPost] = useState("");
     const [hashtag, setHashtag] = useState("");
-
     const handleUploadImages = (e) => {
         let files = [...e.target.files];
-        let newImages = [];
+        let newImages = [...images];
         var date = Date.now();
         var date1 = formatTime(date);
         console.log(date1);
@@ -66,7 +67,7 @@ function CreatePost() {
         let arrayHashtag = "";
         arrayHashtag = hashtag.split(" ");
         let dataPost = {
-            userId: user._id,
+            authorId: user._id,
             title: titlePost,
             body: bodyPost,
         }
@@ -84,17 +85,22 @@ function CreatePost() {
                 // }
         if (images) {          
             dataPost.images = [...images];  
-            console.log(images);        
         }
         console.log(dataPost);
         try{
             await axios.post("/posts", dataPost);
-            window.location.replace(`/`);
+            window.location.reload();
         } catch(error){
         }
 
     }
 
+    // CLICK CHOOSE EMOJI
+    const onEmojiClick = (event, data) => {
+        let s = bodyPost;
+        s += data.emoji;
+        setBodyPost(s);
+    }
 
     return (
         <div className="createPost">
@@ -138,7 +144,13 @@ function CreatePost() {
                             </div>
                         </div>
                         <div className="createPost-content-body">
-                            <textarea type="text" placeholder="Nội dung bài viết" onChange={e => setBodyPost(e.target.value)} ></textarea>
+                            <textarea 
+                                type="text" placeholder="Nội dung bài viết" 
+                                value={bodyPost ? bodyPost : ""}
+                                onChange={e => setBodyPost(e.target.value)} 
+                                onFocus={()=> setIsOpenEmoji(false)}
+                            >                         
+                            </textarea>
                         </div>
                         <div className="createPost-content-imageVideo-camera-emoji">
                             <label htmlFor="chooseFile" className="createPost-content-imageVideo createPost-content-item1">
@@ -146,9 +158,15 @@ function CreatePost() {
                                 <span>Ảnh/Video</span>
                                 <input type="file" id="chooseFile" name="chooseImagePost" onChange={handleUploadImages} style={{display: "none"}} multiple accept="image/*,video/*"/>
                             </label>
-                            <div className="createPost-content-emoji createPost-content-item1">
-                                <i className="fas fa-grin-alt"></i>
-                                <span>Cảm xúc</span>
+                            <div className="createPost-content-emoji createPost-content-item1" >
+                                <div style={{display: "flex", alignItems: "center"}}onClick={()=> setIsOpenEmoji(!isOpenEmoji)}>
+                                    <i className="fas fa-grin-alt"></i>
+                                    <span>Cảm xúc</span>
+                                </div>
+                                {isOpenEmoji && <div className="createPost-content-emoji-picker">
+                                    <Picker onEmojiClick={onEmojiClick} />
+                                </div>}
+
                             </div>
                             <div className="createPost-content-camera createPost-content-item1">
                                 <i className="fas fa-camera"></i>
@@ -159,7 +177,7 @@ function CreatePost() {
                             {images && images.map((image, index) =>  
                                 {return <div key={index} className="createPost-content-containerImage-imageIcon">
                                             <img src={image} />
-                                            <i className="far fa-times-circle" onClick={() => handleRemoveImageItem(index)}></i>
+                                            <i className="fas fa-times-circle" onClick={() => handleRemoveImageItem(index)}></i>
                                         </div>
                                 }
                             )}

@@ -378,3 +378,51 @@
 }
 
 
+/* CSS post modal */
+.post-modal{
+    position: fixed;
+    z-index: 10001;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.post-modal-content{
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100vw;
+    height: 100vh;
+}
+.post-modal-Image{
+    height: 80%;
+    max-width: 90%;
+    position: relative;
+}
+
+.post-modal-close{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    cursor: pointer;
+}
+.post-modal-close i{
+    font-size: 30px;
+    color: white;
+    transition: all 0.3s ease;
+}
+.post-modal-close i:hover{
+    color:rgb(180, 58, 58);
+}
+.post-modal-Image img{
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    z-index: 10002;
+}
+.transform-component-module_wrapper__1_Fgj, .transform-component-module_content__2jYgh{
+    width: 100% !important;
+    height: 100% !important;
+}

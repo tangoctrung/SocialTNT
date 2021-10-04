@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-
-const ReplyCommentsSchema = new mongoose.Schema({
+const ReplyCommentsSchema = new Schema({
     userId: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
+        // type: String,
         required: true,
     },
     commentId: {
+        // type: mongoose.Types.ObjectId,
+        // ref: 'Comment',
         type: String,
         required: true,
     },

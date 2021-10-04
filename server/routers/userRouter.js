@@ -26,8 +26,7 @@ router.get("/profile/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const user = await User.findById(id);
-    const { password, ...other } = user._doc;
-    res.status(200).json(other);
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -195,7 +194,7 @@ router.get("/savepost/:userId", async (req, res) => {
     const user = await User.findById(req.params.userId);
     const posts = await Promise.all(
       user.postSaved.map((postId) => {
-        return Post.findById(postId);
+        return Post.findById(postId).populate('authorId', ['username', 'avatar']);
       })
     );
     res.status(200).json(posts);

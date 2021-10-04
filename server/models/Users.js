@@ -61,10 +61,12 @@ const UserSchema = new mongoose.Schema({
     follower: {
         type: Array,
         required: false,
+        default: [],
     },
     following: {
         type: Array,
         required: false,
+        default: [],
     },
     gender: {
         type: String,

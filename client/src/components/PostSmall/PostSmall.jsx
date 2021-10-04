@@ -19,10 +19,10 @@ function PostSmall({post}) {
         fetchComment();
     })
     return (
-        <Link to={ post ? `/post/${post._id}?userId=${post.userId}` : ""} className="PostSmall">
-            <div className="PostSmall-img">
-                <img src={post ? (post.images[0]) : ""} alt="Image" />
-            </div>
+        <Link to={ post ? `/post/${post._id}?userId=${post.authorId._id}` : ""} className="PostSmall">
+            {post.images.length > 0 ? <div className="PostSmall-img">
+                <img src={post ? (post.images[0]) : ""}/>
+            </div> : <p>Không có hình ảnh</p>}
             <div className="PostSmall-container">
                 <span>{ post ? format(post.createdAt) : ""}</span>
                 <div className="PostSmall-countImg">
