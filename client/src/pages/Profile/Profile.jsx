@@ -38,6 +38,7 @@ function Profile() {
     const [chat, setChat] = useState();
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [imageModal, setImageModal] = useState();
+
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`/users/profile/${paramID}`);
@@ -72,13 +73,9 @@ function Profile() {
         fetchPost();
     }, [paramID])
     
-    useEffect(() => {
-        const fetchChat = async () => {
-            const res = await axios.get(`/conversations/find/${user?._id}/${paramID}`);
-            setChat(res.data);
-        }
-        fetchChat();
-    }, [paramID, user]);
+    // useEffect(() => {
+        
+    // }, [paramID, user]);
 
     const handleSubmitUpdateUser = async (e) => {
         e.preventDefault();
@@ -151,8 +148,11 @@ function Profile() {
     }
 
     const handleClickChat = () => {
-        
-
+        const fetchChat = async () => {
+            const res = await axios.get(`/conversations/find/${user?._id}/${paramID}`);
+            setChat(res.data);
+        }
+        fetchChat();
     }
 
     return (
@@ -173,7 +173,7 @@ function Profile() {
                                                         </div>
                                                         
                                                         <div  className="profile-content-Chat" onClick={handleClickChat}>
-                                                            <Link to={`/chat/${chat?._id}`} style={{textDecoration: "none", color: "rgb(190, 69, 69)"}} >
+                                                            <Link to={`/chat`} style={{textDecoration: "none", color: "rgb(190, 69, 69)"}} >
                                                                 <i className="fab fa-facebook-messenger"></i>
                                                                 <span>Nhắn tin</span>
                                                             </Link>

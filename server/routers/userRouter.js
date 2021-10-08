@@ -101,6 +101,28 @@ router.get("/profile/followings/:userId", async (req, res) => {
   }
 });
 
+// LẤY TẤT CẢ USER MÀ NGƯỜI DÙNG CHƯA FOLLOW
+router.get("/nofollowings/:userId/", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const allUsers = await User.find();
+    const friends = [];
+    allUsers.forEach((u) => {
+        if(!user.following.includes(u._id)) {
+          friends.push({userId: u._id, username: u.username, avatar: u.avatar});
+        } 
+      })
+
+    // let friendList = [];
+    // friends.map((friend) => {
+    //   const { _id, username, avatar } = friend;
+    //   friendList.push({ _id, username, avatar });
+    // });
+    res.status(200).json(friends);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 //FOLLOW A USER
 

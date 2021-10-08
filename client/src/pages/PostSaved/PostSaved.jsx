@@ -2,7 +2,7 @@ import axios from 'axios';
 import Leftbar from 'components/Leftbar/Leftbar';
 import Post from 'components/Post/Post';
 import { Context } from 'context/Context';
-import PostSaveSmall from 'PostSaveSmall/PostSaveSmall';
+import PostSaveSmall from 'components/PostSaveSmall/PostSaveSmall';
 import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';

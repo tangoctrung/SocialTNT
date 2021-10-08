@@ -37,7 +37,6 @@ const PostSchema = new Schema({
         ref: 'User',
         required: true,
     },
-    // comments: [{ type: mongoose.Types.ObjectId, ref: 'Comments' }],
 
 }, {timestamps: true})
 

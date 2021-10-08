@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700&family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400&display=swap');
 .post{
     width: 100%;
     background-color: rgb(255, 255, 255);
@@ -8,7 +8,7 @@
     margin-bottom: 10px;
     -webkit-box-shadow: 0px 0px 3px 0px #000000af; 
     box-shadow: 0px 0px 3px 0px #000000b0;
-    font-family: 'Noto Sans SC', sans-serif;
+    font-family: 'Nunito', sans-serif;
     padding: 10px;
 }
 
@@ -112,11 +112,12 @@
     background-color: rgb(192, 190, 190);
 }
 .post-textContent-body h2{
-    font-size: 18px;
+    font-size: 20px;
 }
 .post-textContent-body span{
-    font-size: 14px;
-    font-weight: 300;
+    font-size: 15px;
+    font-weight: 400;
+    white-space: pre-line;
 }
 .post-textContent-hashtag{
     margin-top: 10px;
@@ -368,7 +369,7 @@
 .post-modal-deletePost-info{
     position: relative;
     width: 400px;
-    height: 200px;
+    height: 150px;
     background-color: white;
     cursor: default;
     border-radius: 10px;
@@ -381,13 +382,13 @@
     font-weight: bold;
 }
 .list-button{
-    margin-top: 50px;
+    margin-top: 40px;
     width: 100%;
     display: flex;
     justify-content: space-around;
 }
 .list-button button{
-    padding: 15px 40px;
+    padding: 10px 30px;
     font-size: 20px;
     cursor: pointer;
     outline: none;

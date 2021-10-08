@@ -136,19 +136,22 @@ function ChatMessage({messages, currentChat, setMessages}) {
                     <input type="file" id="chooseFileToSend" style={{display: "none"}} multiple />
                 </div>
                 <form className="chat-center-3-input" onSubmit={handleSubmitFormSendMessage}>
-                    <input type="text" 
+                    <textarea type="text" 
                         ref={inputChatRef} 
                         placeholder="Nhập tin nhắn muốn gửi" 
                         onChange={(e)=> setNewMessage(e.target.value)} 
                         value={newMessage} 
                         onFocus={()=> setIsOpenEmoji(false)} 
-                    />
+                    ></textarea>
                 </form>
                 <div className="chat-center-3-emoji chat-center-3-itemIcon">
                     <><i className="fas fa-smile" data-tip="Gửi biểu tượng cảm xúc" onClick={()=> setIsOpenEmoji(!isOpenEmoji)}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                     {isOpenEmoji && <div className="chat-center-3-picker">
                         <EmojiPicker onEmojiClick={onEmojiClick} />
                     </div>}
+                </div>
+                <div className="chat-center-3-emoji chat-center-3-itemIcon">
+                    <><i className="fas fa-paper-plane" data-tip="Nhấn để gửi tin nhắn" onClick={handleSubmitFormSendMessage}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>                   
                 </div>
             </div>
         </div>

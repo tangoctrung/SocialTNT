@@ -7,16 +7,12 @@ import axios from 'axios';
 import { format } from 'timeago.js';
 
 
-function Conversation({conversation, currentUser, infoMessageLast, setInfoMessageLast}) {
+function Conversation({conversation, currentUser}) {
     const [friend, setFriend] = useState(null);
     const PF = "http://localhost:8800/images/";
 
 
     useEffect(() => {
-        setInfoMessageLast({
-            messageLast: conversation?.messageLast,
-            senderId: conversation?.senderId
-        })
         const friendId = conversation.members.find((m) => m !== currentUser?._id);
         const getUser = async () => {
         try {

@@ -15,7 +15,7 @@
 .chat-center-2-itemMessage-sender-infoMessage i{
     padding: 7px;
     cursor: pointer;
-    color:rgb(107, 107, 107);
+    color:rgb(194, 193, 193);
 }
 .chat-center-2-itemMessage-sender-text p{
     /* width: 100%; */
@@ -24,6 +24,7 @@
     padding: 10px;
     border-radius: 8px;
     background-color: rgb(68, 157, 199);
+    white-space: pre-line;
     color:#fff;
 }
 .chat-center-2-itemMessage-sender-text span{

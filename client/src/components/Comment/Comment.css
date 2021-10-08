@@ -11,6 +11,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    width: 100%;
 }
 .post-itemComment-avatar{
     width: 40px;
@@ -34,11 +35,11 @@
     max-width: 100%; 
     min-width: 180px;
     padding: 0px 15px 5px;
-    background-color: rgb(235, 230, 230);
+    background-color: rgb(218, 216, 216);
     border-radius: 10px;
 }
 .post-itemComment-body-top b{
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
 }
 .post-itemComment-body-top b:hover{
@@ -47,8 +48,9 @@
 .post-itemComment-body-top span{
     width: 100%;
     font-size: 14px;
-    font-weight: 300;
-    color: rgb(61, 61, 61);
+    font-weight: 400;
+    color: rgb(36, 36, 36);
+    white-space: pre-line;
 }
 .post-itemComment-body-bottom{
     max-width: 100%;
@@ -182,4 +184,49 @@
     z-index: 10000000;
 }
 
+/* EDIT COMMENT */
+.form-EditComment{
+    width: 100%;
+    height: 30px;
+    display:  flex;
+    align-items: center;
+}
+.form-EditComment textarea{
+    resize: none;
+    outline: none;
+    width: 80%;
+}
+.form-EditComment button{
+    padding: 5px;
+    outline: none;
+    border: none;
+    border-radius:3px;
+    cursor: pointer;
+    margin-left: 5px;
+    color:rgb(63, 62, 62);
+    background-color: rgb(90, 199, 162);
+    color: white;
+}
 
+/* delete comment */
+.commentDelete{
+    margin-bottom: 10px;
+    display:  flex;
+    align-items: center;
+}
+
+.commentDelete img{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.commentDelete span{
+    display: inline-block;
+    background-color: rgb(248, 245, 245);
+    font-size: 14px;
+    border-radius:20px;
+    padding: 4px 10px;
+    color:rgb(187, 184, 184);
+}

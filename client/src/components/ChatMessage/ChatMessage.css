@@ -107,9 +107,12 @@
 .chat-center-3-input {
     width: 90%;
 }
-.chat-center-3-input input{
+.chat-center-3-input textarea{
     width: 100%;
+    resize: none;
     padding: 10px 20px;
+    height: 40px;
+    max-height: 70px;
     border-radius: 30px;
     border: none;
     outline: none;

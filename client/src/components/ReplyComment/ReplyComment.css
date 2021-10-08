@@ -40,8 +40,9 @@
 .post-listReplyComment-body-top span{
     width: 100%;
     font-size: 14px;
-    font-weight: 300;
-    color: rgb(61, 61, 61);
+    font-weight: 400;
+    color: rgb(43, 42, 42);
+    white-space: pre-line;
 }
 .post-listReplyComment-body-bottom{
     max-width: 100%;
@@ -90,6 +91,7 @@
     flex-direction: column;
     position: absolute;
     width: 90px;
+    padding: 5px 5px;
     top: 0px;
     right: -70px;
     z-index: 10;
@@ -113,4 +115,17 @@
 }
 .post-listReplyComment-menu-content span:hover{
     background-color: rgb(217, 221, 224);
+}
+
+
+/* delete replycomment */
+
+.replyCommentDelete{
+    margin-left: 50px;
+    margin-bottom: 10px;
+    display: inline-block;
+    font-size: 14px;
+    border-radius:20px;
+    padding: 4px 20px;
+    color:rgb(187, 184, 184);
 }

@@ -21,3 +21,29 @@ content-type: application/json
     "postId": "6157ab694510f40ac805fbe9",
     "content": "xinh" 
 }
+
+###
+
+PUT http://localhost:8800/api/comment/615bfba7006f7c45c0253e6d/delete HTTP/1.1
+
+{
+    "content": "d!e!l!e!t!e",
+}
+
+###
+GET http://localhost:8800/api/users/nofollowings/6140a06b3fee095588756d69 HTTP/1.1
+
+
+###
+POST http://localhost:8800/api/conversationsgroup/ HTTP/1.1
+content-type: application/json
+
+{
+    "members": [
+        "6140a06b3fee095588756d69",
+        "6140a0d63fee095588756d6b",
+    ],
+}
+
+###
+GET http://localhost:8800/api/conversationsgroup/6140a06b3fee095588756d69 HTTP/1.1

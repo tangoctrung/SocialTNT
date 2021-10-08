@@ -24,7 +24,8 @@
     overflow-wrap: break-word;
     padding: 10px;
     border-radius: 8px;
-    background-color: rgb(202, 198, 198);
+    background-color: rgb(230, 230, 230);
+    white-space: pre-line;
 }
 .chat-center-2-itemMessage-text span{
     font-size:12px;
@@ -32,7 +33,7 @@
 .chat-center-2-itemMessage-infoMessage{
     width: 50px;
     display: none;
-    color:rgb(107, 107, 107);
+    color:rgb(151, 150, 150);
 }
 .chat-center-2-itemMessage:hover .chat-center-2-itemMessage-infoMessage{
     display: flex;
@@ -40,4 +41,5 @@
 .chat-center-2-itemMessage-infoMessage i{
     padding: 7px;
     cursor: pointer;
+    color:rgb(194, 193, 193);
 }

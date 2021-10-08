@@ -18,15 +18,6 @@ router.post("/", async (req, res) => {
 // GET ALL COMMENT OF POST
 
 router.get("/post/:id", async (req, res) => {
-  // const commentId = req.params.id;
-  //   try {
-  //       const replyComments = await ReplyComment.find({commentId: commentId}).populate('userId', [
-  //           'username', 'avatar'
-  //       ]);
-  //       res.status(200).json(replyComments);
-  //   } catch (err) {
-  //       res.status(500).json(err);
-  //   }
   const postId = req.params.id;
   try {
     const comments = await Comment.find({postId: postId}).populate('writerId', ['username', 'avatar']);
@@ -50,7 +41,29 @@ router.put("/likecomment", async (req, res) => {
     } catch (err) {
       res.status(500).json(err);
     }
-  });
+});
+
+// UPDATE COMMENT
+router.put("/:id", async (req, res) => {
+  try {
+    const comment = await Comment.findById(req.params.id);  
+      await comment.updateOne({ $set: req.body });
+      res.status(200).json("the comment has been updated");  
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// DELETE COMMENT
+router.put("/:id/delete", async (req, res) => {
+  try {
+    const comment = await Comment.findById(req.params.id);  
+    await comment.updateOne({ $set: req.body });
+    res.status(200).json("the comment has been deleted");  
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 
 module.exports = router;

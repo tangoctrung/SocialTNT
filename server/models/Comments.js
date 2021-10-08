@@ -24,6 +24,10 @@ const CommentsSchema = new Schema({
         type: Array,
         default: [],
     },
+    isDelete: {
+        type: Boolean,
+        default: false,
+    }
 
 }, {timestamps: true})
 

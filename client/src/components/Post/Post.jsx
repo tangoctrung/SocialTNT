@@ -28,7 +28,7 @@ function Post({post}) {
     const [isOpenModalEditPost, setIsOpenModalEditPost] = useState(false);
     const [isDeletePost, setIsDeletePost] = useState(false);
     const PF = "http://localhost:8800/images/";
-    const { user, dispatch } = useContext(Context);
+    const { user, dispatch, socket } = useContext(Context);
     const inputCommentRef = useRef();
     const settings = {
         dots: true,
@@ -38,6 +38,46 @@ function Post({post}) {
         slidesToScroll: 1,
         autoplay: true,
     };
+
+    useEffect(() => {
+        socket?.on('createCommentToClient', (newComment) => {
+            if (newComment.writerId?._id !== user?.id) {
+                let comment = [...comments, newComment];
+                setComments(comment);
+            }
+        })
+    }, [comments]);
+    useEffect(() => {
+        socket?.on("likePostToClient", ({likes, dislikes, postId}) => {
+            if (postId === post?._id) {
+                setTotalLike(likes);
+                setTotalDislike(dislikes);          
+            }
+        })
+        socket?.on("cancleLikePostToClient", ({postId}) => {      
+            if (postId === post?._id) {
+                let likes = totalLike;
+                likes = likes - 1;
+                setTotalLike(likes);
+            }   
+        })
+    }, [totalLike]);
+    useEffect(() => {
+        socket?.on("disLikePostToClient", ({likes, dislikes, postId}) => {
+            if (postId === post?._id) {
+                setTotalDislike(dislikes);           
+                setTotalLike(likes);
+            }
+            
+        })
+        socket?.on("cancleDislikePostToClient", ({postId}) => {   
+            if (postId === post?._id) {
+                let disLikes = totalDislike;
+                disLikes = disLikes - 1;
+                setTotalDislike(disLikes);
+            }        
+        })
+    }, [totalDislike]);
 
     useEffect(() => {
         const setLike = () => {
@@ -54,12 +94,8 @@ function Post({post}) {
 
     useEffect(() => {
         const fetchAuthorPost = async () => {
-            const resComment = await axios.get(`/comment/post/${post?._id}`);
-            console.log(resComment.data);
-            console.log("comment");
-            setComments(resComment.data.sort((p1, p2) => {
-                return new Date(p2.createdAt) - new Date(p1.createdAt);
-              }));
+            const resComment = await axios.get(`/comment/post/${post?._id}`);           
+            setComments(resComment.data);
         }
         fetchAuthorPost();
         
@@ -70,21 +106,35 @@ function Post({post}) {
     const handleLikePost = async () => {
         if (isLiked) {
             setIsLiked(false);
-            let likes = totalLike - 1; setTotalLike(likes);      
+            let likes = totalLike - 1; setTotalLike(likes); 
+            socket?.emit('cancleLikePost', {postId: post?._id});    
+            
         } else {
             setIsLiked(true);
-            let likes = totalLike + 1; setTotalLike(likes);            
+            let likes = totalLike + 1; setTotalLike(likes);     
+                  
             if (isDisliked){
                 setIsDisliked(false);
                 let dislikes = totalDislike - 1; setTotalDislike(dislikes);
                 await axios.put(`/posts/post/${post ? post._id : ""}/dislike`, {
                     userId: user ? user._id : ""
                 });
+                socket?.emit('likePost', {
+                    likes: totalLike + 1,
+                    dislikes: totalDislike - 1,
+                    postId: post?._id,
+                }); 
+            } else {
+                socket?.emit('likePost', {
+                    likes: totalLike + 1,
+                    dislikes: totalDislike,
+                    postId: post?._id,
+                }); 
             }
-        }
+        }    
         await axios.put(`/posts/post/${post ? post._id : ""}/like`, {
             userId: user ? user._id : ""
-        });
+        });   
     }
 
     // DISLIKE POST
@@ -92,16 +142,28 @@ function Post({post}) {
         if (isDisliked) {
             setIsDisliked(false);
             let dislikes = totalDislike - 1; setTotalDislike(dislikes);
-            
+            socket?.emit('cancleDislikePost', {postId: post?._id});    
         } else {
             setIsDisliked(true);
             let dislikes = totalDislike + 1; setTotalDislike(dislikes);
+               
             if (isLiked) {
                 setIsLiked(false);
                 let likes = totalLike - 1; setTotalLike(likes);
                 await axios.put(`/posts/post/${post ? post._id : ""}/like`, {
                     userId: user ? user._id : ""
                 });
+                socket?.emit('disLikePost', {
+                    likes: totalLike - 1,
+                    dislikes: totalDislike + 1,
+                    postId: post?._id,
+                }); 
+            } else {
+                socket?.emit('disLikePost', {
+                    likes: totalLike,
+                    dislikes: totalDislike + 1,
+                    postId: post?._id,
+                }); 
             }
         }
         await axios.put(`/posts/post/${post ? post._id : ""}/dislike`, {
@@ -117,30 +179,24 @@ function Post({post}) {
     // COMMENT POST
     const handleSubmitComment = async (e) => {
         e.preventDefault();
-        // let dataComment = {
-        //     writerId: {
-        //        _id: user ? user._id : "",
-        //        avatar: user ? user.avatar : "",
-        //        username: user ? user.username : "",
-        //     },
-        //     likes: [],
-        //     postId: post ? post._id : "",
-        //     content: inputCommentRef.current.value,
-        //     createdAt: new Date().now,
-        // }
         let dataComment_Post = {
             writerId:  user ? user._id : "",             
             postId: post ? post._id : "",
             content: inputCommentRef.current.value,
         }
-        
-        // let newComments = [...comments];
-        // newComments.unshift(dataComment);
-        // const comment1 = [...newComments];
-        // setComments(comment1);
         try{
             await axios.post(`/comment/`, dataComment_Post);
             setChangeComment(!changeComment);
+            const newComment = {
+                writerId:  {
+                    _id: user?._id,
+                    username: user?.username,
+                    avatar: user?.avatar,
+                },             
+                postId: post?._id,
+                content: inputCommentRef.current.value,
+            }
+            socket?.emit('createComment', newComment);
         }catch(err){}
         inputCommentRef.current.value = "";
         inputCommentRef.current.focus();
@@ -198,7 +254,7 @@ function Post({post}) {
                     <h2>{post ? post.title : ""}</h2>
                     <span>{post ? post.body : ""}</span>
                 </div>
-                {post?.hashtags?.length>=1 && 
+                {post?.hashtags.length !== 0 && post?.hashtags[0] !== "" && 
                     <>
                         <hr />
                         <div className="post-textContent-hashtag">
@@ -250,10 +306,7 @@ function Post({post}) {
             </form>
             
             <div className="post-listComment">      
-                {
-                    console.log(comments)
-                }
-                {comments && comments.map( (comment, index) => (
+                {comments.length>0 && comments.map( (comment, index) => (
                     <Comment key={index} comment={comment} />                  
                 ))}        
               

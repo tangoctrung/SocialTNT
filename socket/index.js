@@ -34,6 +34,53 @@ io.on('connection', (socket) =>{
         });
     });
 
+    // khi người dùng likePost
+    socket.on("likePost", ({likes, dislikes, postId}) => {
+        users.forEach(user => {           
+            socket.to(user.socketId).emit("likePostToClient", {likes, dislikes, postId});          
+        })
+    });
+    // khi người dùng cancle LikePost
+    socket.on("cancleLikePost", ({postId}) => {
+        users.forEach(user => {
+            socket.to(user.socketId).emit("cancleLikePostToClient", {postId});
+        })
+    });
+
+     // khi người dùng dislikePost
+    socket.on("disLikePost", ({likes, dislikes, postId}) => {
+        users.forEach(user => {
+            socket.to(user.socketId).emit("disLikePostToClient", {likes, dislikes, postId});
+        })
+    });
+    // khi người dùng cancle DislikePost
+    socket.on("cancleDislikePost", ({postId}) => {
+        users.forEach(user => {
+            socket.to(user.socketId).emit("cancleDislikePostToClient", {postId});
+        })
+    });
+
+    // khi người dùng likeComment
+    socket.on("likeComment", ({commentId, likesComment}) => {
+        users.forEach(user => {
+            socket.to(user.socketId).emit("LikeCommentToClient", {commentId, likesComment});
+        })
+    });
+    // khi người dùng cancle likeComment
+    socket.on("cancleLikeComment", ({commentId, likesComment}) => {
+        users.forEach(user => {
+            socket.to(user.socketId).emit("cancleLikeCommentToClient", {commentId, likesComment});
+        })
+    });
+
+    // khi người dùng viết comment
+    socket.on("createComment", (newComment) => {
+        users.forEach(user => {
+                socket.to(user.socketId).emit("createCommentToClient", newComment);
+        })
+    });
+
+
     // khi người dùng ngắt kết nối
     socket.on("disconnect", () =>{
         console.log("a user disconnected");

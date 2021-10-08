@@ -216,3 +216,140 @@
     border-left: 1px solid rgba(143, 142, 142, 0.747);
 }
 
+/* CREATE GROUP */
+
+.chat-left-1-createGroup{
+    position: relative;
+}
+.createGroup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.createGroup-modal{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+.createGroup-content{
+    position: absolute;
+    z-index: 11;
+    width: 500px;
+    height: 700px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+.createGroup-avatar-name{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.createGroup-avatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid gray;
+    overflow: hidden;
+}
+.createGroup-avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+.createGroup-name{
+    margin-left: 40px;
+    width: 60%;
+}
+.createGroup-name input{
+    padding: 8px 10px 5px 10px;
+    width: 100%;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    border-bottom: 1.5px solid gray;
+}
+
+.createGroup-text{
+    margin-top: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.createGroup-listUser{
+    margin-top: 10px;
+    height: 480px;
+    width: 100%;
+    overflow-y: scroll;
+    padding: 5px 0px 5px 20px;
+}
+.createGroup-listUser::-webkit-scrollbar{
+    width: 8px;
+}
+.createGroup-listUser::-webkit-scrollbar-track{
+    border-radius: 10px;
+    background-color: aliceblue;
+}
+.createGroup-listUser::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: rgb(135, 135, 136);
+}
+.createGroup-itemUser{
+    display: flex;
+    align-items: center;
+    margin: 10px 0px;
+}
+.createGroup-itemUser-link{
+    display: flex;
+    align-items: center;
+    width: 80%;
+    text-decoration: none;
+    color: black;
+    margin-right: 40px;
+}
+.createGroup-itemUser img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+.createGroup-itemUser  p{
+    width: 75%;
+}
+.createGroup-itemUser input{
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.createGroup-button{
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+}
+.createGroup-button button{
+    padding: 8px 10px;
+    font-size: 18px;
+    border-radius: 10px;
+    outline: none;
+    border: 2px solid #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.createGroup-button button:hover{
+    background-color: rgba(0, 0, 0, 0.774);
+    border: 2px solid rgba(252, 252, 252, 0.774);
+    color: white;
+}

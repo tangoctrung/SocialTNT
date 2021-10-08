@@ -5,7 +5,7 @@ const Conversation = require("../models/Conversations");
 
 router.post("/", async (req, res) => {
     const newConversation = new Conversation({
-      members: [req.body.senderId, req.body.receiverId],
+      members: [...req.body.members],
     });
   
     try {
@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
     } catch (err) {
       res.status(500).json(err);
     }
-  });
+});
 
 
 // LẤY CUỘC TRÒ CHUYỆN CỦA 1 USER

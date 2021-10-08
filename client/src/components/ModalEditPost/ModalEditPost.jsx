@@ -1,5 +1,5 @@
 import React from 'react';
-import "./ModalEditPost.css";
+import "../CreatePost/CreatePost.css";
 import Picker from 'emoji-picker-react';
 import { useContext } from 'react';
 import { Context } from 'context/Context';
@@ -143,7 +143,8 @@ function ModalEditPost({post}) {
                         <span>Chụp ảnh</span>
                     </div>
                 </div>
-                <div className="createPost-content-containerImage">
+                <label htmlFor="filePost" title="Kéo ảnh bạn muốn đăng vào đây" className="createPost-content-containerImage" onDrop={()=> console.log("DragEnter")}>
+                    <input type="file" id="filePost"  onChange={handleUploadImages} multiple />
                     {images && images.map((image, index) =>  
                         {return <div key={index} className="createPost-content-containerImage-imageIcon">
                                     <img src={image} />
@@ -151,8 +152,8 @@ function ModalEditPost({post}) {
                                 </div>
                         }
                     )}
-            
-                </div>
+                   
+                </label>
                 <div className="createPost-content-hashtag-button">
                     <div className="createPost-content-hashtag">
                         <input type="text" value={hashtag} onChange={handleChangeHashtag} />

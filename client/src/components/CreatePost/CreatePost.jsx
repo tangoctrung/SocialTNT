@@ -57,15 +57,16 @@ function CreatePost() {
     }
 
     const handleChangeHashtag = (e) => {
-        setHashtag(e.target.value);
-        
+        setHashtag(e.target.value);       
     }
     const handleSubmitCreatePost = async (e) => {
         e.preventDefault();
         console.log(hashtag);
         console.log(hashtag.split(" "));
-        let arrayHashtag = "";
-        arrayHashtag = hashtag.split(" ");
+        let arrayHashtag = [];
+        if(hashtag !== "") {
+            arrayHashtag = hashtag.split(" ");
+        }
         let dataPost = {
             authorId: user._id,
             title: titlePost,
@@ -173,7 +174,8 @@ function CreatePost() {
                                 <span>Chụp ảnh</span>
                             </div>
                         </div>
-                        <div className="createPost-content-containerImage">
+                        <label htmlFor="filePost" title="Kéo ảnh bạn muốn đăng vào đây" className="createPost-content-containerImage" onDrop={()=> console.log("DragEnter")}>
+                            <input type="file" id="filePost"  onChange={handleUploadImages} multiple />
                             {images && images.map((image, index) =>  
                                 {return <div key={index} className="createPost-content-containerImage-imageIcon">
                                             <img src={image} />
@@ -182,7 +184,7 @@ function CreatePost() {
                                 }
                             )}
                    
-                        </div>
+                        </label>
                         <div className="createPost-content-hashtag-button">
                             <div className="createPost-content-hashtag">
                                 <input type="text" placeholder="Hashtag bài viết" onChange={handleChangeHashtag} />
