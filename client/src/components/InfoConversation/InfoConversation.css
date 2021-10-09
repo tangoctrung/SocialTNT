@@ -65,3 +65,22 @@
     border-radius: 10px;
     background-color: rgb(139, 134, 134);
 }
+
+/* css loading */
+.chat-right-2-loading {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+.spinner-2 {
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:8px solid;
+    border-color:lightblue;
+    border-right-color: orange;
+    animation:s2 1s infinite linear;
+}
+@keyframes s2 {to{transform: rotate(1turn)}}

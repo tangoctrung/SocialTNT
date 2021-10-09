@@ -9,10 +9,13 @@ import axios from 'axios';
 function AllUser() {
 
     const [listUser, setListUser] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
+        setIsLoading(true);
         const FetchAllUser = async () => {
             const res = await axios.get("/users/alluser");
             setListUser(res.data);
+            setIsLoading(false);
         }
         FetchAllUser();
     }, [])
@@ -27,7 +30,11 @@ function AllUser() {
                     <button type="submit">Tìm kiếm</button>
                 </div>
                 <div className="all-user-container-listUser">
-                    {listUser && listUser.map((user, index)=> <UserSmall key={index} data={user} />)}                   
+                    {listUser && !isLoading && listUser.map((user, index)=> <UserSmall key={index} data={user} />)} 
+                    {isLoading && <div className="all-user-container-listUser-loading">
+                        <div className="spinner-1"></div>
+                        <p>Đang tải người dùng...</p>
+                    </div>}                  
                 </div>
             </div>
         </div>

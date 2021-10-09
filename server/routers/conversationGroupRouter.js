@@ -5,7 +5,8 @@ const ConversationGroup = require("../models/ConversationGroup");
 
 router.post("/", async (req, res) => {
     const newConversation = new ConversationGroup({
-        membersGroup : [...req.body.membersGroup],
+        nameGroup: req.body.nameGroup,
+        membersGroup: [...req.body.membersGroup],
     });
     
     try {

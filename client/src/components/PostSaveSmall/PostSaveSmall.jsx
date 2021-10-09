@@ -5,7 +5,9 @@ function PostSaveSmall({post}) {
     return (
         <div className="PostSaveSmall">
             <div className="PostSaveSmall-img">
-                <img src={post?.images[0]} alt="image" />
+                {post?.images[0] ?
+                    <img src={post?.images[0]} alt="image" />
+                : <p>Không có hình ảnh</p>}
             </div>
             <div className="PostSaveSmall-contentInfo">
                 <div className="PostSaveSmall-content">

@@ -38,6 +38,15 @@
     background-color: rgb(48, 98, 131);
 }
 
+.spinner-1 {
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    border:10px solid;
+    border-color:#000 #0000;
+    animation:s1 1s infinite;
+}
+@keyframes s1 {to{transform: rotate(.5turn)}}
 .all-user-container-listUser{
     width: 100%;
     display: flex;
@@ -46,3 +55,15 @@
     padding: 20px 20px 20px 50px;
 }
 
+.all-user-container-listUser-loading{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+.all-user-container-listUser-loading p{
+    font-weight: bold;
+    color: gray;
+    margin-top: 10px;
+}

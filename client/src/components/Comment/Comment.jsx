@@ -11,7 +11,7 @@ import Picker from "emoji-picker-react";
 import { useRef } from "react";
 import ReplyComment from "components/ReplyComment/ReplyComment";
 
-function Comment({ comment }) {
+function Comment({ comment, authorId }) {
   const { user, socket } = useContext(Context);
   const [isOpenReplyComment, setIsOpenReplyComment] = useState(false);
   const [isOpenEmoji, setIsOpenEmoji] = useState(false);
@@ -28,7 +28,9 @@ function Comment({ comment }) {
   const [isEditComment, setIsEditComment] = useState(false);
   const [isDeleteComment, setIsDeleteComment] = useState(false);
   const [changeReplyComment, setChangeReplyComment] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  console.log(authorId);
   useEffect(() => {
     socket?.on('createCommentToClient', (newComment) => {
         if (newComment.userId?._id !== user?.id && newComment.commentId === comment?._id) {
@@ -52,9 +54,11 @@ function Comment({ comment }) {
   }, [totalLikeComment]);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchReplyComment = async () => {
       const resReplyComment = await axios.get(`/replycomment/comment/${comment?._id}`);
       setReplyComments(resReplyComment.data);
+      setIsLoading(false);
   }
   fetchReplyComment();
   }, [changeReplyComment]);
@@ -200,9 +204,14 @@ function Comment({ comment }) {
             <div className="post-itemComment-menu">
               <i className="fas fa-ellipsis-v"></i>
               <div className="post-itemComment-menu-content">
-                {comment.writerId?._id === user._id && (
+                {(comment.writerId?._id === user?._id) && (
+                  <>         
+                    <span onClick={() => setIsEditComment(true)}>Chỉnh sửa</span>         
+                    <span onClick={() => setIsDeleteComment(true)}>Xóa</span>
+                  </>
+                )}
+                {(comment.writerId?._id !== user?._id && authorId === user?._id) && (
                   <>
-                    <span onClick={() => setIsEditComment(true)}>Chỉnh sửa</span>
                     <span onClick={() => setIsDeleteComment(true)}>Xóa</span>
                   </>
                 )}
@@ -233,7 +242,7 @@ function Comment({ comment }) {
         }
 
         <div className="post-listReplyComment" ref={commentRef}>
-            {replyComments && replyComments.map((replyComment, index) => (
+            {replyComments && !isLoading && replyComments.map((replyComment, index) => (
               <div >
                 <ReplyComment
                   key={index}
@@ -241,10 +250,12 @@ function Comment({ comment }) {
                   isOpenReplyComment={isOpenReplyComment}
                   setIsOpenReplyComment={setIsOpenReplyComment}
                   handleClickReply = {handleClickReply}
+                  authorId={authorId}
                 />
 
               </div>
             ))}
+            {isLoading && <div className="post-listReplyComment-loading"> <div className="spinner-7"></div></div>} 
         </div>
 
         {isOpenReplyComment && (

@@ -1,12 +1,35 @@
-
-.PostList-fetching .spinner-3{
-    margin-right: 10px;
-    margin-top: 20px;
+.spinner-5 {
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:#514b82;
+    -webkit-mask:
+      repeating-conic-gradient(#0000 0deg,#000 1deg 70deg,#0000 71deg 90deg),
+      radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 calc(100% - 8px));
+    -webkit-mask-composite: destination-in;
+    mask-composite: intersect;
+    animation:s5 1s infinite ;
+}
+@keyframes s5 {to{transform: rotate(.5turn)}}
+    .spinner-6 {
     width:50px;
     height:50px;
     border-radius:50%;
-    background:conic-gradient(#0000 10%,#25b09b);
-    -webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
-    animation:s3 1s infinite linear;
+    padding:3px;
+    background: 
+        radial-gradient(farthest-side,#ffa516 95%,#0000) 50% 0/12px 12px no-repeat,
+        radial-gradient(farthest-side,#0000 calc(100% - 5px),#ffa516 calc(100% - 4px)) content-box;
+    animation:s6 2s infinite ;
 }
-@keyframes s3 {to{transform: rotate(1turn)}}
+
+.postlist-Loading{
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+.postlist-Loading p{
+    margin-top: 5px;
+    font-weight: bold;
+}

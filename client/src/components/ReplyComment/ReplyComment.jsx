@@ -14,6 +14,7 @@ function ReplyComment({
   isOpenReplyComment,
   setIsOpenReplyComment,
   handleClickReply,
+  authorId
 }) {
   const { user, socket } = useContext(Context);
   const [isLikeComment, setIsLikeComment] = useState(
@@ -128,12 +129,17 @@ function ReplyComment({
             <div className="post-listReplyComment-menu">
               <i className="fas fa-ellipsis-v"></i>
               <div className="post-listReplyComment-menu-content">
-                  {replyComment?.userId?._id === user._id && (
+                  {(replyComment?.userId?._id === user._id) && (
                     <>
                       <span onClick={() => setIsEditReplyComment(true)}>Chỉnh sửa</span>
                       <span onClick={() => setIsDeleteReplyComment(true)}>Xóa</span>
                     </>
-                  )}
+                  )}    
+                  {(replyComment?.userId?._id !== user._id && authorId === user._id) && (
+                    <>
+                      <span onClick={() => setIsDeleteReplyComment(true)}>Xóa</span>
+                    </>
+                  )}             
                 <span>Báo cáo</span>
               </div>
             </div>

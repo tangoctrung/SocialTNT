@@ -1,8 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import "./Chat.css";
-import avatar from "../../image/avatar.jpg";
-import avatar1 from "../../image/avatar1.jpg";
 import { useLocation } from "react-router";
 import { useEffect } from "react";
 import { Context } from "context/Context";
@@ -27,7 +25,11 @@ function Chat() {
   const [chatId, setChatId] = useState();
   const location = useLocation();
   const [isCreateGroup, setIsCreateGroup] = useState(false);
-  const [avatarGroup, setAvatarGroup] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingGroup, setIsLoadingGroup] = useState(false);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [listMembers, setListMembers] = useState([user?._id]);
+  const [nameGroup, setNameGroup] = useState("");
   const PF = "http://localhost:8800/images/";
 
   // Lấy thông tin các following
@@ -47,12 +49,14 @@ function Chat() {
     };
     fetchFollowings();
   }, []);
+
   // GET ALL CONVERSATIONS OF USER
   useEffect(() => {
+    setIsLoading(true);
     const FetchUser = async () => {
       const res = await axios.get(`/conversations/${user && user._id}`);
       setConversations(res.data);
-      console.log(res.data);
+      setIsLoading(false);
     };
     FetchUser();
   }, [user && user._id]);
@@ -69,26 +73,53 @@ function Chat() {
 
   // LẤY TIN NHẮN CỦA MỘT CUỘC TRÒ CHUYỆN
   useEffect(() => {
+    setIsLoadingMessages(true);
     const FetchMessage = async () => {
       try {
         const res = await axios.get(`/messages/${currentChat?._id}`);
         setMessages(res.data);
+        setIsLoadingMessages(false);
       } catch (e) {}
     };
     FetchMessage();
   }, [currentChat]);
 
-  // create group
-  const handleSubmitCreateGroup = async (e) => {
-    e.preventDefault();
-    setIsCreateGroup(false);
-  };
+  
  //  Chuyển sang list group
  const handleClickGroup = async (e) => {
     setIsOpenChatMember(false);
+    setIsLoadingGroup(true);
     const res = await axios.get(`/conversationsgroup/${user?._id}`);
     setGroupChats(res.data);
+    setIsLoadingGroup(false);
  }   
+
+  //  add member group
+  const handleCheckInputAddUser = (e) => {
+    if (e.target.checked) {
+      listMembers.push(e.target.name);
+      console.log(listMembers);
+    } else {
+      let list = [...listMembers];
+      let l = list.filter(member => member !== e.target.name);
+      setListMembers(l);
+    }
+  }
+
+  // create group
+  const handleSubmitCreateGroup = async (e) => {
+    e.preventDefault();
+    const dataGroup = {
+      membersGroup: [...listMembers],
+      nameGroup: nameGroup,
+    }
+    const res = await axios.post(`/conversationsgroup/`, dataGroup);
+    console.log(res.data);
+    window.location.reload();
+    // setIsCreateGroup(false);
+    setListMembers([user?._id]);
+  };
+
   return (
     <div className="chat">
       <div className="chat-left">
@@ -107,32 +138,13 @@ function Chat() {
                   className="createGroup-modal"
                   onClick={() => setIsCreateGroup(false)}
                 ></div>
-                <form
+                <form 
                   className="createGroup-content"
                   onSubmit={handleSubmitCreateGroup}
                 >
                   <div className="createGroup-avatar-name">
-                    <label
-                      htmlFor="chooseAvatarGroup"
-                      className="createGroup-avatar"
-                    >
-                      <img
-                        src={avatarGroup ? avatarGroup : PF + "noAvatar.png"}
-                        alt="image"
-                        data-tip="Click để chọn avatar cho group"
-                      />
-                      <ReactTooltip place="bottom" type="dark" effect="solid" />
-                      <input
-                        id="chooseAvatarGroup"
-                        type="file"
-                        style={{ display: "none" }}
-                        onChange={(e) =>
-                          setAvatarGroup(URL.createObjectURL(e.target.files[0]))
-                        }
-                      />
-                    </label>
                     <div className="createGroup-name">
-                      <input placeholder="Type name of Group..." />
+                      <input placeholder="Type name of Group..." onChange={(e)=> setNameGroup(e.target.value)} />
                     </div>
                   </div>
                   <div className="createGroup-text">
@@ -157,7 +169,7 @@ function Chat() {
                             />
                             <p>{following?.username}</p>
                           </Link>
-                          <input type="checkbox" />
+                          <input type="checkbox" name={following._id} onChange={handleCheckInputAddUser}/>
                         </div>
                       ))}
 
@@ -180,7 +192,7 @@ function Chat() {
                             />
                             <p>{following?.username}</p>
                           </Link>
-                          <input type="checkbox" />
+                          <input type="checkbox" name={following._id} onChange={handleCheckInputAddUser} />
                         </div>
                       ))}
                   </div>
@@ -215,7 +227,7 @@ function Chat() {
         <div className="chat-left-4">
           {isOpenChatMember && (
             <div className="chat-left-4-member">
-              {conversations &&
+              {conversations && !isLoading &&
                 conversations.map((conversation, index) => (
                   <div onClick={() => setCurrentChat(conversation)}>
                     <Conversation
@@ -225,22 +237,23 @@ function Chat() {
                     />
                   </div>
                 ))}
+                {isLoading && <div className="chat-left-4-member-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
             </div>
           )}
           {!isOpenChatMember && (
             <div className="chat-left-4-group">
-                {groupChats && groupChats.map((group) => (
+                {groupChats && !isLoadingGroup && groupChats.map((group) => (
                     <div className="chat-left-4-group-item">
                         <div className="chat-left-4-group-item-img">
-                            <img className="item-img-1" src={group?.membersGroup[0]?.avatar} alt="image" />
-                            <img className="item-img-2" src={group?.membersGroup[1]?.avatar} alt="image" />
+                            <img className="item-img-1" src={group?.membersGroup[1]?.avatar} alt="image" />
+                            <img className="item-img-2" src={group?.membersGroup[2]?.avatar} alt="image" />
                             <i className="fas fa-circle"></i>
                         </div>
                         <div className="chat-left-4-member-item-text">
                             <h3>{group?.nameGroup}</h3>
                             <p>
-                                <p style={{ display: "inline-block" }}>Smith:</p> what are
-                                you doing?<span> {format(group?.updatedAt)}</span>
+                                <p style={{ display: "inline-block" }}>Smith:</p> {group?.messageLastGroup}
+                                <span> {format(group?.updatedAt)}</span>
                             </p>
                         </div>
                         <div className="chat-left-4-member-item-noti">
@@ -248,6 +261,7 @@ function Chat() {
                         </div>
                     </div>
                 ))}
+                {isLoadingGroup && <div className="chat-left-4-member-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
             </div>
           )}
         </div>
@@ -259,6 +273,7 @@ function Chat() {
             messages={messages}
             currentChat={currentChat}
             setMessages={setMessages}
+            isLoadingMessages={isLoadingMessages}
           />
         ) : (
           <span className="chat-text">

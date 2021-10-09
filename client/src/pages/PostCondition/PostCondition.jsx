@@ -10,11 +10,14 @@ import "./PostCondition.css";
 function PostCondition() {
     const [posts, setPosts] = useState([]);
     const location = useLocation();
+    const [isLoading, setIsLoading] = useState(false);
     const hashtag = location.search.split("=")[1];
     useEffect(() => {
+        setIsLoading(true);
         const fetchPost = async () => {
             const res = await axios.get(`/posts?hashtag=${hashtag}`);
             setPosts(res.data);
+            setIsLoading(false);
         }
         fetchPost();
     }, [hashtag])
@@ -37,10 +40,11 @@ function PostCondition() {
                 </div>
             </div>
             <div className="postCondition-center">
-                {posts && posts.length > 0 && posts.map((post, index) => (
+                {!isLoading && posts.length > 0 && posts.map((post, index) => (
                     <Post post={post} post={post} key={index}/>
                 ))}
-                {posts.length === 0 && <span className="postCondition-center-text">Không tìm thấy bài viết nào</span>}
+                {posts.length === 0 && !isLoading &&  <span className="postCondition-center-text">Không tìm thấy bài viết nào</span>}
+                {isLoading && <div className="postCondition-center-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
             </div>
             <div className="postCondition-right">
                 

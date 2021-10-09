@@ -38,11 +38,14 @@ function Profile() {
     const [chat, setChat] = useState();
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [imageModal, setImageModal] = useState();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        setIsLoading(true);
         const fetchUser = async () => {
             const res = await axios.get(`/users/profile/${paramID}`);
             setDateUser(res.data);
+            setIsLoading(false);
         }
         fetchUser();
         const fetchDataFollowers = async()=>{
@@ -158,122 +161,126 @@ function Profile() {
     return (
         <div className="profile">
             <div className="profile-content">
-                <div className="profile-content-top">
-                    <img src={dataUser.cover ? (PF + dataUser.cover) : (PF + "cover.jpg")} alt="Image" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser.cover ? dataUser.cover : "")}}/>
-                    <div className="profile-content-avatar">
-                        <img src={dataUser.avatar ? (dataUser.avatar) : (PF + "noAvatar.png")} alt="avatar" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser.avatar ? dataUser.avatar : "")}}/>
-                        <h2>{dataUser.username}</h2>
-                        {dataUser.nickname && <p>{"(" + dataUser.nickname + ")"}</p>}           
-                    </div>
-                    {dataUser._id !== user._id && <div className="profile-content-requestFriend-Chat">
-
-                                                        <div className={isFollow ? "profile-content-requestFriend" : "profile-content-requestFriend isActiveRequestFriend"} onClick={handleFollow}>
-                                                            {isFollow ? "" : <i className="fas fa-plus"></i>}
-                                                            {isFollow ? "Đang theo dõi" : "Theo dõi"}
-                                                        </div>
-                                                        
-                                                        <div  className="profile-content-Chat" onClick={handleClickChat}>
-                                                            <Link to={`/chat`} style={{textDecoration: "none", color: "rgb(190, 69, 69)"}} >
-                                                                <i className="fab fa-facebook-messenger"></i>
-                                                                <span>Nhắn tin</span>
-                                                            </Link>
-                                                        </div>
-                                                  </div>
-                        }
-                    
-                </div>
-                <hr />
-                <div className="profile-content-bottom">
-                    <div className="profile-content-bottom-left">
-                        <div className="profile-content-infoUser">
-                            <div className="profile-content-title">
-                                <p>Thông tin người dùng</p>
-                                {dataUser._id === user._id && <><i className="far fa-edit" data-tip="Chỉnh sửa thông tin cá nhân" onClick={handleOpenModalEditUser}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>}                            
-                            </div>
-                            <div className="profile-content-infoUser-container">
-                                <span><i className="fas fa-birthday-cake"></i>Ngày sinh: {dataUser.date ? <b>{dataUser.date}</b> : <i>Chưa cập nhật</i>}</span> <br/>
-                                <span><i className="fas fa-user-md"></i>Công việc: {dataUser.job ? <b>{dataUser.job}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                <span><i className="fas fa-transgender"></i>Giới tính: {dataUser.gender ? <b>{dataUser.gender}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                <span><i className="fab fa-gratipay"></i>Trạng thái: {dataUser.status ? <b>{dataUser.status}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                <span><i class="fas fa-home-lg-alt"></i>Nơi ở: {dataUser.address ? <b>{dataUser.address}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                <span><i className="fas fa-map-marker-alt"></i>Quê quán: {dataUser.hometown ? <b>{dataUser.hometown}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                <span><i className="fas fa-info-circle"></i>Thông tin khác: {dataUser.infoOther ? <b>{dataUser.infoOther}</b> : <i>Chưa cập nhật</i>}</span>
-                            </div>
+                { !isLoading && <>
+                        <div className="profile-content-top">
+                        <img src={dataUser.cover ? (PF + dataUser.cover) : (PF + "cover.jpg")} alt="Image" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser.cover ? dataUser.cover : "")}}/>
+                        <div className="profile-content-avatar">
+                            <img src={dataUser.avatar ? (dataUser.avatar) : (PF + "noAvatar.png")} alt="avatar" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser.avatar ? dataUser.avatar : "")}}/>
+                            <h2>{dataUser.username}</h2>
+                            {dataUser.nickname && <p>{"(" + dataUser.nickname + ")"}</p>}           
                         </div>
-                        <div className="profile-content-listFriend">
-                            {/* <ListFollow followers={followers} followings={followings} /> */}
-                                <div className="profile-contennt-listFriend-title">
-                                    <p
-                                        className={isFollower ? "isActiveFollower" : ""}
-                                        onClick={() => setIsFollower(true)}
-                                        >
-                                        Người theo dõi <b>({followers.length})</b>
-                                    </p>
-                                    <p
-                                        className={!isFollower ? "isActiveFollower" : ""}
-                                        onClick={() => setIsFollower(false)}
-                                        >
-                                        Đang theo dõi <b>({followings.length})</b>
-                                    </p>
-                                </div>
-                                <div className="profile-contennt-listFriend-body">
-                                    {isFollower && (
-                                    <>
-                                        {followers.map( (follower) => (<Link to={`/profile/${follower._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
-                                                                            <img src={follower.avatar ? (follower.avatar) : (PF + "noAvatar.png")} />
-                                                                            <span>{follower.username}</span>
-                                                                    </Link>)
-                                        )}
-                                        
-                                    </>
-                                    )}
-                                    {!isFollower && (
-                                    <>
-                                        {followings.map( (following) => (<Link to={`/profile/${following._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
-                                                                            <img src={following.avatar ? (following.avatar) : (PF + "noAvatar.png")} />
-                                                                            <span>{following.username}</span>
-                                                                    </Link>)
-                                        )}
-                                    </>
-                                    )}
-                                </div>
-                            </div>
-                    </div>
-                    <div className="profile-content-bottom-right">
-                        {dataUser._id === user._id && <div className="profile-content-createPost">
-                                                            <CreatePost />
+                        {dataUser._id !== user._id && <div className="profile-content-requestFriend-Chat">
+    
+                                                            <div className={isFollow ? "profile-content-requestFriend" : "profile-content-requestFriend isActiveRequestFriend"} onClick={handleFollow}>
+                                                                {isFollow ? "" : <i className="fas fa-plus"></i>}
+                                                                {isFollow ? "Đang theo dõi" : "Theo dõi"}
+                                                            </div>
+                                                            
+                                                            <div  className="profile-content-Chat" onClick={handleClickChat}>
+                                                                <Link to={`/chat`} style={{textDecoration: "none", color: "rgb(190, 69, 69)"}} >
+                                                                    <i className="fab fa-facebook-messenger"></i>
+                                                                    <span>Nhắn tin</span>
+                                                                </Link>
+                                                            </div>
                                                       </div>
                             }
                         
-                        {/* chọn chế độ xem bài viết */}
-                        <div className="profile-content-bottom-typePostlist">
-                            <div className={isPostList ? "profile-content-typeList isActive" : "profile-content-typeList"} onClick={()=> setIsPostList(true)}>
-                                <i className="fas fa-bars"></i>
-                                <span>Xem theo danh sách</span>
-                            </div>
-                            <div className={!isPostList ? "profile-content-typeList isActive" : "profile-content-typeList"} onClick={()=> setIsPostList(false)}>
-                                <i className="fas fa-th-large"></i>
-                                <span>Xem theo lưới</span>
-                            </div>
-                        </div>
-                        {/* nếu không có bài viết */}
-                        {posts.length === 0 && <div className="profile-content-bottom-noPosts">
-                                                            <span>Chưa có bài viết nào :((</span>
-                                                    </div>} 
-                                            
-                        {/* nếu có bài viết */}
-
-                        {/* xem ở chế độ danh sách */}
-                        {isPostList && <div className="profile-content-bottom-Postlist">
-                                            {posts && posts.map((post, index) => <Post post={post} key={index}/> )}                                                                                       
-                                        </div>}
-                        {/* xem ở chế độ lưới */}
-                        {!isPostList && <div className="profile-content-bottom-PostGird">
-                                            {posts && posts.map((post, index) => <PostSmall post={post} key={index} />)}
-                                        </div>}
-                        
                     </div>
-                </div>
+                        <hr />
+                        <div className="profile-content-bottom">
+                        <div className="profile-content-bottom-left">
+                            <div className="profile-content-infoUser">
+                                <div className="profile-content-title">
+                                    <p>Thông tin người dùng</p>
+                                    {dataUser._id === user._id && <><i className="far fa-edit" data-tip="Chỉnh sửa thông tin cá nhân" onClick={handleOpenModalEditUser}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>}                            
+                                </div>
+                                <div className="profile-content-infoUser-container">
+                                    <span><i className="fas fa-birthday-cake"></i>Ngày sinh: {dataUser.date ? <b>{dataUser.date}</b> : <i>Chưa cập nhật</i>}</span> <br/>
+                                    <span><i className="fas fa-user-md"></i>Công việc: {dataUser.job ? <b>{dataUser.job}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                    <span><i className="fas fa-transgender"></i>Giới tính: {dataUser.gender ? <b>{dataUser.gender}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                    <span><i className="fab fa-gratipay"></i>Trạng thái: {dataUser.status ? <b>{dataUser.status}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                    <span><i class="fas fa-home-lg-alt"></i>Nơi ở: {dataUser.address ? <b>{dataUser.address}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                    <span><i className="fas fa-map-marker-alt"></i>Quê quán: {dataUser.hometown ? <b>{dataUser.hometown}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                    <span><i className="fas fa-info-circle"></i>Thông tin khác: {dataUser.infoOther ? <b>{dataUser.infoOther}</b> : <i>Chưa cập nhật</i>}</span>
+                                </div>
+                            </div>
+                            <div className="profile-content-listFriend">
+                                {/* <ListFollow followers={followers} followings={followings} /> */}
+                                    <div className="profile-contennt-listFriend-title">
+                                        <p
+                                            className={isFollower ? "isActiveFollower" : ""}
+                                            onClick={() => setIsFollower(true)}
+                                            >
+                                            Người theo dõi <b>({followers.length})</b>
+                                        </p>
+                                        <p
+                                            className={!isFollower ? "isActiveFollower" : ""}
+                                            onClick={() => setIsFollower(false)}
+                                            >
+                                            Đang theo dõi <b>({followings.length})</b>
+                                        </p>
+                                    </div>
+                                    <div className="profile-contennt-listFriend-body">
+                                        {isFollower && (
+                                        <>
+                                            {followers.map( (follower) => (<Link to={`/profile/${follower._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
+                                                                                <img src={follower.avatar ? (follower.avatar) : (PF + "noAvatar.png")} />
+                                                                                <span>{follower.username}</span>
+                                                                        </Link>)
+                                            )}
+                                            
+                                        </>
+                                        )}
+                                        {!isFollower && (
+                                        <>
+                                            {followings.map( (following) => (<Link to={`/profile/${following._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
+                                                                                <img src={following.avatar ? (following.avatar) : (PF + "noAvatar.png")} />
+                                                                                <span>{following.username}</span>
+                                                                        </Link>)
+                                            )}
+                                        </>
+                                        )}
+                                    </div>
+                                </div>
+                        </div>
+                        <div className="profile-content-bottom-right">
+                            {dataUser._id === user._id && <div className="profile-content-createPost">
+                                                                <CreatePost />
+                                                          </div>
+                                }
+                            
+                            {/* chọn chế độ xem bài viết */}
+                            <div className="profile-content-bottom-typePostlist">
+                                <div className={isPostList ? "profile-content-typeList isActive" : "profile-content-typeList"} onClick={()=> setIsPostList(true)}>
+                                    <i className="fas fa-bars"></i>
+                                    <span>Xem theo danh sách</span>
+                                </div>
+                                <div className={!isPostList ? "profile-content-typeList isActive" : "profile-content-typeList"} onClick={()=> setIsPostList(false)}>
+                                    <i className="fas fa-th-large"></i>
+                                    <span>Xem theo lưới</span>
+                                </div>
+                            </div>
+                            {/* nếu không có bài viết */}
+                            {posts.length === 0 && <div className="profile-content-bottom-noPosts">
+                                                                <span>Chưa có bài viết nào :((</span>
+                                                        </div>} 
+                                                
+                            {/* nếu có bài viết */}
+    
+                            {/* xem ở chế độ danh sách */}
+                            {isPostList && <div className="profile-content-bottom-Postlist">
+                                                {posts && posts.map((post, index) => <Post post={post} key={index}/> )}                                                                                       
+                                            </div>}
+                            {/* xem ở chế độ lưới */}
+                            {!isPostList && <div className="profile-content-bottom-PostGird">
+                                                {posts && posts.map((post, index) => <PostSmall post={post} key={index} />)}
+                                            </div>}
+                            
+                        </div>
+                    </div>
+                    </>
+                }
+                {isLoading && <div className="profile-content-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
             </div>
 
             {isOpenModal && <div className="post-modal">                                                    

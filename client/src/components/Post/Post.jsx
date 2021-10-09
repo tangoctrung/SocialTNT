@@ -30,6 +30,7 @@ function Post({post}) {
     const PF = "http://localhost:8800/images/";
     const { user, dispatch, socket } = useContext(Context);
     const inputCommentRef = useRef();
+    const [isLoading, setIsLoading] = useState(false);
     const settings = {
         dots: true,
         infinite: true,
@@ -47,6 +48,7 @@ function Post({post}) {
             }
         })
     }, [comments]);
+    
     useEffect(() => {
         socket?.on("likePostToClient", ({likes, dislikes, postId}) => {
             if (postId === post?._id) {
@@ -62,6 +64,7 @@ function Post({post}) {
             }   
         })
     }, [totalLike]);
+   
     useEffect(() => {
         socket?.on("disLikePostToClient", ({likes, dislikes, postId}) => {
             if (postId === post?._id) {
@@ -93,9 +96,11 @@ function Post({post}) {
     }, [user._id, post?.likes, post?.dislikes]);
 
     useEffect(() => {
+        setIsLoading(true);
         const fetchAuthorPost = async () => {
             const resComment = await axios.get(`/comment/post/${post?._id}`);           
             setComments(resComment.data);
+            setIsLoading(false);
         }
         fetchAuthorPost();
         
@@ -306,9 +311,10 @@ function Post({post}) {
             </form>
             
             <div className="post-listComment">      
-                {comments.length>0 && comments.map( (comment, index) => (
-                    <Comment key={index} comment={comment} />                  
-                ))}        
+                {comments.length>0 && !isLoading && comments.map( (comment, index) => (
+                    <Comment key={index} comment={comment} authorId={post?.authorId?._id} />                  
+                ))}    
+                {isLoading && <div className="post-listComment-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}    
               
             </div>
             
