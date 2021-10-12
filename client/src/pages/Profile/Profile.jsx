@@ -39,6 +39,8 @@ function Profile() {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [imageModal, setImageModal] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    let userLoginLocal1 = JSON.parse(localStorage.getItem("userLogin")) || null;
+    const [userLoginLocal, setUserLoginLocal] = useState(userLoginLocal1);
 
     useEffect(() => {
         setIsLoading(true);
@@ -94,9 +96,21 @@ function Profile() {
             hometown,
             infoOther,
         }
+         // LƯU THAY ĐỔI VÀO LOCAL 
+        let newUser = {
+            userId: user._id,
+            username: username,
+            avatar: user.avatar,
+        }     
         if (avatarUrl) {
             infoUserCurrent.avatar = avatarUrl;
+            newUser.avatar = avatarUrl;
         }
+        let listUser = [...userLoginLocal.slice(1)];
+        const lu = [newUser, ...listUser];
+        localStorage.setItem("userLogin", JSON.stringify(lu));
+
+
         try{            
             const res = await axios.put(`/users/profile/${paramID}`, infoUserCurrent);
             dispatch({type: "UPDATE_SUCCESS", payload: res.data});

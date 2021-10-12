@@ -61,8 +61,13 @@
     border: 1px solid rgba(78, 165, 199, 0.74);
     box-shadow: 0px 0px 5px 2px rgb(78, 165, 199);
 }
+.register-form>p{
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+}
 .register-form button{
-    margin-top: 30px;
+    margin-top: 20px;
     width: 200px;
     padding: 20px 20px;
     font-size: 20px;
@@ -79,7 +84,7 @@
     color: white;
 }
 .register-form span{
-    margin-top: 20px;
+    margin-top: 15px;
     font-size: 15px;
     color: rgb(59, 58, 58);
     text-align: center;

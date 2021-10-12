@@ -20,7 +20,12 @@ function PostSaved() {
         setIsLoading(true);
         const fetchPostSave = async () => {
             const res = await axios.get(`/users/savepost/${user?._id}`);
-            setPosts(res.data);
+            // setPosts(res.data);
+            setPosts(
+                res.data.sort((p1, p2) => {
+                  return new Date(p2.createdAt) - new Date(p1.createdAt);
+                })
+              );
             setIsLoading(false);
         }
         fetchPostSave();

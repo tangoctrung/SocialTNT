@@ -16,10 +16,8 @@ function PostDetail() {
             // API GET POST
             const resPost = await axios.get(`/posts/post/${postId}`);
             setPost(resPost.data);        
-            console.log(resPost.data); 
         }
         FetchAuthorPost();
-        // return (()=> FetchAuthorPost());
     }, [postId]);
 
 

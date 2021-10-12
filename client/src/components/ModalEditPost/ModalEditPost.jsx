@@ -8,6 +8,7 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import {storage} from '../../firebase';
 import axios from 'axios';
+import dataThemes from '../../data/index';
 
 function formatTime (date) {
     var hour = new Date(date).getHours(); 
@@ -28,6 +29,7 @@ function ModalEditPost({post}) {
     const [titlePost, setTitlePost] = useState(post?.title);
     const [bodyPost, setBodyPost] = useState(post?.body);
     const [hashtag, setHashtag] = useState("");
+    const [themenPost, setThemenPost] = useState(post?.themen);
 
     useEffect(() => {
         let s = "";
@@ -50,6 +52,7 @@ function ModalEditPost({post}) {
             authorId: user._id,
             title: titlePost,
             body: bodyPost,
+            themen: themenPost,
         }
         dataPost.hashtags = [...arrayHashtag];
         if (images) {          
@@ -138,9 +141,14 @@ function ModalEditPost({post}) {
                         </div>}
 
                     </div>
-                    <div className="createPost-content-camera createPost-content-item1">
-                        <i className="fas fa-camera"></i>
-                        <span>Chụp ảnh</span>
+                    <div className="createPost-content-camera createPost-content-select">
+                        {/* <i className="fas fa-camera"></i>
+                        <span>Chụp ảnh</span> */}
+                        <select value={themenPost} onChange={(e)=> setThemenPost(e.target.value)}>
+                            {dataThemes.map( (data, index) => (
+                                <option key={index} value={data.themen}>{data.themen}</option>
+                            ))}                                
+                        </select>
                     </div>
                 </div>
                 <label htmlFor="filePost" title="Kéo ảnh bạn muốn đăng vào đây" className="createPost-content-containerImage" onDrop={()=> console.log("DragEnter")}>

@@ -26,7 +26,7 @@ function PostList() {
     return (
         <div className="PostList">
             {posts  && posts.map((post, index) => <Post post={post} key={index}/> )} 
-            {posts.length === 0 && !isLoading  && <div>Bạn chưa có bài viết nào liên quan</div>}  
+            {posts.length === 0 && !isLoading  && <p>Bạn chưa có bài viết nào liên quan</p>}  
             {isLoading && <div className="postlist-Loading"><div className="spinner-5"></div><p>Đang tải bài viết</p></div>}
         </div>
     );

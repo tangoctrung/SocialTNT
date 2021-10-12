@@ -18,7 +18,7 @@ function Leftbar() {
                     <i className="fas fa-home"></i>
                     <span>Trang chủ</span>
                 </Link>
-                <Link to="/" style={{textDecoration: "none"}} className="leftbar-item">
+                <Link to="/notification" style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-bell"></i>
                     <span>Thông báo</span>
                 </Link>
@@ -30,10 +30,6 @@ function Leftbar() {
                     <i className="fas fa-comments"></i>
                     <span>Tin nhắn</span>
                 </Link>
-                <div className="leftbar-item">
-                    <i className="fas fa-book"></i>
-                    <span>Bài viết hot</span>
-                </div>
                 <Link to="/postSaved" style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-bookmark"></i>
                     <span>Đã lưu</span>
@@ -42,42 +38,42 @@ function Leftbar() {
             </div>
             <div className="leftbar-bottom">
                 <p>Những chủ đề bài viết mà bạn quan tâm</p>
-                <div className="leftbar-item">
+                <Link to={`/postthemen?themen=Thế giới`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-globe-americas"></i>
                     <span>Thế giới</span>
-                </div>
-                <div className="leftbar-item">
+                </Link>
+                <Link to={`/postthemen?themen=Khoa học công nghệ`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-user-astronaut"></i>
                     <span>Khoa học, Công nghệ</span>
-                </div>
-                <div className="leftbar-item">
+                </Link>
+                <Link to={`/postthemen?themen=Giáo dục`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-school"></i>
                     <span>Giáo dục</span>
-                </div>
-                <div className="leftbar-item">
+                </Link>
+                <Link to={`/postthemen?themen=Văn hóa`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-skiing-nordic"></i>
                     <span>Văn hóa</span>
-                </div>
-                <div className="leftbar-item">
+                </Link>
+                <Link to={`/postthemen?themen=Y tế`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-hospital-user"></i>
                     <span>Y tế</span>
-                </div>
-                <div className="leftbar-item">
+                </Link>
+                <Link to={`/postthemen?themen=Giải trí`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-person-booth"></i>
                     <span>Giải trí</span>
-                </div>
-                <div className="leftbar-item">
+                </Link>
+                <Link to={`/postthemen?themen=Du lịch`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-plane-departure"></i>
                     <span>Du lịch</span>
-                </div>
-                <div className="leftbar-item">
+                </Link>
+                <Link to={`/postthemen?themen=Sức khỏe`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-hands-heart"></i>
                     <span>Sức khỏe</span>
-                </div>
-                <div className="leftbar-item">
+                </Link>
+                <Link to={`/postthemen?themen=Thể thao`} style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-futbol"></i>
                     <span>Thể thao</span>
-                </div>
+                </Link>
             </div>
             <div className="leftbar-text">
                 <span>SocialTNT@2021. Đã đăng kí bản quyền.</span>

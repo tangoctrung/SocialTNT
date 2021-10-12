@@ -5,6 +5,8 @@ import axios from 'axios';
 import {storage} from '../../firebase';
 import Picker from 'emoji-picker-react';
 import { useRef } from 'react';
+import dataThemes from '../../data/index';
+import { useEffect } from 'react';
 
 function formatTime (date) {
     var hour = new Date(date).getHours(); 
@@ -25,6 +27,11 @@ function CreatePost() {
     const [titlePost, setTitlePost] = useState("");
     const [bodyPost, setBodyPost] = useState("");
     const [hashtag, setHashtag] = useState("");
+    const [themenPost, setThemenPost] = useState("");
+
+    useEffect(() => {
+        console.log(themenPost);
+    }, [themenPost])
     const handleUploadImages = (e) => {
         let files = [...e.target.files];
         let newImages = [...images];
@@ -71,6 +78,7 @@ function CreatePost() {
             authorId: user._id,
             title: titlePost,
             body: bodyPost,
+            themen: themenPost === "Chọn chủ đề" ? "Khác" : themenPost,
         }
         dataPost.hashtags = [...arrayHashtag];
                 // let urlImage = [];
@@ -169,9 +177,14 @@ function CreatePost() {
                                 </div>}
 
                             </div>
-                            <div className="createPost-content-camera createPost-content-item1">
-                                <i className="fas fa-camera"></i>
-                                <span>Chụp ảnh</span>
+                            <div className="createPost-content-camera createPost-content-select">
+                                {/* <i className="fas fa-camera"></i>
+                                <span>Chụp ảnh</span> */}
+                                <select onChange={(e)=> setThemenPost(e.target.value)}>
+                                    {dataThemes.map( (data, index) => (
+                                        <option key={index} value={data.themen}>{data.themen}</option>
+                                    ))}                                
+                                </select>
                             </div>
                         </div>
                         <label htmlFor="filePost" title="Kéo ảnh bạn muốn đăng vào đây" className="createPost-content-containerImage" onDrop={()=> console.log("DragEnter")}>

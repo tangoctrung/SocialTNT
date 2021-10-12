@@ -6,6 +6,9 @@ GET http://localhost:8800/api/replycomment/comment/61482e3308758546ccf67f1e HTTP
 
 GET http://localhost:8800/api/posts/profile/6140a06b3fee095588756d69 HTTP/1.1
 
+###
+
+GET http://localhost:8800/api/posts?hashtag=tho HTTP/1.1
 
 ###
 
@@ -47,3 +50,44 @@ content-type: application/json
 
 ###
 GET http://localhost:8800/api/conversationsgroup/6140a06b3fee095588756d69 HTTP/1.1
+
+
+###
+
+GET http://localhost:8800/api/posts?themen=khoahoccongnghe HTTP/1.1
+
+
+###
+
+PUT http://localhost:8800/api/notifications/deleteNotification HTTP/1.1
+content-type: application/json
+
+{
+    "userId": "6140a0d63fee095588756d6b",
+    "notiId": "6162dbc257f1d770307ddd84"
+}
+
+###
+GET http://localhost:8800/api/notifications/getNotification/6140a06b3fee095588756d69 HTTP/1.1
+
+
+###
+POST http://localhost:8800/api/userlogin/ HTTP/1.1
+content-type: application/json
+
+{
+    "userId": "6140a06b3fee095588756d69",
+    "password": "12345678"
+}
+
+###
+
+GET http://localhost:8800/api/userlogin/ HTTP/1.1
+
+
+###
+DELETE http://localhost:8800/api/userlogin/delete HTTP/1.1
+
+{
+    "userLoginId": "6164e11f8210d348c019e60a",
+}

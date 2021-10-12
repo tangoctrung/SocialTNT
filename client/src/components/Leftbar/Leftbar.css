@@ -13,7 +13,7 @@
     border-bottom: 1.5px solid #000;
 }
 .leftbar-bottom{
-    max-height: 48%;
+    max-height: 55%;
     margin-top: 10px;
 }
 .leftbar-bottom p{
@@ -37,7 +37,7 @@
 
 .leftbar-item{
     margin-left: 10px;
-    padding: 20px 20px;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -63,12 +63,12 @@
 .leftbar-item i{
     font-size: 24px;
     margin-right: 10px;
-    color: rgb(105, 104, 104);
+    color: rgb(87, 86, 86);
 }
 .leftbar-item span{
     font-size: 15px;
     font-weight: 500;
-    color: rgb(100, 99, 99);
+    color: rgb(78, 78, 78);
 }
 
 .leftbar-text{

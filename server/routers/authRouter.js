@@ -7,6 +7,10 @@ router.post("/register", async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPass = await bcrypt.hash(req.body.password, salt);
+        const user1 = await User.findOne({email: req.body.email});
+        if (user1) 
+            return res.status(400).send({success: false, message: "Email đã được sử dụng"})
+        
         const newUser = new User({
             username: req.body.username,
             email: req.body.email,
@@ -23,13 +27,34 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const newUser = await User.findOne({email: req.body.email});
-        !newUser && res.status(400).json("No exits");
+         if (!newUser){
+             return res.status(400).json({success: false, message: 'Sai email hoặc mật khẩu.'});  
+         } 
+        if (!req.body.isLogin) {
+            const validate = await bcrypt.compare(req.body.password, newUser.password);
+            if (!validate){
+                return res.status(400).json({success: false, message: 'Sai email hoặc mật khẩu.'});
+            } 
+        }
 
-        const validate = await bcrypt.compare(req.body.password, newUser.password);
-        !validate && res.status(400).json("No exits");
+        res.status(200).json(newUser);
 
-        const {password, ...other} = newUser._doc;
-        res.status(200).json(other);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+})
+
+// LOGIN WITH ID
+router.post("/loginwithid", async (req, res) => {
+    try {
+        const newUser = await User.findById({_id: req.body.userId});
+        !newUser && res.status(400).json({success: false, message: "Sai email hoặc mật khẩu."});  
+        if (!req.body.isLogin) {
+            const validate = await bcrypt.compare(req.body.password, newUser.password);
+            !validate && res.status(400).json({success: false, message: "Sai email hoặc mật khẩu."});
+        }
+
+        res.status(200).json(newUser);
 
     } catch (error) {
         res.status(500).json(error);

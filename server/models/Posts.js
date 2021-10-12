@@ -37,6 +37,10 @@ const PostSchema = new Schema({
         ref: 'User',
         required: true,
     },
+    themen: {
+        type: String,
+        default: '',
+    }
 
 }, {timestamps: true})
 

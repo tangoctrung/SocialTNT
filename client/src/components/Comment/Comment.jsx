@@ -30,7 +30,6 @@ function Comment({ comment, authorId }) {
   const [changeReplyComment, setChangeReplyComment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(authorId);
   useEffect(() => {
     socket?.on('createCommentToClient', (newComment) => {
         if (newComment.userId?._id !== user?.id && newComment.commentId === comment?._id) {

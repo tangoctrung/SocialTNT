@@ -263,6 +263,9 @@ function Post({post}) {
                     <>
                         <hr />
                         <div className="post-textContent-hashtag">
+                            {post?.themen ? <p>Chủ đề: <b>{post?.themen}</b></p> : ""}
+                        </div>
+                        <div className="post-textContent-hashtag">
                             { post &&
                                 post.hashtags.map((hashtag, index) => <Link to={`/postcondition?hashtag=${hashtag}`} key={index} href="">#{hashtag}</Link>)
                             }         

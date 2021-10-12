@@ -6,8 +6,8 @@ const User = require("../models/Users");
 
 router.post("/", async (req, res) => {
 
-    const {authorId, title, body, images, hashtags} = req.body;
-    const newPost = new Post({authorId, title, body, images, hashtags});
+    const {authorId, title, body, images, hashtags, themen} = req.body;
+    const newPost = new Post({authorId, title, body, images, hashtags, themen});
     try {
         const savedPost = await newPost.save();
         res.status(200).json(savedPost);
@@ -99,6 +99,18 @@ router.get('/', async (req, res) => {
   }
 })
 
+// TÌM KIẾM BÀI VIẾT THEO CHỦ ĐỀ
+router.get('/themen/', async (req, res) => {
+  const themen = req.query.themen;
+  try{
+      const posts = await Post.find({ themen: themen }).populate('authorId', [
+        'username', 'avatar'
+      ]);
+      res.status(200).json(posts);
+  }catch(err){
+      res.status(500).json(err);
+  }
+})
 
 // LIKE POST
 

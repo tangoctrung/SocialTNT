@@ -4,26 +4,34 @@ import { Link } from 'react-router-dom';
 import "./Register.css";
 
 function Register() {
-    const [username, setUsername] = useState(null);
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
-    const [error, setError] = useState(false);
-
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    
+    setTimeout(() => {
+        if (error) {
+            setError("");
+        }
+    }, 3000);
     const handleSubmitForm = async (e) => {
         e.preventDefault();
-        setError(false);
-        try {
-            const res = await axios.post("/auth/register", {
-                username: username,
-                email: email,
-                password: password,
-            });
-            console.log(res.data);
-            res.data && window.location.replace('/login');
-        } catch (error) {
-            setError(true);
+        if (username === "" || email === "" || password === "") {
+            setError("Bạn chưa điền đầy đủ thông tin");
+        } else {
+            try {
+                const res = await axios.post("/auth/register", {
+                    username: username,
+                    email: email,
+                    password: password,
+                });
+                console.log(res.data);
+                // res.data && window.location.replace('/login');
+            } catch (error) {
+                setError("Email bị sai hoặc đã được sử dụng.");
+            } 
         }
-        
+       
     }
     return (
         <div className="register">
@@ -33,6 +41,7 @@ function Register() {
                 <input type="text" className="inputUsername" placeholder="Username của bạn" onChange={(e)=> setUsername(e.target.value)} />
                 <input type="email" className="inputEmail" placeholder="Email của bạn" onChange={(e)=> setEmail(e.target.value)} />
                 <input type="password" className="inputPassword" placeholder="Password của bạn" onChange={(e)=> setPassword(e.target.value)} />
+                <p style={{color: 'red'}}>{error}</p>
                 <button type="submit">Đăng kí</button>
                 <span>Bạn đã có tài khoản? <Link to="/login">Đăng nhập ngay.</Link></span>
             </form>

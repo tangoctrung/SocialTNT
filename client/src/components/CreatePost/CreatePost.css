@@ -173,6 +173,14 @@
     margin-top: 20px;
     justify-content: space-around;
 }
+.createPost-content-select select{
+    font-size: 16px;
+    padding: 8px 10px;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
 .createPost-content-item1{
     padding: 10px 20px;
     border-radius: 5px;

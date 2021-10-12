@@ -1,3 +1,11 @@
+.PostList>p{
+    font-size: 32px;
+    width: 100%;
+    text-align: center;
+    margin-top: 200px;
+    color: rgb(114, 109, 109);
+}
+
 .spinner-5 {
     width:70px;
     height:70px;

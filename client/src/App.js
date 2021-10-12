@@ -12,6 +12,8 @@ import AllUser from 'pages/AllUser/AllUser';
 import Chat from 'pages/Chat/Chat';
 import PostSaved from 'pages/PostSaved/PostSaved';
 import PostCondition from 'pages/PostCondition/PostCondition';
+import PostThemen from 'pages/PostThemen/PostThemen';
+import Notification from 'pages/Notification/Notification';
 
 function App() {
     const {user} = useContext(Context);
@@ -51,6 +53,12 @@ function App() {
               </Route>
               <Route path="/postcondition" exact>
                 {user ? <PostCondition /> : <Login />} 
+              </Route>
+              <Route path="/postthemen" exact>
+                {user ? <PostThemen /> : <Login />} 
+              </Route>
+              <Route path="/notification" exact>
+                {user ? <Notification /> : <Login />} 
               </Route>
           </Switch>
       </Router>

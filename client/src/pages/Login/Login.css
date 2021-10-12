@@ -15,6 +15,87 @@
     url("https://media-exp1.licdn.com/dms/image/C511BAQESMts2_-Kzow/company-background_10000/0/1526996466943?e=2159024400&v=beta&t=i70et-r4er1nnU6tWgyQGyCAqkyyX_48-8pJM2WXnm0")
       center;
 }
+.login-left-container{
+    position: relative;
+}
+.login-left-container h2{
+    position: absolute;
+    top: -60px;
+    left: 10px;
+    font-size: 32px;
+    color:rgb(59, 58, 58);
+}
+.login-left{
+    width: 600px; 
+    height: 500px;
+    padding: 10px;
+    overflow-y: scroll;
+    border-radius: 10px;
+    margin-right: 100px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.login-left::-webkit-scrollbar{
+    width: 0px;
+}
+.login-left::-webkit-scrollbar-track{
+    background-color: transparent;
+}
+.login-left::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: rgb(163, 151, 151);
+}
+.login-left-fast{
+    position: relative;
+    width: 170px;
+    height: 230px;
+    transition: all 0.2s ease;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+.login-left-fast:hover .login-left-fast-close{
+    left: -3px;
+    top: -5px;
+}
+.login-left-fast:hover .login-left-fast-close i{
+    transform: scale(1.4);
+    background-color: rgb(233, 227, 227);
+    color: rgb(163, 160, 160);
+}
+.login-left-fast-close{
+    position: absolute;
+    top: -4px;
+    left: 0px;
+}
+.login-left-fast-close i{
+    font-size: 14px;
+    color: rgb(233, 229, 229);
+    padding: 2px 5px;
+    border-radius: 50%;   
+    background-color: gray;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* css loading */
+.login-left-loading {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+.spinner-2 {
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:8px solid;
+    border-color:lightblue;
+    border-right-color: orange;
+    animation:s2 1s infinite linear;
+}
+@keyframes s2 {to{transform: rotate(1turn)}}
+
 
 .login-form{
     display: flex;
@@ -57,8 +138,13 @@
     border: 1px solid rgba(78, 165, 199, 0.74);
     box-shadow: 0px 0px 5px 2px rgb(78, 165, 199);
 }
+.login-form>p{
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+}
 .login-form button{
-    margin-top: 50px;
+    margin-top: 40px;
     width: 200px;
     padding: 20px 20px;
     font-size: 20px;
