@@ -12,6 +12,7 @@ import InfoConversation from "components/InfoConversation/InfoConversation";
 import ReactTooltip from "react-tooltip";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
+import NotificationFast from 'components/NotificationFast/NotificationFast';
 
 function Chat() {
   const [isOpenChatMember, setIsOpenChatMember] = useState(true);
@@ -21,7 +22,7 @@ function Chat() {
   const [followings, setFollowings] = useState([]);
   const [noFollowings, setNoFollowings] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
-  const { user } = useContext(Context);
+  const { user, socket } = useContext(Context);
   const [chatId, setChatId] = useState();
   const location = useLocation();
   const [isCreateGroup, setIsCreateGroup] = useState(false);
@@ -31,6 +32,54 @@ function Chat() {
   const [listMembers, setListMembers] = useState([user?._id]);
   const [nameGroup, setNameGroup] = useState("");
   const PF = "http://localhost:8800/images/";
+  const [isNotiCreatePost, setIsNotiCreatePost] = useState(false);
+  const [listNoti, setListNoti] = useState([]);
+
+   // thông báo createPost, likePost, commentPost
+   useEffect(() => {
+    socket?.on("createPostToClient", (noti) => {
+        let newNoti = [...listNoti];
+        newNoti.push(noti);
+        setListNoti(newNoti);
+        setIsNotiCreatePost(true);
+    });
+    socket?.on("likePostNotiToClient", (noti) => {
+        let newNoti = [...listNoti];
+        newNoti.push(noti);
+        setListNoti(newNoti);
+        setIsNotiCreatePost(true);
+    });
+    socket?.on("commentPostNotiToClient", (noti) => {
+        let newNoti = [...listNoti];
+        newNoti.push(noti);
+        setListNoti(newNoti);
+        setIsNotiCreatePost(true);
+    })
+    socket?.on("replyCommentPostNotiToClient", (noti) => {
+        let newNoti = [...listNoti];
+        newNoti.push(noti);
+        setListNoti(newNoti);
+        setIsNotiCreatePost(true);
+    })
+    socket?.on("likeCommentNotiToClient", (noti) => {
+        let newNoti = [...listNoti];
+        newNoti.push(noti);
+        setListNoti(newNoti);
+        setIsNotiCreatePost(true);
+    })
+    }, [])
+    setTimeout(() => {
+        if(isNotiCreatePost) {
+            setIsNotiCreatePost(false);
+        }
+    }, 5000)
+    const handleClickNotiFast = async (noti, index) => {
+        const dataNoti = {
+            userId: user?._id,
+            notiId: noti?._id
+        }
+        await axios.put(`/notifications/updateNotification`, dataNoti);
+    }
 
   // Lấy thông tin các following
   useEffect(() => {
@@ -121,171 +170,182 @@ function Chat() {
   };
 
   return (
-    <div className="chat">
-      <div className="chat-left">
-        <div className="chat-left-1">
-          <h2>Chat</h2>
-          <div className="chat-left-1-createGroup">
-            <i
-              className="far fa-users-medical"
-              data-tip="Tạo nhóm chat"
-              onClick={() => setIsCreateGroup(true)}
-            ></i>
-            <ReactTooltip place="bottom" type="dark" effect="solid" />
-            {isCreateGroup && (
-              <div className="createGroup">
-                <div
-                  className="createGroup-modal"
-                  onClick={() => setIsCreateGroup(false)}
-                ></div>
-                <form 
-                  className="createGroup-content"
-                  onSubmit={handleSubmitCreateGroup}
-                >
-                  <div className="createGroup-avatar-name">
-                    <div className="createGroup-name">
-                      <input placeholder="Type name of Group..." onChange={(e)=> setNameGroup(e.target.value)} />
+    <>
+      <div className="chat">
+        <div className="chat-left">
+          <div className="chat-left-1">
+            <h2>Chat</h2>
+            <div className="chat-left-1-createGroup">
+              <i
+                className="far fa-users-medical"
+                data-tip="Tạo nhóm chat"
+                onClick={() => setIsCreateGroup(true)}
+              ></i>
+              <ReactTooltip place="bottom" type="dark" effect="solid" />
+              {isCreateGroup && (
+                <div className="createGroup">
+                  <div
+                    className="createGroup-modal"
+                    onClick={() => setIsCreateGroup(false)}
+                  ></div>
+                  <form 
+                    className="createGroup-content"
+                    onSubmit={handleSubmitCreateGroup}
+                  >
+                    <div className="createGroup-avatar-name">
+                      <div className="createGroup-name">
+                        <input placeholder="Type name of Group..." onChange={(e)=> setNameGroup(e.target.value)} />
+                      </div>
                     </div>
-                  </div>
-                  <div className="createGroup-text">
-                    <h4>Thêm thành viên</h4>
-                  </div>
-                  <div className="createGroup-listUser">
-                    <b>Những người bạn đang theo dõi</b>
-                    {followings &&
-                      followings.map((following) => (
-                        <div className="createGroup-itemUser">
-                          <Link
-                            className="createGroup-itemUser-link"
-                            to={`/profile/${following._id}`}                          
-                          >
-                            <img
-                              src={
-                                following.avatar
-                                  ? following.avatar
-                                  : PF + "noAvatar.png"
-                              }
-                              alt="image"
-                            />
-                            <p>{following?.username}</p>
-                          </Link>
-                          <input type="checkbox" name={following._id} onChange={handleCheckInputAddUser}/>
-                        </div>
-                      ))}
+                    <div className="createGroup-text">
+                      <h4>Thêm thành viên</h4>
+                    </div>
+                    <div className="createGroup-listUser">
+                      <b>Những người bạn đang theo dõi</b>
+                      {followings &&
+                        followings.map((following) => (
+                          <div className="createGroup-itemUser">
+                            <Link
+                              className="createGroup-itemUser-link"
+                              to={`/profile/${following._id}`}                          
+                            >
+                              <img
+                                src={
+                                  following.avatar
+                                    ? following.avatar
+                                    : PF + "noAvatar.png"
+                                }
+                                alt="image"
+                              />
+                              <p>{following?.username}</p>
+                            </Link>
+                            <input type="checkbox" name={following._id} onChange={handleCheckInputAddUser}/>
+                          </div>
+                        ))}
 
-                    <b>Những người dùng được gợi ý</b>
+                      <b>Những người dùng được gợi ý</b>
 
-                    {noFollowings &&
-                      noFollowings.map((following) => (
-                        <div className="createGroup-itemUser">
-                          <Link
-                            className="createGroup-itemUser-link"
-                            to={`/profile/${following.userId}`}                          
-                          >
-                            <img
-                              src={
-                                following.avatar
-                                  ? following.avatar
-                                  : PF + "noAvatar.png"
-                              }
-                              alt="image"
-                            />
-                            <p>{following?.username}</p>
-                          </Link>
-                          <input type="checkbox" name={following._id} onChange={handleCheckInputAddUser} />
-                        </div>
-                      ))}
-                  </div>
-                  <div className="createGroup-button">
-                    <button>CREATE</button>
-                  </div>
-                </form>
+                      {noFollowings &&
+                        noFollowings.map((following) => (
+                          <div className="createGroup-itemUser">
+                            <Link
+                              className="createGroup-itemUser-link"
+                              to={`/profile/${following.userId}`}                          
+                            >
+                              <img
+                                src={
+                                  following.avatar
+                                    ? following.avatar
+                                    : PF + "noAvatar.png"
+                                }
+                                alt="image"
+                              />
+                              <p>{following?.username}</p>
+                            </Link>
+                            <input type="checkbox" name={following._id} onChange={handleCheckInputAddUser} />
+                          </div>
+                        ))}
+                    </div>
+                    <div className="createGroup-button">
+                      <button>CREATE</button>
+                    </div>
+                  </form>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="chat-left-2">
+            <input
+              type="text"
+              placeholder="Tìm kiếm theo tên người dùng hoặc nhóm chat"
+            />
+          </div>
+          <div className="chat-left-3">
+            <span
+              onClick={() => setIsOpenChatMember(true)}
+              className={isOpenChatMember ? "isActive" : ""}
+            >
+              <i className="fas fa-user-friends"></i>Bạn bè
+            </span>
+            <span
+              onClick={handleClickGroup}
+              className={isOpenChatMember ? "" : "isActive"}
+            >
+              <i className="fas fa-users"></i>Nhóm
+            </span>
+          </div>
+          <div className="chat-left-4">
+            {isOpenChatMember && (
+              <div className="chat-left-4-member">
+                {conversations && !isLoading &&
+                  conversations.map((conversation, index) => (
+                    <div onClick={() => setCurrentChat(conversation)}>
+                      <Conversation
+                        key={index}
+                        conversation={conversation}
+                        currentUser={user}
+                      />
+                    </div>
+                  ))}
+                  {isLoading && <div className="chat-left-4-member-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
+              </div>
+            )}
+            {!isOpenChatMember && (
+              <div className="chat-left-4-group">
+                  {groupChats && !isLoadingGroup && groupChats.map((group) => (
+                      <div className="chat-left-4-group-item">
+                          <div className="chat-left-4-group-item-img">
+                              <img className="item-img-1" src={group?.membersGroup[1]?.avatar} alt="image" />
+                              <img className="item-img-2" src={group?.membersGroup[2]?.avatar} alt="image" />
+                              <i className="fas fa-circle"></i>
+                          </div>
+                          <div className="chat-left-4-member-item-text">
+                              <h3>{group?.nameGroup}</h3>
+                              <p>
+                                  <p style={{ display: "inline-block" }}>Smith:</p> {group?.messageLastGroup}
+                                  <span> {format(group?.updatedAt)}</span>
+                              </p>
+                          </div>
+                          <div className="chat-left-4-member-item-noti">
+                              <i className="fas fa-circle"></i>
+                          </div>
+                      </div>
+                  ))}
+                  {isLoadingGroup && <div className="chat-left-4-member-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
               </div>
             )}
           </div>
         </div>
-        <div className="chat-left-2">
-          <input
-            type="text"
-            placeholder="Tìm kiếm theo tên người dùng hoặc nhóm chat"
-          />
-        </div>
-        <div className="chat-left-3">
-          <span
-            onClick={() => setIsOpenChatMember(true)}
-            className={isOpenChatMember ? "isActive" : ""}
-          >
-            <i className="fas fa-user-friends"></i>Bạn bè
-          </span>
-          <span
-            onClick={handleClickGroup}
-            className={isOpenChatMember ? "" : "isActive"}
-          >
-            <i className="fas fa-users"></i>Nhóm
-          </span>
-        </div>
-        <div className="chat-left-4">
-          {isOpenChatMember && (
-            <div className="chat-left-4-member">
-              {conversations && !isLoading &&
-                conversations.map((conversation, index) => (
-                  <div onClick={() => setCurrentChat(conversation)}>
-                    <Conversation
-                      key={index}
-                      conversation={conversation}
-                      currentUser={user}
-                    />
-                  </div>
-                ))}
-                {isLoading && <div className="chat-left-4-member-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
-            </div>
+
+        <div className="chat-center">
+          {currentChat ? (
+            <ChatMessage
+              messages={messages}
+              currentChat={currentChat}
+              setMessages={setMessages}
+              isLoadingMessages={isLoadingMessages}
+            />
+          ) : (
+            <span className="chat-text">
+              Chọn cuộc hội thoại để bắt đầu nhắn tin.
+            </span>
           )}
-          {!isOpenChatMember && (
-            <div className="chat-left-4-group">
-                {groupChats && !isLoadingGroup && groupChats.map((group) => (
-                    <div className="chat-left-4-group-item">
-                        <div className="chat-left-4-group-item-img">
-                            <img className="item-img-1" src={group?.membersGroup[1]?.avatar} alt="image" />
-                            <img className="item-img-2" src={group?.membersGroup[2]?.avatar} alt="image" />
-                            <i className="fas fa-circle"></i>
-                        </div>
-                        <div className="chat-left-4-member-item-text">
-                            <h3>{group?.nameGroup}</h3>
-                            <p>
-                                <p style={{ display: "inline-block" }}>Smith:</p> {group?.messageLastGroup}
-                                <span> {format(group?.updatedAt)}</span>
-                            </p>
-                        </div>
-                        <div className="chat-left-4-member-item-noti">
-                            <i className="fas fa-circle"></i>
-                        </div>
-                    </div>
-                ))}
-                {isLoadingGroup && <div className="chat-left-4-member-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
-            </div>
-          )}
+        </div>
+
+        <div className="chat-right">
+          <InfoConversation currentChat={currentChat && currentChat} />
         </div>
       </div>
 
-      <div className="chat-center">
-        {currentChat ? (
-          <ChatMessage
-            messages={messages}
-            currentChat={currentChat}
-            setMessages={setMessages}
-            isLoadingMessages={isLoadingMessages}
-          />
-        ) : (
-          <span className="chat-text">
-            Chọn cuộc hội thoại để bắt đầu nhắn tin.
-          </span>
-        )}
-      </div>
-
-      <div className="chat-right">
-        <InfoConversation currentChat={currentChat && currentChat} />
-      </div>
-    </div>
+      {isNotiCreatePost && 
+                  <div className="homePage-noti">
+                      {listNoti && listNoti.map( (noti, index) => (
+                          <div key={index} onClick={() => handleClickNotiFast(noti, index)}>
+                              <NotificationFast noti={noti} />
+                          </div>
+                      ))}
+                  </div>}
+    </>
   );
 }
 

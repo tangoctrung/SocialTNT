@@ -19,7 +19,6 @@ function Comment({ comment, authorId }) {
   const [totalLikeComment, setTotalLikeComment] = useState(0);
   const [replyComments, setReplyComments] = useState([]);
   const [nameComment, setNameComment] = useState("");
-  const inputCommentRef = useRef();
   const [nameReply, setNameReply] = useState("");
   const [contentComment, setContentComment] = useState(comment?.content);
   const PF = "http://localhost:8800/images/";
@@ -27,7 +26,6 @@ function Comment({ comment, authorId }) {
   const inputEditComment = useRef();
   const [isEditComment, setIsEditComment] = useState(false);
   const [isDeleteComment, setIsDeleteComment] = useState(false);
-  const [changeReplyComment, setChangeReplyComment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -52,15 +50,33 @@ function Comment({ comment, authorId }) {
     });
   }, [totalLikeComment]);
 
+  // khi replyComment bị edit
   useEffect(() => {
-    setIsLoading(true);
+    socket?.on("editCommentToClient", newComment => {        
+        if (newComment?.commentId === comment?._id) {
+            let listComment = [...replyComments];
+            
+            listComment.map(comment => {
+                if (comment?._id === newComment?._id) {
+                    comment.content = newComment.content;
+                }
+            })
+            setReplyComments(listComment);
+        }
+    })
+  }, [replyComments])
+
+  useEffect(() => {
     const fetchReplyComment = async () => {
       const resReplyComment = await axios.get(`/replycomment/comment/${comment?._id}`);
       setReplyComments(resReplyComment.data);
       setIsLoading(false);
   }
-  fetchReplyComment();
-  }, [changeReplyComment]);
+  if (comment?.isReply) {
+    setIsLoading(true);
+    fetchReplyComment();
+  }
+  }, [comment?._id]);
 
 
   useEffect(() => {
@@ -71,7 +87,7 @@ function Comment({ comment, authorId }) {
   }, [])
 
   // LIKE/UNLIKE COMMENT
-  const handleLikedComment = () => {
+  const handleLikedComment = async () => {
       const fetchLikedComment = async () => {
         await axios.put(`/comment/likecomment`, {
           commentId: comment?._id,
@@ -89,6 +105,27 @@ function Comment({ comment, authorId }) {
           commentId: comment?._id, 
           likesComment: totalLikeComment + 1,
         });
+
+        // tạo thông báo like comment
+        const dataNoti = {
+          typeNoti: "likeCommentPost",
+          senderNotiId: user?._id,
+          receiverNotiId: [comment?.writerId],
+          postNotiId: comment?.postId,
+          content: `đã yêu thích bình luận của bạn`,
+        }
+        const noti = await axios.post('/notifications/createNotification', dataNoti);
+        const newNoti = {
+            ...noti.data,
+            senderNotiId: {
+                _id: user?._id,
+                username: user?.username,
+                avatar: user?.avatar
+            }
+        }
+        socket?.emit('likeCommentNoti', newNoti); 
+
+
       }
       setTotalLikeComment(
         !isLikeComment ? totalLikeComment + 1 : totalLikeComment - 1
@@ -98,7 +135,8 @@ function Comment({ comment, authorId }) {
 
   // CLICK CHOOSE EMOJI
   const onEmojiClick = (event, data) => {
-    inputCommentRef.current.value += data.emoji;
+    let s = nameReply; s += data.emoji;
+    setNameReply(s);
   };
 
   // KHI NGƯỜI DÙNG ẤN NÚT TRẢ LỜI
@@ -118,18 +156,41 @@ function Comment({ comment, authorId }) {
         commentId: comment?._id,
     }
     const fetchSubmitReplyComment = async () => {
-        await axios.post(`/replycomment/`, dataReply);
-        const newComment = {
-          userId:  {
+        await axios.put(`/comment/reply/${comment?._id}`);
+        const newReplyComment = await axios.post(`/replycomment/`, dataReply);
+
+        // tạo thông báo commentPost
+        const dataNoti = {
+          typeNoti: "replyCommentPost",
+          senderNotiId: user?._id,
+          receiverNotiId: [authorId, comment?.writerId],
+          postNotiId: comment?.postId,
+          content: `đã phản hồi một bình luận trong bài viết của bạn`,
+        }
+        const noti = await axios.post('/notifications/createNotification', dataNoti);
+        const newNoti = {
+            ...noti.data,
+            senderNotiId: {
+                _id: user?._id,
+                username: user?.username,
+                avatar: user?.avatar
+            }
+        }
+        socket?.emit('replyCommentPostNoti', newNoti); 
+
+
+        const c = {
+          ...newReplyComment.data,
+          userId: {
               _id: user?._id,
               username: user?.username,
               avatar: user?.avatar,
-          },             
-          commentId: comment?._id,
-          content: nameReply,
-        }
-        socket?.emit('createComment', newComment);
-        setChangeReplyComment(!changeReplyComment);
+          },
+        } 
+      let listComment = [...replyComments];
+      listComment.push(c);
+      setReplyComments(listComment);
+      socket?.emit('createComment', c);
     }
     fetchSubmitReplyComment();
     setNameReply("");
@@ -143,7 +204,8 @@ function Comment({ comment, authorId }) {
       content: contentComment,
     }
     try {
-      await axios.put(`/comment/${comment?._id}`, dataComment);
+      const res = await axios.put(`/comment/${comment?._id}`, dataComment);
+      socket?.emit("editComment", res.data);
       setIsEditComment(false);
     } catch (err) {
       console.log(err);
@@ -250,6 +312,7 @@ function Comment({ comment, authorId }) {
                   setIsOpenReplyComment={setIsOpenReplyComment}
                   handleClickReply = {handleClickReply}
                   authorId={authorId}
+                  postId = {comment.postId}
                 />
 
               </div>
@@ -267,12 +330,11 @@ function Comment({ comment, authorId }) {
             </div>
             <div className="post-replyComment-input">
               <input
-                ref={inputCommentRef}
                 type="text"
                 value={nameReply}
                 placeholder="Phản hồi của bạn..."
                 onChange={(e) => setNameReply(e.target.value)}
-                onFocus={() => setIsOpenEmoji(false)}
+                onFocus={() => {setIsOpenEmoji(false); console.log(nameReply)}}
               />
             </div>
             <div className="post-replyComment-emoji">

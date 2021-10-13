@@ -21,7 +21,7 @@ function formatTime (date) {
 function CreatePost() {
     const [isOpenCreatePost, setIsOpenCreatePost] = useState(false);
     const PF = "http://localhost:8800/images/";
-    const { user} = useContext(Context);
+    const { user, socket } = useContext(Context);
     const [images, setImages] = useState([]);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [titlePost, setTitlePost] = useState("");
@@ -31,7 +31,17 @@ function CreatePost() {
 
     useEffect(() => {
         console.log(themenPost);
-    }, [themenPost])
+    }, [themenPost]);
+
+    // useEffect(() => {
+    //     socket?.on("createPostToClient", (noti) => {
+    //         // const listNoti = [...notifications];
+    //         // listNoti.unshift(noti);
+    //         // setNotifications(listNoti);
+    //         console.log(noti);
+    //     })
+    // }, [])
+
     const handleUploadImages = (e) => {
         let files = [...e.target.files];
         let newImages = [...images];
@@ -66,10 +76,9 @@ function CreatePost() {
     const handleChangeHashtag = (e) => {
         setHashtag(e.target.value);       
     }
+
     const handleSubmitCreatePost = async (e) => {
         e.preventDefault();
-        console.log(hashtag);
-        console.log(hashtag.split(" "));
         let arrayHashtag = [];
         if(hashtag !== "") {
             arrayHashtag = hashtag.split(" ");
@@ -81,23 +90,29 @@ function CreatePost() {
             themen: themenPost === "Chọn chủ đề" ? "Khác" : themenPost,
         }
         dataPost.hashtags = [...arrayHashtag];
-                // let urlImage = [];
-                // for(const image of images) {
-                //     const data = new FormData();
-                //     const filename = Date.now() + image.name;
-                //     data.append("name", filename);
-                //     data.append("file", image);
-                //     urlImage.push(filename);
-                //     try {
-                //         await axios.post("/upload", data);
-                //     } catch (err) {}
-                // }
         if (images) {          
             dataPost.images = [...images];  
         }
-        console.log(dataPost);
         try{
-            await axios.post("/posts", dataPost);
+            const newPost = await axios.post("/posts", dataPost);
+            const dataNoti = {
+                typeNoti: "createPost",
+                senderNotiId: user?._id,
+                receiverNotiId: [...user?.follower],
+                postNotiId: newPost.data._id,
+                content: `đã thêm một bài viết mới - "${bodyPost.slice(0,60)}" `
+            }
+            const noti = await axios.post('/notifications/createNotification', dataNoti);
+            console.log(noti.data);
+            const newNoti = {
+                ...noti.data,
+                senderNotiId: {
+                    _id: user?._id,
+                    username: user?.username,
+                    avatar: user?.avatar
+                }
+            }
+            socket?.emit('createPost', newNoti); 
             window.location.reload();
         } catch(error){
         }

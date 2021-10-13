@@ -7,7 +7,7 @@ import "./PostList.css";
 function PostList() {
 
     const [posts, setPosts] = useState([]);
-    const { user } = useContext(Context);
+    const { user, socket } = useContext(Context);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -22,7 +22,10 @@ function PostList() {
             setIsLoading(false);
         }
         FetchPostTimeLine();
-    }, [user._id])
+    }, [user._id]);
+
+    
+
     return (
         <div className="PostList">
             {posts  && posts.map((post, index) => <Post post={post} key={index}/> )} 

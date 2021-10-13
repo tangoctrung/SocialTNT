@@ -8,16 +8,28 @@ import NotificationType from "components/NotificationType/NotificationType";
 
 function Notification() {
 
-    const { user } = useContext(Context); 
+    const { user, socket } = useContext(Context); 
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        socket?.on("createPostToClient", (noti) => {
+            const listNoti = [...notifications];
+            listNoti.unshift(noti);
+            setNotifications(listNoti);
+            console.log(noti);
+        })
+    }, [notifications])
 
     // LẤY TẤT CẢ THÔNG BÁO CỦA NGƯỜI DÙNG
     useEffect(() => {
         setIsLoading(true);
         const fetchNoti = async () => {
             const res = await axios.get(`/notifications/getNotification/${user?._id}`);
-            setNotifications(res.data);
+            console.log(res.data);
+            setNotifications(res.data.sort((p1, p2) => {
+                return new Date(p2.createdAt) - new Date(p1.createdAt);
+              }));
             setIsLoading(false);
         }
         fetchNoti();
@@ -31,6 +43,7 @@ function Notification() {
         }
         await axios.put(`/notifications/updateNotification`, dataNoti);
     }
+
     return (
         <div className="notification">
             <div className="notification-container">

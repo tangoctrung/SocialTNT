@@ -22,7 +22,7 @@ function Login() {
     const passwordRef = useRef();
     const { dispatch, isFetching } = useContext(Context);
     const [error, setError] = useState("");
-    let userLoginLocal1 = JSON.parse(localStorage.getItem("userLogin")) || null;
+    let userLoginLocal1 = JSON.parse(localStorage.getItem("userLogin")) || [];
     const [userLoginLocal, setUserLoginLocal] = useState(userLoginLocal1);
 
     setTimeout(() => {

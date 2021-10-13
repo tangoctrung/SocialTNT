@@ -17,7 +17,6 @@ const getUser = (userId) => {
 
 io.on('connection', (socket) =>{
     // khi người dùng kết nối vào scoket server
-    console.log("a user connected");
 
     // nhận userId và socketId từ người dùng
     socket.on("addUser", userId => {
@@ -80,10 +79,79 @@ io.on('connection', (socket) =>{
         })
     });
 
+    // khi người dùng edit comment
+    socket.on("editComment", (comment) => {
+        users.forEach( user => {
+            socket.to(user.socketId).emit("editCommentToClient", comment);
+        })
+    });
+
+
+    // khi người dùng xóa comment
+    socket.on("deleteComment", (comment) => {
+        users.forEach( user => {
+            socket.to(user.socketId).emit("deleteCommentToClient", comment);
+        })
+    });
+
+    // khi người dùng edit post
+    // socket.on("editPost", (post) => {
+    //     users.forEach( user => {
+    //         socket.to(user.socketId).emit("editPostToClient", post);
+    //     })
+    // });
+
+    // khi người dùng tạo bài viết thì gửi đến thông báo
+    socket.on("createPost", (noti) => {
+        users.forEach( user => {
+           if (noti.receiverNotiId?.includes(user.userId))  {
+                socket.to(user.socketId).emit("createPostToClient", noti);
+            }
+        })
+    });
+
+    // khi người dùng likePost. dislikePost thì gửi đến thông báo
+    socket.on("likePostNoti", (noti) => {
+        users.forEach( user => {
+           if (noti.receiverNotiId?.includes(user.userId))  {
+                socket.to(user.socketId).emit("likePostNotiToClient", noti);
+            }
+        })
+    });
+
+    // khi người dùng likeComment thì gửi đến thông báo
+    socket.on("likeCommentNoti", (noti) => {
+        users.forEach( user => {
+           if (noti.receiverNotiId?.includes(user.userId))  {
+                socket.to(user.socketId).emit("likeCommentNotiToClient", noti);
+            }
+        })
+    });
+
+    // khi người dùng commentPost thì gửi đến thông báo
+    socket.on("commentPostNoti", (noti) => {
+        users.forEach( user => {
+           if (noti.receiverNotiId?.includes(user.userId))  {
+                socket.to(user.socketId).emit("commentPostNotiToClient", noti);
+            }
+        })
+    });
+    // khi người dùng replyCommentPost thì gửi đến thông báo
+    socket.on("replyCommentPostNoti", (noti) => {
+        users.forEach( user => {
+           if (noti.receiverNotiId?.includes(user.userId))  {
+                socket.to(user.socketId).emit("replyCommentPostNotiToClient", noti);
+            }
+        })
+    });
+
+
+
+    
+
 
     // khi người dùng ngắt kết nối
     socket.on("disconnect", () =>{
-        console.log("a user disconnected");
         removeUser(socket.id);
         io.emit("getUsers", users);
     })

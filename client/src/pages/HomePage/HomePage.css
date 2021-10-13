@@ -1,5 +1,5 @@
 
-.homePage{
+.homePage-content{
     margin-top: 50px;
     display: flex;
     height: calc(100vh - 50px);
@@ -24,4 +24,12 @@
     min-width: 250px;
     position: fixed;
     right: 0px;
+}
+.homePage-noti{
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    overflow-y: scroll;
+    width: 350px;
+    background-color: gray;
 }

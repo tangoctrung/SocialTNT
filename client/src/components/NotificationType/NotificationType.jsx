@@ -24,7 +24,7 @@ function NotificationType({noti}) {
         <>
             {!noti?.deleteNotiId.includes(user?._id) && <div className={!isRead ? 'notification-item isRead' : "notification-item"}>
                 <Link 
-                 to={`/post/${noti?.postNotiId}`} 
+                 to={`/post/${noti?.postNotiId?._id}`} 
                  className="notification-item-img" 
                  style={{textDecoration: "none", color: "black"}}
                 >
@@ -32,26 +32,14 @@ function NotificationType({noti}) {
                 </Link>
 
                 <Link 
-                 to={`/post/${noti?.postNotiId}`} 
+                 to={`/post/${noti?.postNotiId?._id}`} 
                  style={{textDecoration: "none", color: "black"}}  
                  className="notification-item-info"
                 >
                     <div className="notification-item-content">
-                        {noti?.typeNoti ==="likePost" && <p>
-                            <b>{noti?.senderNotiId.username}</b> đã thích bài viết của bạn - "Yêu là chết ở trong lòng một ít..."
-                        </p>}
-                        {noti?.typeNoti ==="createPost" && <p>
-                            <b>{noti?.senderNotiId.username}</b> đăng tải một bài viết - "Web server là gì?..."
-                        </p>}
-                        {noti?.typeNoti ==="commentPost" && <p>
-                            <b>{noti?.senderNotiId.username}</b> đã bình luận bài viết của bạn - "Nghe hay đấy nhỉ?"
-                        </p>}
-                        {noti?.typeNoti ==="likeComment" && <p>
-                            <b>{noti?.senderNotiId.username}</b> đã thích bình luận của bạn - "Xinh thế nhỉ."
-                        </p>}
-                        {noti?.typeNoti ==="replyComment" && <p>
-                            <b>{noti?.senderNotiId.username}</b> đã trả lời bình luận của bạn - "Haha, xem hài vch."
-                        </p>}
+                        <p>
+                            <b>{noti?.senderNotiId.username}</b> {noti?.content}
+                        </p>
                     </div>
                     <div className="notification-item-time">
                         <p>{format(noti?.createdAt)}</p>

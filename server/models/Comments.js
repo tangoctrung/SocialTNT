@@ -27,6 +27,10 @@ const CommentsSchema = new Schema({
     isDelete: {
         type: Boolean,
         default: false,
+    },
+    isReply: {
+        type: Boolean,
+        default: false,
     }
 
 }, {timestamps: true})

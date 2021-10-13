@@ -14,7 +14,8 @@ function ReplyComment({
   isOpenReplyComment,
   setIsOpenReplyComment,
   handleClickReply,
-  authorId
+  authorId,
+  postId
 }) {
   const { user, socket } = useContext(Context);
   const [isLikeComment, setIsLikeComment] = useState(
@@ -43,7 +44,7 @@ function ReplyComment({
   }, [totalLikeComment]);
 
   // LIKE/UNLIKE COMMENT
-  const handleLikedComment = () => {
+  const handleLikedComment = async () => {
       const fetchLikedComment = async () => {
         await axios.put(`/replycomment/likereplyComment`, {
           replyCommentId: replyComment?._id,
@@ -61,6 +62,25 @@ function ReplyComment({
           commentId: replyComment?._id, 
           likesComment: totalLikeComment + 1,
         });
+
+        // tạo thông báo  like replyComment
+        const dataNoti = {
+          typeNoti: "likeReplyCommentPost",
+          senderNotiId: user?._id,
+          receiverNotiId: [replyComment?.userId],
+          postNotiId: postId,
+          content: `đã yêu thích phản hồi của bạn`,
+        }
+        const noti = await axios.post('/notifications/createNotification', dataNoti);
+        const newNoti = {
+            ...noti.data,
+            senderNotiId: {
+                _id: user?._id,
+                username: user?.username,
+                avatar: user?.avatar
+            }
+        }
+        socket?.emit('likeCommentNoti', newNoti); 
       }
       setTotalLikeComment(
         !isLikeComment ? totalLikeComment + 1 : totalLikeComment - 1
@@ -89,7 +109,8 @@ function ReplyComment({
       content: contentReplyComment,
     }
     try {
-      await axios.put(`/replycomment/${replyComment?._id}`, dataComment);
+      const res = await axios.put(`/replycomment/${replyComment?._id}`, dataComment);
+      socket?.emit("editComment", res.data);
       setIsEditReplyComment(false);
     } catch (err) {
       console.log(err);

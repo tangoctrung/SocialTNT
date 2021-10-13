@@ -16,3 +16,9 @@
     font-family: 'Noto Sans SC', sans-serif;
     padding: 10px;
 }
+.post-detail-notFound p{
+    font-size: 32px;
+    margin-top: 200px;
+    color: gray;
+    font-weight: bold;
+}

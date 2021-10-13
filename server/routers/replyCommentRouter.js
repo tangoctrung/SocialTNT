@@ -48,9 +48,9 @@ router.put("/likereplyComment", async (req, res) => {
 // UPDATE REPLYCOMMENT
 router.put("/:id", async (req, res) => {
   try {
-    const comment = await ReplyComment.findById(req.params.id);  
-      await comment.updateOne({ $set: req.body });
-      res.status(200).json("the comment has been updated");  
+    const comment = await ReplyComment.findByIdAndUpdate({_id: req.params.id}, { $set: req.body }, {new: true})
+    .populate('userId', ['username', 'avatar']);  
+      res.status(200).json(comment);  
   } catch (err) {
     res.status(500).json(err);
   }

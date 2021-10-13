@@ -123,9 +123,15 @@ function Navbar() {
                                                 <span>Cài đặt</span>
                                             </div>
                                             <div className="navbar-right-item">
-                                                <i className="fas fa-save"></i>
-                                                <span>Đã lưu</span>
+                                                <Link to="/postSaved" style={{textDecoration: "none", color: 'black'}}>
+                                                    <i className="fas fa-save"></i>
+                                                    <span>Đã lưu</span>
+                                                </Link>
                                             </div>
+                                            {/* <Link to="/postSaved" style={{textDecoration: "none"}} className="leftbar-item">
+                    <i className="fas fa-bookmark"></i>
+                    <span>Đã lưu</span>
+                </Link> */}
                                             <div className="navbar-right-item" onClick={handleClickLogout}>
                                                 <i className="fas fa-sign-out-alt"></i>
                                                 <span>Đăng xuất</span>

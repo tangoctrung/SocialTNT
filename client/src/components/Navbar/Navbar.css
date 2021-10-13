@@ -133,11 +133,12 @@
     left: -100px;
     background-color: white;
     width: 170px;
-    -webkit-box-shadow: 0px 1px 11px 0px rgba(76,76,76,0.84); 
-    box-shadow: 0px 1px 6px 1px rgba(76,76,76,0.44);
+    padding: 5px;
+    -webkit-box-shadow: 0px 1px 2px 2px rgba(49, 17, 17, 0.44); 
+    box-shadow: 0px 0px 2px 2px rgba(76,76,76,0.34);
     transition: all 0.3s ease;
     display: none;
-    border-radius: 10px;
+    border-radius: 3px;
 }
 .navbar-right-list::after{
     position: absolute;
@@ -153,16 +154,14 @@
     padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s ease;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 .navbar-right-item i{
     font-size: 18px;
     margin-right: 5px;
-    color: gray;
+    color: rgb(78, 75, 75);
 }
-.navbar-right-item:not(:last-child){
-    border-bottom: 1.5px solid rgb(160, 158, 158);
-}
+
 .navbar-right-item:hover{
     background-color: rgb(232, 236, 236);
 }

@@ -14,12 +14,34 @@ import { useRef } from 'react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ModalEditPost from 'components/ModalEditPost/ModalEditPost';
 
+function createNoti(user, socket, post, typeNoti, content ) {
+    const dataNoti = {
+        typeNoti: typeNoti,
+        senderNotiId: user?._id,
+        receiverNotiId: [post?.authorId],
+        postNotiId: post?._id,
+        content: content,
+    }
+    const fetchNoti = async () => {
+        const noti = await axios.post('/notifications/createNotification', dataNoti);
+        const newNoti = {
+            ...noti.data,
+            senderNotiId: {
+                _id: user?._id,
+                username: user?.username,
+                avatar: user?.avatar
+            }
+        }
+        socket?.emit('likePostNoti', newNoti); 
+    }
+    fetchNoti();
+}
+
 function Post({post}) {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [imageModal, setImageModal] = useState();
-    const [changeComment, setChangeComment] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [comments, setComments] = useState([]);
     const [isDisliked, setIsDisliked] = useState(false);
@@ -40,15 +62,34 @@ function Post({post}) {
         autoplay: true,
     };
 
+    // khi có người khác comment vào post
     useEffect(() => {
         socket?.on('createCommentToClient', (newComment) => {
-            if (newComment.writerId?._id !== user?.id) {
+            if (newComment.writerId?._id !== user?.id && newComment?.postId === post?._id) {
                 let comment = [...comments, newComment];
                 setComments(comment);
             }
         })
     }, [comments]);
     
+    // khi comment bị edit
+    useEffect(() => {
+        socket?.on("editCommentToClient", newComment => {        
+            if (newComment?.postId === post?._id) {
+                let listComment = [...comments];
+                
+                listComment.map(comment => {
+                    if (comment?._id === newComment?._id) {
+                        comment.content = newComment.content;
+                        console.log(comment.content);
+                    }
+                })
+                setComments(listComment);
+            }
+        })
+    }, [comments])
+
+    // khi người dùng like post
     useEffect(() => {
         socket?.on("likePostToClient", ({likes, dislikes, postId}) => {
             if (postId === post?._id) {
@@ -65,6 +106,7 @@ function Post({post}) {
         })
     }, [totalLike]);
    
+    // khi người dùng dislike post
     useEffect(() => {
         socket?.on("disLikePostToClient", ({likes, dislikes, postId}) => {
             if (postId === post?._id) {
@@ -82,6 +124,7 @@ function Post({post}) {
         })
     }, [totalDislike]);
 
+    // xét xem post đã được like, dislike hay saved chưa
     useEffect(() => {
         const setLike = () => {
             setTotalLike(post?.likes?.length);
@@ -95,6 +138,7 @@ function Post({post}) {
         return (()=> setLike());
     }, [user._id, post?.likes, post?.dislikes]);
 
+    // lấy comments
     useEffect(() => {
         setIsLoading(true);
         const fetchAuthorPost = async () => {
@@ -105,7 +149,7 @@ function Post({post}) {
         fetchAuthorPost();
         
         return(()=> fetchAuthorPost());
-    }, [post?._id, changeComment])
+    }, [post?._id])
 
     // LIKE POST
     const handleLikePost = async () => {
@@ -135,11 +179,20 @@ function Post({post}) {
                     dislikes: totalDislike,
                     postId: post?._id,
                 }); 
+                
             }
         }    
         await axios.put(`/posts/post/${post ? post._id : ""}/like`, {
             userId: user ? user._id : ""
-        });   
+        });  
+
+        if (!isLiked && !isDisliked) {
+            // tạo thông báo likePost
+            const typeNoti = "likePost";
+            const content = `đã yêu thích về bài viết của bạn - "${post?.body.slice(0,60)}" `;
+            createNoti(user, socket, post, typeNoti, content ) ;
+        }
+        
     }
 
     // DISLIKE POST
@@ -174,6 +227,13 @@ function Post({post}) {
         await axios.put(`/posts/post/${post ? post._id : ""}/dislike`, {
             userId: user ? user._id : ""
         });
+        if (!isLiked && !isDisliked) {
+            // tạo thông báo likePost
+            const typeNoti = "likePost";
+            const content = `đã thất vọng về bài viết của bạn - "${post?.body.slice(0,60)}" `;
+            createNoti(user, socket, post, typeNoti, content ) ;
+
+        }
     }
 
     // CLICK CHOOSE EMOJI
@@ -190,18 +250,39 @@ function Post({post}) {
             content: inputCommentRef.current.value,
         }
         try{
-            await axios.post(`/comment/`, dataComment_Post);
-            setChangeComment(!changeComment);
-            const newComment = {
-                writerId:  {
+            const newComment = await axios.post(`/comment/`, dataComment_Post);
+
+            // tạo thông báo commentPost
+            const dataNoti = {
+                typeNoti: "commentPost",
+                senderNotiId: user?._id,
+                receiverNotiId: [post?.authorId],
+                postNotiId: post?._id,
+                content: `đã bình luận về bài viết của bạn - "${post?.body.slice(0,60)}" `,
+            }
+            const noti = await axios.post('/notifications/createNotification', dataNoti);
+            const newNoti = {
+                ...noti.data,
+                senderNotiId: {
+                    _id: user?._id,
+                    username: user?.username,
+                    avatar: user?.avatar
+                }
+            }
+            socket?.emit('commentPostNoti', newNoti); 
+
+            const c = {
+                ...newComment.data,
+                writerId: {
                     _id: user?._id,
                     username: user?.username,
                     avatar: user?.avatar,
-                },             
-                postId: post?._id,
-                content: inputCommentRef.current.value,
-            }
-            socket?.emit('createComment', newComment);
+                },
+            } 
+            let listComment = [...comments];
+            listComment.push(c);
+            setComments(listComment);
+            socket?.emit('createComment', c);
         }catch(err){}
         inputCommentRef.current.value = "";
         inputCommentRef.current.focus();

@@ -20,9 +20,11 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);  
-      await post.updateOne({ $set: req.body });
-      res.status(200).json("the post has been updated");  
+    const post = await Post.findByIdAndUpdate({_id: req.params.id}, { $set: req.body }, {new: true})
+      .populate('authorId', [
+        'username', 'avatar'
+      ]);  
+    res.status(200).json(post);  
   } catch (err) {
     res.status(500).json(err);
   }

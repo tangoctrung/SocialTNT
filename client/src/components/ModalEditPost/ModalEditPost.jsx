@@ -23,7 +23,7 @@ function formatTime (date) {
 function ModalEditPost({post}) {
     const inputCommentRef = useRef();
     const PF = "http://localhost:8800/images/";
-    const { user} = useContext(Context);
+    const { user, socket } = useContext(Context);
     const [images, setImages] = useState(post?.images);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [titlePost, setTitlePost] = useState(post?.title);
@@ -60,7 +60,8 @@ function ModalEditPost({post}) {
         }
         console.log(dataPost);
         try{
-            await axios.put(`/posts/${post?._id}`, dataPost);
+            const res = await axios.put(`/posts/${post?._id}`, dataPost);
+            // socket?.emit("editPost", res.data);
             window.location.reload();
         } catch(error){
         }

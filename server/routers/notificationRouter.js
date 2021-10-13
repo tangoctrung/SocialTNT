@@ -4,10 +4,10 @@ const Notification = require("../models/Notifications");
 // CREATE NOTIFICATION
 router.post('/createNotification', async (req, res) => {
     const {senderNotiId, receiverNotiId, typeNoti, postNotiId, content} = req.body;
-    const Notification = new Notification({senderNotiId, receiverNotiId, typeNoti, postNotiId, content});
+    const notification = new Notification({senderNotiId, receiverNotiId, typeNoti, postNotiId, content});
 
     try{   
-        const newNotification = await Notification.save();
+        const newNotification = await notification.save();
         res.status(200).json(newNotification);
     } catch (err) {
         res.status(500).json(err);
@@ -21,7 +21,8 @@ router.get('/getNotification/:id', async (req, res) => {
     try{   
         const notification = await Notification.find({receiverNotiId: {$in: [userId]}}).populate(
             'receiverNotiId', ['username', 'avatar'],
-        ).populate('senderNotiId', ['username', 'avatar']);
+        ).populate('senderNotiId', ['username', 'avatar'])
+        .populate('postNotiId', ['body']);
         notification.map((noti) => {
             if (!noti.deleteNotiId.includes(userId)){
                 listNoti.push(noti);
