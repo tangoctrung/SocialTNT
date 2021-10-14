@@ -22,7 +22,7 @@ app.use("/images", express.static(path.join(__dirname, "/images")));
 
 // connect to the database
 mongoose
-  .connect(process.env.MONGO_URL, {
+  .connect("mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
