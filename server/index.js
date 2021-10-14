@@ -56,6 +56,7 @@ app.use("/api/messagesgroup", messageGroupRouter);
 app.use("/api/conversationsgroup", conversationGroupRouter);
 app.use("/api/notifications", notificationRouter);
 
+const PORT = process.env.PORT || 8800;
 app.listen(8800, () => {
   console.log("server is running on port 8800");
 });
