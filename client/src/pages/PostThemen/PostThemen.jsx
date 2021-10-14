@@ -6,10 +6,7 @@ import { useState } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import "./PostThemen.css";
-import NotificationFast from 'components/NotificationFast/NotificationFast';
 import dataThemes from '../../data/index';
-import { useContext } from 'react';
-import { Context } from 'context/Context';
 
 function PostThemen() {
     const [posts, setPosts] = useState([]);
@@ -18,58 +15,6 @@ function PostThemen() {
     const themen = location.search.split("=")[1];
     const themeHot = dataThemes.slice(0,8);
     const themenNormal = dataThemes.slice(8);
-    const { user, socket } = useContext(Context);
-    const [isNotiCreatePost, setIsNotiCreatePost] = useState(false);
-    const [listNoti, setListNoti] = useState([]);
-
-    // thông báo createPost, likePost, commentPost
-    useEffect(() => {
-        socket?.on("createPostToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        });
-        socket?.on("likePostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        });
-        socket?.on("commentPostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-        socket?.on("replyCommentPostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-        socket?.on("likeCommentNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-    }, [])
-
-    setTimeout(() => {
-        if(isNotiCreatePost) {
-            setIsNotiCreatePost(false);
-        }
-    }, 5000)
-
-    const handleClickNotiFast = async (noti, index) => {
-        const dataNoti = {
-            userId: user?._id,
-            notiId: noti?._id
-        }
-        await axios.put(`/notifications/updateNotification`, dataNoti);
-    }
-
     useEffect(() => {
         setIsLoading(true);
         const fetchPost = async () => {
@@ -131,15 +76,6 @@ function PostThemen() {
                     </div>
                 </div>
             </div>
-
-            {isNotiCreatePost && 
-                <div className="homePage-noti">
-                    {listNoti && listNoti.map( (noti, index) => (
-                        <div key={index} onClick={() => handleClickNotiFast(noti, index)}>
-                            <NotificationFast noti={noti} />
-                        </div>
-                    ))}
-                </div>}
         </>
     );
 };

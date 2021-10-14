@@ -26,7 +26,7 @@ function Register() {
                     password: password,
                 });
                 console.log(res.data);
-                // res.data && window.location.replace('/login');
+                res.data && window.location.replace('/login');
             } catch (error) {
                 setError("Email bị sai hoặc đã được sử dụng.");
             } 

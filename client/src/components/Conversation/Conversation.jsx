@@ -9,7 +9,7 @@ import { format } from 'timeago.js';
 
 function Conversation({conversation, currentUser}) {
     const [friend, setFriend] = useState(null);
-    const PF = "http://localhost:8800/images/";
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
 
     useEffect(() => {

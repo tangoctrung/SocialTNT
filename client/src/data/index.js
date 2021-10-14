@@ -61,6 +61,11 @@ const dataThemes = [
         name: "quocgia",
     },
     {
+        id: "16",
+        themen: "Con người",
+        name: "connguoi",
+    },
+    {
         id: "13",
         themen: "Thiên nhiên hoang dã",
         name: "thiennhienhoangda",

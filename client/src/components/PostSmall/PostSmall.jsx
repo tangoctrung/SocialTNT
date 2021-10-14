@@ -7,7 +7,6 @@ import { useState } from 'react';
 import axios from 'axios';
 
 function PostSmall({post}) {
-    const PF = "http://localhost:8800/images/";
     const [comments, setComments] = useState([])
     useEffect(() => {
         const fetchComment = async () => {

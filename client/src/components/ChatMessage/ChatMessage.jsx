@@ -21,7 +21,7 @@ function ChatMessage({messages, currentChat, setMessages, isLoadingMessages}) {
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const listMessageRef = useRef();
     const inputChatRef = useRef();
-    const PF = "http://localhost:8800/images/";
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
 
     // lấy tin nhắn

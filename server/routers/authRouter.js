@@ -27,15 +27,10 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const newUser = await User.findOne({email: req.body.email});
-         if (!newUser){
-             return res.status(400).json({success: false, message: 'Sai email hoặc mật khẩu.'});  
-         } 
-        if (!req.body.isLogin) {
-            const validate = await bcrypt.compare(req.body.password, newUser.password);
-            if (!validate){
-                return res.status(400).json({success: false, message: 'Sai email hoặc mật khẩu.'});
-            } 
-        }
+        !newUser && res.status(400).json('Sai email hoặc mật khẩu.');  
+            
+        const validate = await bcrypt.compare(req.body.password, newUser.password);
+        !validate && res.status(400).json('Sai email hoặc mật khẩu.');          
 
         res.status(200).json(newUser);
 
@@ -48,10 +43,10 @@ router.post("/login", async (req, res) => {
 router.post("/loginwithid", async (req, res) => {
     try {
         const newUser = await User.findById({_id: req.body.userId});
-        !newUser && res.status(400).json({success: false, message: "Sai email hoặc mật khẩu."});  
+        !newUser && res.status(400).json("Sai email hoặc mật khẩu.");  
         if (!req.body.isLogin) {
             const validate = await bcrypt.compare(req.body.password, newUser.password);
-            !validate && res.status(400).json({success: false, message: "Sai email hoặc mật khẩu."});
+            !validate && res.status(400).json("Sai email hoặc mật khẩu.");
         }
 
         res.status(200).json(newUser);

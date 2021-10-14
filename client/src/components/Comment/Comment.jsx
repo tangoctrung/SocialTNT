@@ -21,7 +21,8 @@ function Comment({ comment, authorId }) {
   const [nameComment, setNameComment] = useState("");
   const [nameReply, setNameReply] = useState("");
   const [contentComment, setContentComment] = useState(comment?.content);
-  const PF = "http://localhost:8800/images/";
+  // const PF = "http://localhost:8800/images/";
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const commentRef = useRef();
   const inputEditComment = useRef();
   const [isEditComment, setIsEditComment] = useState(false);
@@ -231,7 +232,7 @@ function Comment({ comment, authorId }) {
               className="post-itemComment-avatar"
             >
               <img
-                src={comment ? comment.writerId?.avatar : PF + "noAvatar.png"}
+                src={comment?.writerId?.avatar || (PF + "noAvatar.png")}
                 alt="Avatar"
               />
             </Link>

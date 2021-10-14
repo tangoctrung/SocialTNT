@@ -49,7 +49,7 @@ function Post({post}) {
     const [totalDislike, setTotalDislike] = useState();
     const [isOpenModalEditPost, setIsOpenModalEditPost] = useState(false);
     const [isDeletePost, setIsDeletePost] = useState(false);
-    const PF = "http://localhost:8800/images/";
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const { user, dispatch, socket } = useContext(Context);
     const inputCommentRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
@@ -189,7 +189,7 @@ function Post({post}) {
         if (!isLiked && !isDisliked) {
             // tạo thông báo likePost
             const typeNoti = "likePost";
-            const content = `đã yêu thích về bài viết của bạn - "${post?.body.slice(0,60)}" `;
+            const content = `đã yêu thích bài viết của bạn - "${post?.body.slice(0,60)}" `;
             createNoti(user, socket, post, typeNoti, content ) ;
         }
         

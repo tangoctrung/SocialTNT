@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
 function Leftbar() {
-    const PF = "http://localhost:8800/images/";
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const { user} = useContext(Context);
     return (
         <div className="leftbar">

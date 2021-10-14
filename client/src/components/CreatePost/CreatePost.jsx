@@ -20,7 +20,7 @@ function formatTime (date) {
 
 function CreatePost() {
     const [isOpenCreatePost, setIsOpenCreatePost] = useState(false);
-    const PF = "http://localhost:8800/images/";
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const { user, socket } = useContext(Context);
     const [images, setImages] = useState([]);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);

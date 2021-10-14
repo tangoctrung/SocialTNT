@@ -8,6 +8,7 @@ import "./FriendOnline.css";
 function FriendOnline({friendId}) {
 
     const [friend, setFriend] = useState();
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
     useEffect( async () => {
         const resFriend = await axios.get(`/users/profile/${friendId}`);
@@ -18,7 +19,7 @@ function FriendOnline({friendId}) {
             <div className="rightbar-item">
                     <div className="rightbar-item-friend">
                         <div className="rightbar-item-friend-image">
-                            <img src={friend?.avatar} alt="Hình ảnh" />
+                            <img src={friend?.avatar || (PF + "noAvatar.png") } alt="Hình ảnh" />
                             <i className="fas fa-circle"></i>
                         </div>
                         <div className="rightbar-item-friend-name">
@@ -27,7 +28,7 @@ function FriendOnline({friendId}) {
                     </div>
                     <div className="rightbar-item-infoFriend">
                         <div className="rightbar-item-image">
-                            <img src={friend?.avatar} alt="Hình ảnh" />
+                            <img src={friend?.avatar || (PF + "noAvatar.png") } alt="Hình ảnh" />
                         </div>
                         <div className="rightbar-item-info">
                             <b>{friend?.username}</b>

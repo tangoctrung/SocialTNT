@@ -18,6 +18,7 @@ function ReplyComment({
   postId
 }) {
   const { user, socket } = useContext(Context);
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [isLikeComment, setIsLikeComment] = useState(
     replyComment.likes?.includes(user?._id)
   );
@@ -123,7 +124,7 @@ function ReplyComment({
         ?
         <div className="post-itemReplyComment">
           <Link to={`/profile/${replyComment?.userId?._id}`} className="post-listReplyComment-avatar">
-            <img src={replyComment?.userId?.avatar} alt="Avatar" />
+            <img src={replyComment?.userId?.avatar || (PF + "noAvatar.png")} alt="Avatar" />
           </Link>
           
           {!isEditReplyComment && <>

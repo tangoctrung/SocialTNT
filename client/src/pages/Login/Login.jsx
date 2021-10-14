@@ -6,7 +6,6 @@ import { Context } from "context/Context";
 import axios from "axios";
 import UserLoginSmall from 'components/UserLoginSmall/UserLoginSmall';
 import { useState } from 'react';
-import { useEffect } from 'react';
 
 function Number(userLoginLocal, index) {
     let listUser = [...userLoginLocal];

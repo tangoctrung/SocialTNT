@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 function NotificationType({noti}) {
 
     const { user } = useContext(Context);
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const [isRead, setIsRead] = useState(noti?.readNotiId.includes(user?._id));
     const handleDeleteNotification = async () => {
         const dataNoti = {
@@ -28,7 +29,7 @@ function NotificationType({noti}) {
                  className="notification-item-img" 
                  style={{textDecoration: "none", color: "black"}}
                 >
-                    <img src={noti?.senderNotiId.avatar} alt="image" />
+                    <img src={noti?.senderNotiId.avatar || (PF + "noAvatar.png")} alt="image" />
                 </Link>
 
                 <Link 

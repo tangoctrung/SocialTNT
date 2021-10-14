@@ -13,7 +13,7 @@ function InfoConversation ({currentChat}) {
     const [isLoading, setIsLoading] = useState(false);
     const [friend, setFriend] = useState(null);
     const { user } = useContext(Context);
-    const PF = "http://localhost:8800/images/";
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
     useEffect(() => {
         const friendId = currentChat && currentChat.members.find((m) => m !== user._id);

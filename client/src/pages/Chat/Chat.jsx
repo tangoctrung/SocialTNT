@@ -12,7 +12,6 @@ import InfoConversation from "components/InfoConversation/InfoConversation";
 import ReactTooltip from "react-tooltip";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
-import NotificationFast from 'components/NotificationFast/NotificationFast';
 
 function Chat() {
   const [isOpenChatMember, setIsOpenChatMember] = useState(true);
@@ -22,7 +21,7 @@ function Chat() {
   const [followings, setFollowings] = useState([]);
   const [noFollowings, setNoFollowings] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
-  const { user, socket } = useContext(Context);
+  const { user } = useContext(Context);
   const [chatId, setChatId] = useState();
   const location = useLocation();
   const [isCreateGroup, setIsCreateGroup] = useState(false);
@@ -31,55 +30,7 @@ function Chat() {
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [listMembers, setListMembers] = useState([user?._id]);
   const [nameGroup, setNameGroup] = useState("");
-  const PF = "http://localhost:8800/images/";
-  const [isNotiCreatePost, setIsNotiCreatePost] = useState(false);
-  const [listNoti, setListNoti] = useState([]);
-
-   // thông báo createPost, likePost, commentPost
-   useEffect(() => {
-    socket?.on("createPostToClient", (noti) => {
-        let newNoti = [...listNoti];
-        newNoti.push(noti);
-        setListNoti(newNoti);
-        setIsNotiCreatePost(true);
-    });
-    socket?.on("likePostNotiToClient", (noti) => {
-        let newNoti = [...listNoti];
-        newNoti.push(noti);
-        setListNoti(newNoti);
-        setIsNotiCreatePost(true);
-    });
-    socket?.on("commentPostNotiToClient", (noti) => {
-        let newNoti = [...listNoti];
-        newNoti.push(noti);
-        setListNoti(newNoti);
-        setIsNotiCreatePost(true);
-    })
-    socket?.on("replyCommentPostNotiToClient", (noti) => {
-        let newNoti = [...listNoti];
-        newNoti.push(noti);
-        setListNoti(newNoti);
-        setIsNotiCreatePost(true);
-    })
-    socket?.on("likeCommentNotiToClient", (noti) => {
-        let newNoti = [...listNoti];
-        newNoti.push(noti);
-        setListNoti(newNoti);
-        setIsNotiCreatePost(true);
-    })
-    }, [])
-    setTimeout(() => {
-        if(isNotiCreatePost) {
-            setIsNotiCreatePost(false);
-        }
-    }, 5000)
-    const handleClickNotiFast = async (noti, index) => {
-        const dataNoti = {
-            userId: user?._id,
-            notiId: noti?._id
-        }
-        await axios.put(`/notifications/updateNotification`, dataNoti);
-    }
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   // Lấy thông tin các following
   useEffect(() => {
@@ -336,15 +287,6 @@ function Chat() {
           <InfoConversation currentChat={currentChat && currentChat} />
         </div>
       </div>
-
-      {isNotiCreatePost && 
-                  <div className="homePage-noti">
-                      {listNoti && listNoti.map( (noti, index) => (
-                          <div key={index} onClick={() => handleClickNotiFast(noti, index)}>
-                              <NotificationFast noti={noti} />
-                          </div>
-                      ))}
-                  </div>}
     </>
   );
 }

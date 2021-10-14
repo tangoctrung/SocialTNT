@@ -1,5 +1,4 @@
 import React from 'react'
-import { format } from 'timeago.js';
 import "./MessageSender.css";
 
 function formatTime(time) {
@@ -22,7 +21,6 @@ function MessageSender({message}) {
             </div>
             <div className="chat-center-2-itemMessage-sender-text" title={formatTime(message.createdAt)}>
                 <p>{message.content}</p>
-                {/* <span title={formatTime(message.createdAt)}>{format(message.createdAt)}</span> */}
             </div>
         </div>
     )

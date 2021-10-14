@@ -22,7 +22,7 @@ function formatTime (date) {
 
 function ModalEditPost({post}) {
     const inputCommentRef = useRef();
-    const PF = "http://localhost:8800/images/";
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const { user, socket } = useContext(Context);
     const [images, setImages] = useState(post?.images);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);

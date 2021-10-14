@@ -10,14 +10,13 @@ import { Link } from 'react-router-dom';
 import PostSmall from 'components/PostSmall/PostSmall';
 import {storage} from '../../firebase';
 import ReactTooltip from 'react-tooltip';
-import NotificationFast from 'components/NotificationFast/NotificationFast';
 
 function Profile() {
     const [dataUser, setDateUser] = useState({});
     const [isPostList, setIsPostList] = useState(true);
     const [isModalEdit, setIsModalEdit] = useState(false);
-    const { user, dispatch, socket } = useContext(Context);
-    const PF = "http://localhost:8800/images/";
+    const { user, dispatch } = useContext(Context);
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const [username, setUsername] = useState(user.username);
     const [nickname, setNickname] = useState(user.nickname);
     const [date, setDate] = useState(user.date);
@@ -42,55 +41,6 @@ function Profile() {
     const [isLoading, setIsLoading] = useState(false);
     let userLoginLocal1 = JSON.parse(localStorage.getItem("userLogin")) || null;
     const [userLoginLocal, setUserLoginLocal] = useState(userLoginLocal1);
-
-    const [isNotiCreatePost, setIsNotiCreatePost] = useState(false);
-    const [listNoti, setListNoti] = useState([]);
-
-    // thông báo createPost, likePost, commentPost
-    useEffect(() => {
-        socket?.on("createPostToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        });
-        socket?.on("likePostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        });
-        socket?.on("commentPostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-        socket?.on("replyCommentPostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-        socket?.on("likeCommentNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-    }, [])
-    setTimeout(() => {
-        if(isNotiCreatePost) {
-            setIsNotiCreatePost(false);
-        }
-    }, 5000)
-    const handleClickNotiFast = async (noti, index) => {
-        const dataNoti = {
-            userId: user?._id,
-            notiId: noti?._id
-        }
-        await axios.put(`/notifications/updateNotification`, dataNoti);
-    }
 
     useEffect(() => {
         setIsLoading(true);
@@ -164,7 +114,7 @@ function Profile() {
         try{            
             const res = await axios.put(`/users/profile/${paramID}`, infoUserCurrent);
             dispatch({type: "UPDATE_SUCCESS", payload: res.data});
-            window.location.replace(`/profile/${paramID}`);              
+            window.location.reload();              
         } catch(error){
             dispatch({type: "UPDATE_FAILURE"});
         }
@@ -389,14 +339,6 @@ function Profile() {
 
                 
             </div>
-            {isNotiCreatePost && 
-                <div className="homePage-noti">
-                    {listNoti && listNoti.map( (noti, index) => (
-                        <div key={index} onClick={() => handleClickNotiFast(noti, index)}>
-                            <NotificationFast noti={noti} />
-                        </div>
-                    ))}
-                </div>}
         </>
     );
 }

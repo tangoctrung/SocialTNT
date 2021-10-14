@@ -7,65 +7,13 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useContext } from 'react';
-import NotificationFast from 'components/NotificationFast/NotificationFast';
 import './PostSaved.css';
 
 function PostSaved() {
-    const { user, socket } = useContext(Context);
+    const { user } = useContext(Context);
     const [postSave, setPostSave] = useState(null);
     const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isNotiCreatePost, setIsNotiCreatePost] = useState(false);
-    const [listNoti, setListNoti] = useState([]);
-
-    // thông báo createPost, likePost, commentPost
-    useEffect(() => {
-        socket?.on("createPostToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        });
-        socket?.on("likePostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        });
-        socket?.on("commentPostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-        socket?.on("replyCommentPostNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-        socket?.on("likeCommentNotiToClient", (noti) => {
-            let newNoti = [...listNoti];
-            newNoti.push(noti);
-            setListNoti(newNoti);
-            setIsNotiCreatePost(true);
-        })
-    }, [])
- 
-    setTimeout(() => {
-        if(isNotiCreatePost) {
-            setIsNotiCreatePost(false);
-        }
-    }, 5000)
-
-    const handleClickNotiFast = async (noti, index) => {
-        const dataNoti = {
-            userId: user?._id,
-            notiId: noti?._id
-        }
-        await axios.put(`/notifications/updateNotification`, dataNoti);
-    }
-
 
     useEffect(() => {
         setIsLoading(true);
@@ -108,16 +56,7 @@ function PostSaved() {
                         ))}  
                     </div>
                 </div>
-            </div>
-
-            {isNotiCreatePost && 
-                <div className="homePage-noti">
-                    {listNoti && listNoti.map( (noti, index) => (
-                        <div key={index} onClick={() => handleClickNotiFast(noti, index)}>
-                            <NotificationFast noti={noti} />
-                        </div>
-                    ))}
-                </div>}
+            </div>         
         </>
     );
 };

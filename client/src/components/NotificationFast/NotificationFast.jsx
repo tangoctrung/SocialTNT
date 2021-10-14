@@ -8,6 +8,7 @@ import "./NotificationFast.css";
 
 function NotificationFast({noti}) {
     const {user} = useContext(Context);
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     console.log(noti);
     return (
         <Link 
@@ -16,7 +17,7 @@ function NotificationFast({noti}) {
             className="notificationFast"
         >
             <div className="notificationFast-img"> 
-                <img src={noti?.senderNotiId?.avatar} alt="image" />
+                <img src={noti?.senderNotiId?.avatar || (PF + "noAvatar.png")} alt="image" />
             </div>
             <div className="notificationFast-info">
                 <p className="notificationFast-content">

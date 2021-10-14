@@ -20,7 +20,7 @@ function Navbar() {
     const { user, dispatch, isFetching } = useContext(Context);
     const inputRef = useRef();
     const [searchs, setSearchs] = useState(user ? reserveArr(user.searchHistorys) : []);
-    const PF = "http://localhost:8800/images/";
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
     console.log();
     
