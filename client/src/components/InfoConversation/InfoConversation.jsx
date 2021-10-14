@@ -7,13 +7,14 @@ import { useContext } from 'react';
 import { Context } from 'context/Context';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
+import URL from 'config/config';
 
 function InfoConversation ({currentChat}) {
     const [settingChat, setSettingChat] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [friend, setFriend] = useState(null);
     const { user } = useContext(Context);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
 
     useEffect(() => {
         const friendId = currentChat && currentChat.members.find((m) => m !== user._id);
@@ -40,7 +41,7 @@ function InfoConversation ({currentChat}) {
                             style={{textDecoration: "none", color: "black"}}
                             >
                                 <img 
-                                    src={friend ? friend.avatar : (PF + "noAvatar.png")} 
+                                    src={friend ? friend.avatar : (PF)} 
                                     alt="image" 
                                     data-tip={`Đi đến trang cá nhân của ${friend?.username}`}
                                 ></img>

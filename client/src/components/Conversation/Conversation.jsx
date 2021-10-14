@@ -5,11 +5,12 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import { format } from 'timeago.js';
+import URL from 'config/config';
 
 
 function Conversation({conversation, currentUser}) {
     const [friend, setFriend] = useState(null);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
 
 
     useEffect(() => {
@@ -28,7 +29,7 @@ function Conversation({conversation, currentUser}) {
         <Link to={`/chat/${conversation?._id}`} style={{textDecoration: 'none', color: 'black'}} >
             <div className="chat-left-4-member-item">
                 <div className="chat-left-4-member-item-img">
-                    <img src={friend ? (friend.avatar) : (PF + "noAvatar.png")} alt="image" />
+                    <img src={friend ? (friend.avatar) : (PF)} alt="image" />
                     <i className="fas fa-circle"></i>
                 </div>
                 <div className="chat-left-4-member-item-text">

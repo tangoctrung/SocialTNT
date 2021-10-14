@@ -10,13 +10,15 @@ import { Link } from 'react-router-dom';
 import PostSmall from 'components/PostSmall/PostSmall';
 import {storage} from '../../firebase';
 import ReactTooltip from 'react-tooltip';
+import URL from 'config/config';
 
 function Profile() {
     const [dataUser, setDateUser] = useState({});
     const [isPostList, setIsPostList] = useState(true);
     const [isModalEdit, setIsModalEdit] = useState(false);
     const { user, dispatch } = useContext(Context);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
+    const PFcover = URL.urlCover;
     const [username, setUsername] = useState(user.username);
     const [nickname, setNickname] = useState(user.nickname);
     const [date, setDate] = useState(user.date);
@@ -178,9 +180,9 @@ function Profile() {
                 <div className="profile-content">
                     { !isLoading && <>
                             <div className="profile-content-top">
-                            <img src={dataUser.cover ? (PF + dataUser.cover) : (PF + "cover.jpg")} alt="Image" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser.cover ? dataUser.cover : "")}}/>
+                            <img src={dataUser?.cover || PFcover} alt="Image" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser?.cover || PFcover)}}/>
                             <div className="profile-content-avatar">
-                                <img src={dataUser.avatar ? (dataUser.avatar) : (PF + "noAvatar.png")} alt="avatar" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser.avatar ? dataUser.avatar : "")}}/>
+                                <img src={dataUser?.avatar || (PF)} alt="avatar" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser?.avatar || PF )}}/>
                                 <h2>{dataUser.username}</h2>
                                 {dataUser.nickname && <p>{"(" + dataUser.nickname + ")"}</p>}           
                             </div>
@@ -239,7 +241,7 @@ function Profile() {
                                             {isFollower && (
                                             <>
                                                 {followers.map( (follower) => (<Link to={`/profile/${follower._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
-                                                                                    <img src={follower.avatar ? (follower.avatar) : (PF + "noAvatar.png")} />
+                                                                                    <img src={follower.avatar ? (follower.avatar) : (PF)} />
                                                                                     <span>{follower.username}</span>
                                                                             </Link>)
                                                 )}
@@ -249,7 +251,7 @@ function Profile() {
                                             {!isFollower && (
                                             <>
                                                 {followings.map( (following) => (<Link to={`/profile/${following._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
-                                                                                    <img src={following.avatar ? (following.avatar) : (PF + "noAvatar.png")} />
+                                                                                    <img src={following.avatar ? (following.avatar) : (PF)} />
                                                                                     <span>{following.username}</span>
                                                                             </Link>)
                                                 )}
@@ -318,8 +320,8 @@ function Profile() {
                         <form className="modalEdit-content-form" onSubmit = {handleSubmitUpdateUser}>
                             <div className="modalEdit-content-form-avatar">
                                 <label htmlFor="chooseAvatar" >
-                                    {user.avatar && <img src={file ? URL.createObjectURL(file) : (user.avatar)} alt="avatar" title="Bấm vào đây để thay đổi avatar"/>}
-                                    {!user.avatar && <img src={file ? URL.createObjectURL(file) : (PF + "noAvatar.png")} alt="avatar" title="Bấm vào đây để thay đổi avatar"/>}
+                                    {user.avatar && <img src={file ? URL.createObjectURL(file) : (user?.avatar)} alt="avatar" title="Bấm vào đây để thay đổi avatar"/>}
+                                    {!user.avatar && <img src={file ? URL.createObjectURL(file) : (PF)} alt="avatar" title="Bấm vào đây để thay đổi avatar"/>}
                                     <input type="file" id="chooseAvatar" style={{display: "none"}}  onChange={handleChooseAvatarProfile} />
                                 </label>
                             </div>

@@ -12,6 +12,7 @@ import { useRef } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
+import URL from 'config/config';
 
 function ChatMessage({messages, currentChat, setMessages, isLoadingMessages}) {
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
@@ -21,7 +22,7 @@ function ChatMessage({messages, currentChat, setMessages, isLoadingMessages}) {
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const listMessageRef = useRef();
     const inputChatRef = useRef();
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
 
 
     // lấy tin nhắn
@@ -97,7 +98,7 @@ function ChatMessage({messages, currentChat, setMessages, isLoadingMessages}) {
                 <div className="chat-center-1">
                     <div className="chat-center-1-infoUser">
                         <div className="chat-center-1-infoUser-img">
-                            <Link to={`/profile/${friend ? friend._id : ""}`} style={{textDecoration: "none", color: "black"}}><img src={friend ? friend.avatar : (PF + "noAvatar.png")} alt="image" /></Link>
+                            <Link to={`/profile/${friend ? friend._id : ""}`} style={{textDecoration: "none", color: "black"}}><img src={friend ? friend.avatar : (PF)} alt="image" /></Link>
                             <i className="fas fa-circle"></i>
                         </div>
                         <div className="chat-center-1-infoUser-name">
@@ -112,7 +113,7 @@ function ChatMessage({messages, currentChat, setMessages, isLoadingMessages}) {
                 <div className="chat-center-2">
                     <div className="chat-center-2-container" >
                         <div className="chat-center-2-infoUser">
-                            <img src={friend ? friend.avatar : (PF + "noAvatar.png")} alt="image"/>
+                            <img src={friend ? friend.avatar : (PF)} alt="image"/>
                             <h3>{friend && friend.username}</h3>
                             <p>Tham gia từ <b>{friend && format(friend.createdAt)}</b> trước.</p>
                         </div>

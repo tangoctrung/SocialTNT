@@ -2,15 +2,16 @@ import React from 'react';
 import "./UserSmall.css";
 import { format } from 'timeago.js';
 import { Link } from 'react-router-dom';
+import URL from 'config/config';
 
 function UserSmall({data}) {
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
 
     return (
         <Link to={`/profile/${data._id}`} style={{textDecoration: 'none', color: 'black'}} className="all-user-container-itemUser">
             <div className="all-user-container-itemUser-img">
-                <img src={data?.avatar || (PF + "noAvatar.png")} alt="image"/>
+                <img src={data?.avatar || (PF)} alt="image"/>
             </div>
             <div className="all-user-container-itemUser-info">
                 <h3>{data && data.username}</h3>

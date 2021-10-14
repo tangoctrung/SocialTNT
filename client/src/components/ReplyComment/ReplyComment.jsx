@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRef } from "react";
 import { useEffect } from "react";
+import URL from 'config/config';
 
 function ReplyComment({
   replyComment,
@@ -18,7 +19,7 @@ function ReplyComment({
   postId
 }) {
   const { user, socket } = useContext(Context);
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const PF = URL.urlNoAvatar;
   const [isLikeComment, setIsLikeComment] = useState(
     replyComment.likes?.includes(user?._id)
   );
@@ -124,7 +125,7 @@ function ReplyComment({
         ?
         <div className="post-itemReplyComment">
           <Link to={`/profile/${replyComment?.userId?._id}`} className="post-listReplyComment-avatar">
-            <img src={replyComment?.userId?.avatar || (PF + "noAvatar.png")} alt="Avatar" />
+            <img src={replyComment?.userId?.avatar || (PF)} alt="Avatar" />
           </Link>
           
           {!isEditReplyComment && <>

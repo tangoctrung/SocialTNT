@@ -10,6 +10,7 @@ import { useContext } from "react";
 import Picker from "emoji-picker-react";
 import { useRef } from "react";
 import ReplyComment from "components/ReplyComment/ReplyComment";
+import URL from "../../config/config";
 
 function Comment({ comment, authorId }) {
   const { user, socket } = useContext(Context);
@@ -22,7 +23,7 @@ function Comment({ comment, authorId }) {
   const [nameReply, setNameReply] = useState("");
   const [contentComment, setContentComment] = useState(comment?.content);
   // const PF = "http://localhost:8800/images/";
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const PF = URL.urlNoAvatar;
   const commentRef = useRef();
   const inputEditComment = useRef();
   const [isEditComment, setIsEditComment] = useState(false);
@@ -232,7 +233,7 @@ function Comment({ comment, authorId }) {
               className="post-itemComment-avatar"
             >
               <img
-                src={comment?.writerId?.avatar || (PF + "noAvatar.png")}
+                src={comment?.writerId?.avatar || (PF)}
                 alt="Avatar"
               />
             </Link>
@@ -296,7 +297,7 @@ function Comment({ comment, authorId }) {
           </div>: 
           <div className="commentDelete">
           <img
-              src={PF + "noAvatar.png"}
+              src={PF}
               alt="Avatar"
           />
           <span>Bình luận này đã bị xóa</span>       
@@ -325,7 +326,7 @@ function Comment({ comment, authorId }) {
           <form className="post-replyComment" onSubmit={handleSubmitReplyComment}>
             <div className="post-replyComment-avatar">
               <img
-                src={user.avatar ? user.avatar : PF + "noAvatar.png"}
+                src={user.avatar ? user.avatar : PF}
                 alt="Avatar"
               />
             </div>

@@ -7,6 +7,7 @@ import Picker from 'emoji-picker-react';
 import { useRef } from 'react';
 import dataThemes from '../../data/index';
 import { useEffect } from 'react';
+import URL from 'config/config';
 
 function formatTime (date) {
     var hour = new Date(date).getHours(); 
@@ -20,7 +21,7 @@ function formatTime (date) {
 
 function CreatePost() {
     const [isOpenCreatePost, setIsOpenCreatePost] = useState(false);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
     const { user, socket } = useContext(Context);
     const [images, setImages] = useState([]);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
@@ -131,7 +132,7 @@ function CreatePost() {
             <div className="createPost-info" onClick={()=> setIsOpenCreatePost(true)}>
                 <div className="createPost-info-top">
                     <div className="createPost-info-top-image">
-                        <img src={user.avatar ? (user.avatar) : (PF + "noAvatar.png")} alt="Hình ảnh"/>
+                        <img src={user.avatar ? (user.avatar) : (PF)} alt="Hình ảnh"/>
                     </div>
                     <div className="createPost-info-top-input">
                         <div className="input">Hãy cập nhật trạng thái bây giờ của bạn!</div>
@@ -161,7 +162,7 @@ function CreatePost() {
                     <form className="createPost-content-post" onSubmit={handleSubmitCreatePost}>
                         <div className="createPost-content-image-title">
                             <div className="createPost-content-image">
-                                <img src={user.avatar ? (user.avatar) : (PF + "noAvatar.png")} alt="Hình ảnh" />
+                                <img src={user.avatar ? (user.avatar) : (PF)} alt="Hình ảnh" />
                             </div>
                             <div className="createPost-content-title">
                                 <input type="text" placeholder="Tiêu đề bài viết" onChange={e => setTitlePost(e.target.value)} />

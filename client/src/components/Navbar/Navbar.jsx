@@ -5,7 +5,7 @@ import { Context } from 'context/Context';
 import axios from 'axios';
 import { format } from "timeago.js";
 import ReactTooltip from 'react-tooltip';
-
+import URL from 'config/config';
 // hàm đảo ngược mảng
 function reserveArr (arr) {
     let arr1 = [...arr];
@@ -20,7 +20,7 @@ function Navbar() {
     const { user, dispatch, isFetching } = useContext(Context);
     const inputRef = useRef();
     const [searchs, setSearchs] = useState(user ? reserveArr(user.searchHistorys) : []);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
 
     console.log();
     
@@ -116,7 +116,7 @@ function Navbar() {
                     {user && <>                               
                                 <div className="navbar-right-profile">
                                     <div className="navbar-right-img">
-                                        <img src={user.avatar ? (user.avatar) : (PF + "noAvatar.png")} alt="image" />
+                                        <img src={user.avatar ? (user.avatar) : (PF)} alt="image" />
                                         <div className="navbar-right-list">
                                             <div className="navbar-right-item">
                                                 <i className="fas fa-cog"></i>
@@ -182,7 +182,7 @@ function Navbar() {
                                 <div onClick={() => setIsSearch(false)}>
                                     <Link to={`/profile/${user ? user._id : ""}`} style={{textDecoration: "none", color: "black"}} className="find-content-user-container-item">
                                         <div className="find-user-container-item-img">
-                                            <img src={user.avatar ? (user.avatar) : (PF + "noAvatar.png")} alt="image" />
+                                            <img src={user.avatar ? (user.avatar) : (PF)} alt="image" />
                                         </div>
                                         <div className="find-user-container-item-info">
                                             <strong>{user ? user.username : ""}</strong>
@@ -206,7 +206,7 @@ function Navbar() {
                                 <div onClick={() => setIsSearch(false)}>
                                     <Link to={post ? `/post/${post._id}?userId=${post.userId}` : ""}  style={{textDecoration: "none", color: "black"}}  className="find-content-post-container-item">
                                         <div className="find-post-container-item-img">
-                                            <img src={post ? (post.images[0]) : (PF + "noAvatar.png")} alt="image" />
+                                            <img src={post ? (post.images[0]) : (PF)} alt="image" />
                                         </div>
                                         <div className="find-post-container-item-info">
                                             <strong>{post ? post.title : ""}</strong>

@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import {storage} from '../../firebase';
 import axios from 'axios';
 import dataThemes from '../../data/index';
+import URL from 'config/config';
 
 function formatTime (date) {
     var hour = new Date(date).getHours(); 
@@ -22,7 +23,7 @@ function formatTime (date) {
 
 function ModalEditPost({post}) {
     const inputCommentRef = useRef();
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
     const { user, socket } = useContext(Context);
     const [images, setImages] = useState(post?.images);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
@@ -110,7 +111,7 @@ function ModalEditPost({post}) {
         <form className="createPost-content-post" onSubmit={handleSubmitCreatePost}>
                 <div className="createPost-content-image-title">
                     <div className="createPost-content-image">
-                        <img src={user.avatar ? (user.avatar) : (PF + "noAvatar.png")} alt="Hình ảnh" />
+                        <img src={user.avatar ? (user.avatar) : (PF)} alt="Hình ảnh" />
                     </div>
                     <div className="createPost-content-title">
                         <input type="text" value={titlePost} onChange={e => setTitlePost(e.target.value)} />

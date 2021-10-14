@@ -13,6 +13,7 @@ import { useContext } from 'react';
 import { useRef } from 'react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ModalEditPost from 'components/ModalEditPost/ModalEditPost';
+import URL from 'config/config';
 
 function createNoti(user, socket, post, typeNoti, content ) {
     const dataNoti = {
@@ -49,7 +50,7 @@ function Post({post}) {
     const [totalDislike, setTotalDislike] = useState();
     const [isOpenModalEditPost, setIsOpenModalEditPost] = useState(false);
     const [isDeletePost, setIsDeletePost] = useState(false);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
     const { user, dispatch, socket } = useContext(Context);
     const inputCommentRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
@@ -315,7 +316,7 @@ function Post({post}) {
         <div className="post">
             <div className="post-infoAuthor">
                 <Link to={`/profile/${post ? post.authorId._id : ""}`} className="post-infoAuthor-avatar">
-                    <img src={post?.authorId.avatar ? (post?.authorId.avatar) : (PF + "noAvatar.png")} alt="Avatar" />
+                    <img src={post?.authorId.avatar ? (post?.authorId.avatar) : (PF)} alt="Avatar" />
                 </Link>
                 <div className="post-infoAuthor-nameAuthor">
                     <Link to={`/profile/${post ? post?.authorId._id : ""}`} style={{ textDecoration: "none", color: "black" }}><b>{post?.authorId.username}</b></Link>
@@ -381,7 +382,7 @@ function Post({post}) {
             
             <form className="post-writeComment" onSubmit={handleSubmitComment}>
                 <div className="post-writeComment-avatar">
-                    <img src={user.avatar ? (user.avatar) : (PF + "noAvatar.png")} alt="Avatar" />
+                    <img src={user.avatar ? (user.avatar) : (PF)} alt="Avatar" />
                 </div>
                 <div className="post-writeComment-input">
                     <input ref={inputCommentRef} type="text" placeholder="Hãy bình luận về bài viết này..." onFocus={()=> setIsOpenEmoji(false)} />

@@ -1,14 +1,13 @@
 import { Context } from 'context/Context';
 import React from 'react';
-import { useEffect } from 'react';
 import { useContext } from 'react';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./NotificationFast.css";
+import URL from 'config/config';
 
 function NotificationFast({noti}) {
     const {user} = useContext(Context);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
     console.log(noti);
     return (
         <Link 
@@ -17,7 +16,7 @@ function NotificationFast({noti}) {
             className="notificationFast"
         >
             <div className="notificationFast-img"> 
-                <img src={noti?.senderNotiId?.avatar || (PF + "noAvatar.png")} alt="image" />
+                <img src={noti?.senderNotiId?.avatar || (PF)} alt="image" />
             </div>
             <div className="notificationFast-info">
                 <p className="notificationFast-content">

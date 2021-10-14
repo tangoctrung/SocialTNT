@@ -5,12 +5,13 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
+import URL from 'config/config';
 
 
 function NotificationType({noti}) {
 
     const { user } = useContext(Context);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
     const [isRead, setIsRead] = useState(noti?.readNotiId.includes(user?._id));
     const handleDeleteNotification = async () => {
         const dataNoti = {
@@ -29,7 +30,7 @@ function NotificationType({noti}) {
                  className="notification-item-img" 
                  style={{textDecoration: "none", color: "black"}}
                 >
-                    <img src={noti?.senderNotiId.avatar || (PF + "noAvatar.png")} alt="image" />
+                    <img src={noti?.senderNotiId.avatar || (PF)} alt="image" />
                 </Link>
 
                 <Link 

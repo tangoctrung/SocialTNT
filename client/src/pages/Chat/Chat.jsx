@@ -12,6 +12,7 @@ import InfoConversation from "components/InfoConversation/InfoConversation";
 import ReactTooltip from "react-tooltip";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
+import URL from 'config/config';
 
 function Chat() {
   const [isOpenChatMember, setIsOpenChatMember] = useState(true);
@@ -30,7 +31,7 @@ function Chat() {
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [listMembers, setListMembers] = useState([user?._id]);
   const [nameGroup, setNameGroup] = useState("");
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const PF = URL.urlNoAvatar;
 
   // Lấy thông tin các following
   useEffect(() => {
@@ -164,7 +165,7 @@ function Chat() {
                                 src={
                                   following.avatar
                                     ? following.avatar
-                                    : PF + "noAvatar.png"
+                                    : PF
                                 }
                                 alt="image"
                               />
@@ -187,7 +188,7 @@ function Chat() {
                                 src={
                                   following.avatar
                                     ? following.avatar
-                                    : PF + "noAvatar.png"
+                                    : PF
                                 }
                                 alt="image"
                               />

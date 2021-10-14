@@ -3,14 +3,15 @@ import "./Leftbar.css";
 import { Context } from 'context/Context';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
+import URL from 'config/config';
 
 function Leftbar() {
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const PF = URL.urlNoAvatar;
     const { user} = useContext(Context);
     return (
         <div className="leftbar">
             <Link to={`/profile/${user._id}`} style={{textDecoration: "none"}} className="leftbar-item image">
-                <img src={user.avatar ? (user.avatar) : (PF + "noAvatar.png")} />
+                <img src={user.avatar ? (user.avatar) : (PF)} />
                 <span>{user.username}</span>
             </Link>
             <div className="leftbar-top">
