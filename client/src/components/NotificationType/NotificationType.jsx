@@ -13,14 +13,7 @@ function NotificationType({noti}) {
     const { user } = useContext(Context);
     const PF = URL.urlNoAvatar;
     const [isRead, setIsRead] = useState(noti?.readNotiId.includes(user?._id));
-    const handleDeleteNotification = async () => {
-        const dataNoti = {
-            userId: user?._id,
-            notiId: noti?._id
-        }
-        await axios.put(`/notifications/deleteNotification`, dataNoti);
-        window.location.reload();
-    }
+    
     
     return (  
         <>
@@ -48,15 +41,7 @@ function NotificationType({noti}) {
                     </div>
                 </Link>
                 
-                <div className="notification-item-menu">
-                    <i className="fas fa-ellipsis-h"></i>
-                    <div className="notification-item-listMenu">
-                        <div className="notification-item-itemMenu" onClick={handleDeleteNotification}>
-                            <i className="fas fa-trash"></i>
-                            <span>Xóa thông báo</span>
-                        </div>
-                    </div>
-                </div>
+                
             </div>}  
         </>
     )

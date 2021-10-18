@@ -7,15 +7,18 @@ import { Context } from 'context/Context';
 import { useContext } from 'react';
 
 function Rightbar() {
-    const { socket } = useContext(Context);
-    const [listFriendOnline, setListFriendOnline] = useState([]);
+    const { user, socket } = useContext(Context);
+    const [listFriendOnline, setListFriendOnline] = useState();
     const [isShowInputFindFriend, setIsShowInputFindFriend] = useState(false);
+    
+
     useEffect(() => {
-        socket?.on("getUser", users => {
-            setListFriendOnline(users);
+        socket?.emit("addUser", user?._id);
+        socket?.on("getUser", (users) => {
+            setListFriendOnline([...users])
         });
-    }, [socket]);
-    console.log(listFriendOnline);
+    }, [user?._id])
+
     const handleClickSearchFriend = () => {
         setIsShowInputFindFriend(true);
     }
@@ -26,7 +29,7 @@ function Rightbar() {
         <div className="rightbar">
             <form className="rightbar-form-find">
                 {!isShowInputFindFriend && <>
-                    <span>Bạn bè đang hoạt động</span>
+                    <span>Người dùng đang hoạt động</span>
                     <><i className="fas fa-search" data-tip="Tìm kiếm bạn bè để nhắn tin" onClick={handleClickSearchFriend}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
                 </>}
                 
@@ -38,7 +41,7 @@ function Rightbar() {
             </form>
             <div className="rightbar-listFriendOnline">
                 {listFriendOnline && listFriendOnline.map ((friendOnline, index) => (
-                    <FriendOnline key={index} friendId={friendOnline.userId} />
+                        <FriendOnline key={index} friendId={friendOnline.userId} />
                 ))}
             </div>
         </div>

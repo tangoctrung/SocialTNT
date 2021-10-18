@@ -171,3 +171,25 @@
     color: rgb(59, 58, 58);
     text-align: center;
 }
+
+@media screen and (min-width: 768px) and (max-width: 1300px){
+    .login-form{
+        width: 350px;
+        height: 450px;
+    }
+    .login-form button{
+        margin-top: 40px;
+        width: 150px;
+        padding: 15px 20px;
+    }
+    .login-form .inputEmail{
+        margin-top: 50px;
+    }
+    .login-left{
+        margin-right: 40px;
+        width: 500px;
+    }
+    .login-left-container h2{
+        font-size: 26px;
+    }
+}

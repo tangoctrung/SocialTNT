@@ -8,7 +8,7 @@
 
 /* css nôị dung bên trái */
 .PostThemen-left{
-    width: 33.33%;
+    width: 300px;
     height: calc(100vh - 50px);
 }
 .PostThemen-left-top{
@@ -25,6 +25,13 @@
 
 .PostThemen-left-bottom{
     width: 350px;
+}
+.PostThemen-left-bottom-1{
+    display: none;
+    margin-top: 20px;
+}
+.PostThemen-left-bottom-1>p{
+    font-size: 20px;
 }
 .PostThemen-left-bottom-container{
     margin-top: 20px;
@@ -50,9 +57,14 @@
 
 /* css nội dung ở giữa */
 .PostThemen-center{
-    width: 33.33%;
-    min-width: 500px;
+    width: calc(100vw - 600px);
+    display: flex;
+    justify-content: center;
+    min-width: 600px;
     height: calc(100vh - 50px);
+}
+.PostThemen-center-1{
+    width: 650px;
 }
 .PostThemen-center-text{
     font-size: 36px;
@@ -112,3 +124,39 @@
     animation:s2 1s infinite linear;
 }
 @keyframes s2 {to{transform: rotate(1turn)}}
+
+@media (min-width: 1201px) and (max-width: 1350px) {
+    .PostThemen-left-bottom-1{
+        display: block;    
+    }
+    .PostThemen-right{
+        display: none;
+    }
+    .PostThemen-left{
+        width: 400px;
+    }
+    .PostThemen-center{
+        width: calc(100vw - 400px); 
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+    .PostThemen-left-bottom-1{
+        display: block;    
+    }
+    .PostThemen-right{
+        display: none;
+    }
+    .PostThemen-left{
+        width: 300px;
+    }
+    .PostThemen-left-bottom{
+        width: 300px;
+    }
+    .PostThemen-center{
+        width: calc(100vw - 300px); 
+    }
+    .PostThemen-center-1{
+        width: 550px;
+    }
+}

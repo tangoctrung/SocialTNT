@@ -21,7 +21,7 @@ import { useRef } from 'react';
 
 function App() {
     const audioRef = useRef();
-    const { user, socket } = useContext(Context);
+    const { user, socket, accessToken, dispatch } = useContext(Context);
     const [isNotiCreatePost, setIsNotiCreatePost] = useState(false);
     const [listNoti, setListNoti] = useState([]);
 
@@ -32,35 +32,35 @@ function App() {
             newNoti.push(noti);
             setListNoti(newNoti);
             setIsNotiCreatePost(true);
-            audioRef.current.play();
+            audioRef?.current?.play();
         });
         socket?.on("likePostNotiToClient", (noti) => {
             let newNoti = [...listNoti];
             newNoti.push(noti);
             setListNoti(newNoti);
             setIsNotiCreatePost(true);
-            audioRef.current.play();
+            audioRef?.current?.play();
         });
         socket?.on("commentPostNotiToClient", (noti) => {
             let newNoti = [...listNoti];
             newNoti.push(noti);
             setListNoti(newNoti);
             setIsNotiCreatePost(true);
-            audioRef.current.play();
+            audioRef?.current?.play();
         })
         socket?.on("replyCommentPostNotiToClient", (noti) => {
             let newNoti = [...listNoti];
             newNoti.push(noti);
             setListNoti(newNoti);
             setIsNotiCreatePost(true);
-            audioRef.current.play();
+            audioRef?.current?.play();
         })
         socket?.on("likeCommentNotiToClient", (noti) => {
             let newNoti = [...listNoti];
             newNoti.push(noti);
             setListNoti(newNoti);
             setIsNotiCreatePost(true);
-            audioRef.current.play();
+            audioRef?.current?.play();
         })
     }, [])   
     setTimeout(() => {
@@ -68,6 +68,18 @@ function App() {
             setIsNotiCreatePost(false);
         }
     }, 5000)
+
+    useEffect( async () => {
+        if (accessToken) {
+            const res = await axios.get('/auth/', {
+                headers: {
+                  Authorization: 'Bearer ' + accessToken //the token is a variable which holds the token
+                }
+            });
+            dispatch({type: "NO_LOGIN", payload: res.data});
+        }
+    }, []);
+
     const handleClickNotiFast = async (noti, index) => {
         const dataNoti = {
             userId: user?._id,
@@ -86,13 +98,13 @@ function App() {
           </audio>
           <Switch>
               <Route path="/" exact>
-                  {user ? <HomePage /> : <Login />}    
+                  {accessToken ? <HomePage /> : <Login />}    
               </Route>
               <Route path="/post/:id" exact>
-                  {user ? <PostDetail /> : <Login />} 
+                  {accessToken ? <PostDetail /> : <Login />} 
               </Route>
               <Route path="/profile/:id" exact>
-                  {user ? <Profile /> : <Login />} 
+                  {accessToken ? <Profile /> : <Login />} 
               </Route>
               <Route path="/login" exact>
                   <Login />
@@ -101,25 +113,25 @@ function App() {
                   <Register />
               </Route>
               <Route path="/alluser" exact>            
-                  {user ? <AllUser /> : <Login />} 
+                  {accessToken ? <AllUser /> : <Login />} 
               </Route>
               <Route path="/chat" exact>
-                {user ? <Chat /> : <Login />} 
+                {accessToken ? <Chat /> : <Login />} 
               </Route>
               <Route path="/chat/:id" exact>
-                {user ? <Chat /> : <Login />} 
+                {accessToken ? <Chat /> : <Login />} 
               </Route>
               <Route path="/postsaved" exact>
-                {user ? <PostSaved /> : <Login />} 
+                {accessToken ? <PostSaved /> : <Login />} 
               </Route>
               <Route path="/postcondition" exact>
-                {user ? <PostCondition /> : <Login />} 
+                {accessToken ? <PostCondition /> : <Login />} 
               </Route>
               <Route path="/postthemen" exact>
-                {user ? <PostThemen /> : <Login />} 
+                {accessToken ? <PostThemen /> : <Login />} 
               </Route>
               <Route path="/notification" exact>
-                {user ? <Notification /> : <Login />} 
+                {accessToken ? <Notification /> : <Login />} 
               </Route>
           </Switch>
           {isNotiCreatePost && 

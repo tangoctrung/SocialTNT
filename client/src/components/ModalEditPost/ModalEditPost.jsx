@@ -42,6 +42,7 @@ function ModalEditPost({post}) {
         }
         s += s1[n-1];
         console.log(s);
+        if (s === "undefined") s = "";
         setHashtag(s);
     }, [post]);
 
@@ -62,7 +63,7 @@ function ModalEditPost({post}) {
         console.log(dataPost);
         try{
             const res = await axios.put(`/posts/${post?._id}`, dataPost);
-            // socket?.emit("editPost", res.data);
+            socket?.emit("editPost", res.data);
             window.location.reload();
         } catch(error){
         }

@@ -4,14 +4,10 @@ import { Link } from "react-router-dom";
 import { Context } from 'context/Context';
 import axios from 'axios';
 import { format } from "timeago.js";
-import ReactTooltip from 'react-tooltip';
 import URL from 'config/config';
-// hàm đảo ngược mảng
-function reserveArr (arr) {
-    let arr1 = [...arr];
-    arr1.reverse();
-    return arr1;
-}
+import { Tooltip } from '@material-ui/core';
+import ReactTooltip from 'react-tooltip';
+import { reserveArr } from "../../config/reserveArr";
 
 function Navbar() {
     const [isSearch, setIsSearch] = useState(false);
@@ -19,10 +15,11 @@ function Navbar() {
     const [posts, setPosts] = useState([]);
     const { user, dispatch, isFetching } = useContext(Context);
     const inputRef = useRef();
-    const [searchs, setSearchs] = useState(user ? reserveArr(user.searchHistorys) : []);
+    const [searchs, setSearchs] = useState(user?.searchHistorys);
     const PF = URL.urlNoAvatar;
 
-    console.log();
+    console.log(user);
+    console.log(searchs);
     
     const handleClickLogout = () => {
         dispatch({type: "LOGOUT"});
@@ -44,22 +41,22 @@ function Navbar() {
     const handleSubmitFind =  (e) => {
         e.preventDefault();
         dispatch({ type: "SEARCH_START"});
+
         const fetchDataUserPost = async () => {
             const resUser = await axios.get(`/users?username=${inputRef.current.value}`);
             setUsers(resUser.data);
             const resPost = await axios.get(`/posts?hashtag=${inputRef.current.value}`);
             setPosts(resPost.data);
             await axios.put("/users/addSearchHistory", {
-                userId: user._id,
+                userId: user?._id,
                 history: inputRef.current.value
             });
             const s = inputRef.current.value;
-            let historys = [...searchs];
+            let historys = [...user?.searchHistorys];
             if (!historys.includes(s)){
-                historys.unshift(s);
+                historys.push(s);
                 dispatch({ type: "SEARCH_HISTORY", payload: s });
             }
-            setSearchs(historys);
             dispatch({ type: "SEARCH_SUCCESS"});
         }
         fetchDataUserPost();
@@ -73,13 +70,12 @@ function Navbar() {
 
     //KHI NGƯỜI DÙNG XÓA 1 LỊCH SỬ TÌM KIẾM
     const handleDeleteHistory = (history) => {
-        let newHistory = [...searchs];
+        let newHistory = [...user?.searchHistorys];
         const nh = newHistory.filter(h => h !== history);
-        setSearchs(nh);
         dispatch({ type: "DELETE_HISTORY", payload: history });
         const fetchDeleteHistory = async () => {
             await axios.put("/users/deleteSearchHistory", {
-                userId: user._id,
+                userId: user?._id,
                 history: history,
             })
         }
@@ -96,17 +92,30 @@ function Navbar() {
                 <div className="navbar-center">
                     {user && <>
                                 <Link to="/" className="navbar-center-home">
-                                    <><i className="fas fa-home" data-tip="Trang chủ"></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
+                                    <Tooltip title="Trang chủ" placement={isSearch ? "left" : "bottom"} enterDelay={1000} arrow>
+                                        <i className="fas fa-home"></i>
+                                    </Tooltip>
                                 </Link>
                                 <div className="navbar-center-find">
-                                    {!isSearch && <><i className="fas fa-search" data-tip="Tìm kiếm" onClick={handleClickOpenFind}></i> <ReactTooltip place="bottom" type="dark" effect="solid"/></>}
-                                    {isSearch && <><i class="fas fa-times" data-tip="Tắt tìm kiếm" onClick={handleClickCloseFind}></i><ReactTooltip place="left" type="dark" effect="solid"/></>}
+                                    {!isSearch && 
+                                        <>
+                                            <i className="fas fa-search" data-tip="Tìm kiếm" onClick={handleClickOpenFind}></i> 
+                                            <ReactTooltip place="bottom" effect="solid" />
+                                        </>}
+                                    {isSearch && 
+                                        <>
+                                            <i class="fas fa-times" data-tip="Tắt tìm kiếm" onClick={handleClickCloseFind}></i>
+                                            <ReactTooltip place="left"  effect="solid" />
+                                        </>
+                                    }
                                     <form className="navbar-center-form" style={{width: isSearch ? "350px" : "30px"}} onSubmit={handleSubmitFind}>
                                         <input ref={inputRef} onChange={handleChangeFind} placeholder="Tìm kiếm người dùng hoặc bài viết theo hashtag"/>
                                     </form>
                                 </div>
-                                <Link to={`/profile/${user._id}`} className="navbar-center-noti">
-                                    <><i className="fas fa-user-plus" data-tip="Trang cá nhân"></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
+                                <Link to={`/profile/${user?._id}`} className="navbar-center-noti">
+                                    <Tooltip title="Trang cá nhân" placement={isSearch ? "left" : "bottom"} enterDelay={1000} arrow>
+                                        <i className="fas fa-user-plus"></i>
+                                    </Tooltip>
                                 </Link>
                             </>}
                     
@@ -116,7 +125,7 @@ function Navbar() {
                     {user && <>                               
                                 <div className="navbar-right-profile">
                                     <div className="navbar-right-img">
-                                        <img src={user.avatar ? (user.avatar) : (PF)} alt="image" />
+                                        <img src={user?.avatar ? (user?.avatar) : (PF)} alt="image" />
                                         <div className="navbar-right-list">
                                             <div className="navbar-right-item">
                                                 <i className="fas fa-cog"></i>
@@ -127,11 +136,7 @@ function Navbar() {
                                                     <i className="fas fa-save"></i>
                                                     <span>Đã lưu</span>
                                                 </Link>
-                                            </div>
-                                            {/* <Link to="/postSaved" style={{textDecoration: "none"}} className="leftbar-item">
-                    <i className="fas fa-bookmark"></i>
-                    <span>Đã lưu</span>
-                </Link> */}
+                                            </div>                                         
                                             <div className="navbar-right-item" onClick={handleClickLogout}>
                                                 <i className="fas fa-sign-out-alt"></i>
                                                 <span>Đăng xuất</span>
@@ -161,13 +166,13 @@ function Navbar() {
                     <div className="find-content-history">
                         <p>Lịch sử tìm kiếm</p>
                         <div className="find-content-history-container">
-                            {searchs.length > 0 && searchs.map( (history) => (
-                                <div className="find-content-history-container-item" onClick={() => handleClickHistory(history)}>
-                                    <div className="find-history-container-item-info">
+                            {user?.searchHistorys?.length > 0 && user?.searchHistorys?.map( (history) => (
+                                <div className="find-content-history-container-item" >
+                                    <div className="find-history-container-item-info" onClick={() => handleClickHistory(history)}>
                                         <p>{history}</p>
                                     </div>                             
                                     <div className="find-history-container-item-close" onClick={()=> handleDeleteHistory(history)}>
-                                        <i className="fal fa-times" title="Xóa tìm kiếm"></i>
+                                        <i className="fal fa-times"></i>
                                     </div>
                                 </div>     
                             ))}
@@ -176,8 +181,15 @@ function Navbar() {
                     <div className="find-content-user">
                         <p>Người dùng được tìm thấy</p>
                         <div className="find-content-user-container">
-                            {isFetching && <div className="find-content-user-container-item"> <div className="spinner-3"></div><p>Đang tìm kiếm</p></div>}
-                            {users.length === 0 && !isFetching && <div className="find-content-user-container-item-noFind"> <p>Không có</p></div>}                
+                            {isFetching && 
+                                <div className="find-content-user-container-item"> 
+                                    <div className="spinner-3"></div>
+                                    <p>Đang tìm kiếm</p>
+                                </div>}
+                            {users?.length === 0 && !isFetching && 
+                                <div className="find-content-user-container-item-noFind"> 
+                                    <p>Không có</p>
+                                </div>}                
                             {users && !isFetching && users.map(user => (
                                 <div onClick={() => setIsSearch(false)}>
                                     <Link to={`/profile/${user ? user._id : ""}`} style={{textDecoration: "none", color: "black"}} className="find-content-user-container-item">
@@ -200,11 +212,18 @@ function Navbar() {
                     <div className="find-content-post">
                     <p>Bài viết được tìm thấy</p>
                         <div className="find-content-post-container">
-                            {isFetching && <div className="find-content-post-container-item"><div className="spinner-3"></div><p>Đang tìm kiếm</p></div>}
-                            {posts.length === 0 && !isFetching && <div className="find-content-post-container-item-noFind"> <p>Không có</p></div>}
+                            {isFetching && 
+                                <div className="find-content-post-container-item">
+                                    <div className="spinner-3"></div>
+                                    <p>Đang tìm kiếm</p>
+                                </div>}
+                            {posts.length === 0 && !isFetching && 
+                                <div className="find-content-post-container-item-noFind"> 
+                                    <p>Không có</p>
+                                </div>}
                             {posts && !isFetching && posts.map(post => (
                                 <div onClick={() => setIsSearch(false)}>
-                                    <Link to={post ? `/post/${post._id}?userId=${post.userId}` : ""}  style={{textDecoration: "none", color: "black"}}  className="find-content-post-container-item">
+                                    <Link to={post ? `/post/${post._id}` : ""}  style={{textDecoration: "none", color: "black"}}  className="find-content-post-container-item">
                                         <div className="find-post-container-item-img">
                                             <img src={post ? (post.images[0]) : (PF)} alt="image" />
                                         </div>

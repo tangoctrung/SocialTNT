@@ -52,13 +52,30 @@ function PostThemen() {
                             
                         </div>
                     </div>
+                    <div className="PostThemen-left-bottom-1">
+                        <p >Những <b>chủ đề</b> có thể bạn quan tâm</p>
+                        <div className="PostThemen-right-bottom-container">
+                            {themenNormal && themenNormal.map((themen, index) => (
+                                <Link 
+                                    key={index}
+                                    to={`postthemen?themen=${themen.themen}`} 
+                                    style={{textDecoration: 'none', color: 'black'}}
+                                >
+                                    <p>{themen.themen}</p>
+                                </Link>
+                            ))}
+                            
+                        </div>
+                    </div>
                 </div>
                 <div className="PostThemen-center">
-                    {!isLoading && posts.length > 0 && posts.map((post, index) => (
-                        <Post post={post} post={post} key={index}/>
-                    ))}
-                    {posts.length === 0 && !isLoading &&  <span className="PostThemen-center-text">Không tìm thấy bài viết nào</span>}
-                    {isLoading && <div className="PostThemen-center-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
+                    <div className="PostThemen-center-1">
+                        {!isLoading && posts.length > 0 && posts.map((post, index) => (
+                            <Post post={post} post={post} key={index}/>
+                        ))}
+                        {posts.length === 0 && !isLoading &&  <span className="PostThemen-center-text">Không tìm thấy bài viết nào</span>}
+                        {isLoading && <div className="PostThemen-center-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
+                    </div>
                 </div>
                 <div className="PostThemen-right">
                     <p>Những <b>chủ đề</b> có thể bạn quan tâm</p>

@@ -20,9 +20,10 @@ dotenv.config();
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
+// mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority
 // connect to the database
 mongoose
-  .connect("mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority", {
+  .connect("mongodb://localhost:27017/SocialTNT", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,

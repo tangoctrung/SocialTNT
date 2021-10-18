@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { format } from 'timeago.js';
 import "./FriendOnline.css";
 import URL from 'config/config';
+import { Link } from 'react-router-dom';
 
 function FriendOnline({friendId}) {
 
@@ -18,7 +19,7 @@ function FriendOnline({friendId}) {
     return (
         <div>
             <div className="rightbar-item">
-                    <div className="rightbar-item-friend">
+                    <Link to={`/profile/${friendId}`} style={{textDecoration: "none", color: "black"}}  className="rightbar-item-friend">
                         <div className="rightbar-item-friend-image">
                             <img src={friend?.avatar || (PF) } alt="Hình ảnh" />
                             <i className="fas fa-circle"></i>
@@ -26,7 +27,7 @@ function FriendOnline({friendId}) {
                         <div className="rightbar-item-friend-name">
                             <b>{friend?.username}</b>
                         </div>
-                    </div>
+                    </Link>
                     <div className="rightbar-item-infoFriend">
                         <div className="rightbar-item-image">
                             <img src={friend?.avatar || (PF) } alt="Hình ảnh" />

@@ -6,8 +6,12 @@ import "./HomePageContent.css";
 function HomePageContent(props) {
     return (
         <div className="home-page-content">
-            <CreatePost />
-            <PostList />
+            <div className="home-page-content-create-post">
+                <CreatePost />
+            </div>
+            <div className="home-page-content-create-post">
+                <PostList />
+            </div>
         </div>
     );
 }

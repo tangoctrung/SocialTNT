@@ -19,20 +19,20 @@ function Profile() {
     const { user, dispatch } = useContext(Context);
     const PF = URL.urlNoAvatar;
     const PFcover = URL.urlCover;
-    const [username, setUsername] = useState(user.username);
-    const [nickname, setNickname] = useState(user.nickname);
-    const [date, setDate] = useState(user.date);
-    const [gender, setGender] = useState(user.gender);
-    const [job, setJob] = useState(user.job);
-    const [status, setStatus] = useState(user.status);
-    const [address, setAddress] = useState(user.address);
-    const [hometown, setHometown] = useState(user.hometown);
-    const [infoOther, setInfoOther] = useState(user.infoOther);
+    const [username, setUsername] = useState(user?.username);
+    const [nickname, setNickname] = useState(user?.nickname);
+    const [date, setDate] = useState(user?.date);
+    const [gender, setGender] = useState(user?.gender);
+    const [job, setJob] = useState(user?.job);
+    const [status, setStatus] = useState(user?.status);
+    const [address, setAddress] = useState(user?.address);
+    const [hometown, setHometown] = useState(user?.hometown);
+    const [infoOther, setInfoOther] = useState(user?.infoOther);
     const [file, setFile] = useState(null);
     const [posts, setPosts] = useState([]);
     const [followers, setFollowers] = useState([]);
     const [followings, setFollowings] = useState([]);
-    const [isFollow, setIsFollow] = useState(user.following.includes(user?._id));
+    const [isFollow, setIsFollow] = useState(user?.following.includes(user?._id));
     const [isFollower, setIsFollower] = useState(true);
     const searchURL = useLocation();
     const paramID = searchURL.pathname.split("/")[2];
@@ -64,7 +64,7 @@ function Profile() {
           console.log(res2.data);
         }
         fetchDataFollowings();
-        setIsFollow(user.following.includes(paramID));
+        setIsFollow(user?.following.includes(paramID));
     }, [paramID, isFollow]);
     
     useEffect(() => {
@@ -100,9 +100,9 @@ function Profile() {
         }
          // LƯU THAY ĐỔI VÀO LOCAL 
         let newUser = {
-            userId: user._id,
+            userId: user?._id,
             username: username,
-            avatar: user.avatar,
+            avatar: user?.avatar,
         }     
         if (avatarUrl) {
             infoUserCurrent.avatar = avatarUrl;
@@ -126,14 +126,14 @@ function Profile() {
         const file1 = e.target.files[0];
         setFile(file1);
         if (file1) {
-            const uploadTask = storage.ref(`avatar/${user._id},${user.username}/${file1.name}`).put(file1);
+            const uploadTask = storage.ref(`avatar/${user?._id},${user?.username}/${file1.name}`).put(file1);
             console.log("loading");
             uploadTask.on('state_changed', 
                 (snapshot) => {}, 
                 (error) => { alert(error)}, 
                 () => {
                     // complete function ....
-                    storage.ref(`avatar/${user._id},${user.username}`).child(file1.name).getDownloadURL().then(url => {
+                    storage.ref(`avatar/${user?._id},${user?.username}`).child(file1.name).getDownloadURL().then(url => {
                         console.log(url);
                         setAvatarUrl(url);
                     })
@@ -150,12 +150,12 @@ function Profile() {
             try {
                 if (isFollow) {
                   await axios.put(`/users/profile/${paramID}/unfollow`, {
-                    userId: user._id,
+                    userId: user?._id,
                   });
                   dispatch({ type: "UNFOLLOW", payload: paramID });
                 } else {
                   await axios.put(`/users/profile/${paramID}/follow`, {
-                    userId: user._id,
+                    userId: user?._id,
                   });
                   dispatch({ type: "FOLLOW", payload: paramID });
                 }
@@ -183,10 +183,10 @@ function Profile() {
                             <img src={dataUser?.cover || PFcover} alt="Image" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser?.cover || PFcover)}}/>
                             <div className="profile-content-avatar">
                                 <img src={dataUser?.avatar || (PF)} alt="avatar" onClick={()=> {setIsOpenModal(true); setImageModal(dataUser?.avatar || PF )}}/>
-                                <h2>{dataUser.username}</h2>
-                                {dataUser.nickname && <p>{"(" + dataUser.nickname + ")"}</p>}           
+                                <h2>{dataUser?.username}</h2>
+                                {dataUser?.nickname && <p>{"(" + dataUser.nickname + ")"}</p>}           
                             </div>
-                            {dataUser._id !== user._id && <div className="profile-content-requestFriend-Chat">
+                            {dataUser?._id !== user?._id && <div className="profile-content-requestFriend-Chat">
         
                                                                 <div className={isFollow ? "profile-content-requestFriend" : "profile-content-requestFriend isActiveRequestFriend"} onClick={handleFollow}>
                                                                     {isFollow ? "" : <i className="fas fa-plus"></i>}
@@ -209,16 +209,16 @@ function Profile() {
                                 <div className="profile-content-infoUser">
                                     <div className="profile-content-title">
                                         <p>Thông tin người dùng</p>
-                                        {dataUser._id === user._id && <><i className="far fa-edit" data-tip="Chỉnh sửa thông tin cá nhân" onClick={handleOpenModalEditUser}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>}                            
+                                        {dataUser?._id === user?._id && <><i className="far fa-edit" data-tip="Chỉnh sửa thông tin cá nhân" onClick={handleOpenModalEditUser}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>}                            
                                     </div>
                                     <div className="profile-content-infoUser-container">
-                                        <span><i className="fas fa-birthday-cake"></i>Ngày sinh: {dataUser.date ? <b>{dataUser.date}</b> : <i>Chưa cập nhật</i>}</span> <br/>
-                                        <span><i className="fas fa-user-md"></i>Công việc: {dataUser.job ? <b>{dataUser.job}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                        <span><i className="fas fa-transgender"></i>Giới tính: {dataUser.gender ? <b>{dataUser.gender}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                        <span><i className="fab fa-gratipay"></i>Trạng thái: {dataUser.status ? <b>{dataUser.status}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                        <span><i class="fas fa-home-lg-alt"></i>Nơi ở: {dataUser.address ? <b>{dataUser.address}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                        <span><i className="fas fa-map-marker-alt"></i>Quê quán: {dataUser.hometown ? <b>{dataUser.hometown}</b> : <i>Chưa cập nhật</i>}</span><br/>
-                                        <span><i className="fas fa-info-circle"></i>Thông tin khác: {dataUser.infoOther ? <b>{dataUser.infoOther}</b> : <i>Chưa cập nhật</i>}</span>
+                                        <span><i className="fas fa-birthday-cake"></i>Ngày sinh: {dataUser?.date ? <b>{dataUser?.date}</b> : <i>Chưa cập nhật</i>}</span> <br/>
+                                        <span><i className="fas fa-user-md"></i>Công việc: {dataUser?.job ? <b>{dataUser?.job}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                        <span><i className="fas fa-transgender"></i>Giới tính: {dataUser?.gender ? <b>{dataUser?.gender}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                        <span><i className="fab fa-gratipay"></i>Trạng thái: {dataUser?.status ? <b>{dataUser?.status}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                        <span><i class="fas fa-home-lg-alt"></i>Nơi ở: {dataUser?.address ? <b>{dataUser?.address}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                        <span><i className="fas fa-map-marker-alt"></i>Quê quán: {dataUser?.hometown ? <b>{dataUser?.hometown}</b> : <i>Chưa cập nhật</i>}</span><br/>
+                                        <span><i className="fas fa-info-circle"></i>Thông tin khác: {dataUser?.infoOther ? <b>{dataUser?.infoOther}</b> : <i>Chưa cập nhật</i>}</span>
                                     </div>
                                 </div>
                                 <div className="profile-content-listFriend">
@@ -228,21 +228,21 @@ function Profile() {
                                                 className={isFollower ? "isActiveFollower" : ""}
                                                 onClick={() => setIsFollower(true)}
                                                 >
-                                                Người theo dõi <b>({followers.length})</b>
+                                                Người theo dõi <b>({followers?.length})</b>
                                             </p>
                                             <p
                                                 className={!isFollower ? "isActiveFollower" : ""}
                                                 onClick={() => setIsFollower(false)}
                                                 >
-                                                Đang theo dõi <b>({followings.length})</b>
+                                                Đang theo dõi <b>({followings?.length})</b>
                                             </p>
                                         </div>
                                         <div className="profile-contennt-listFriend-body">
                                             {isFollower && (
                                             <>
-                                                {followers.map( (follower) => (<Link to={`/profile/${follower._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
-                                                                                    <img src={follower.avatar ? (follower.avatar) : (PF)} />
-                                                                                    <span>{follower.username}</span>
+                                                {followers?.map( (follower) => (<Link to={`/profile/${follower?._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
+                                                                                    <img src={follower?.avatar ? (follower?.avatar) : (PF)} />
+                                                                                    <span>{follower?.username}</span>
                                                                             </Link>)
                                                 )}
                                                 
@@ -250,7 +250,7 @@ function Profile() {
                                             )}
                                             {!isFollower && (
                                             <>
-                                                {followings.map( (following) => (<Link to={`/profile/${following._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
+                                                {followings?.map( (following) => (<Link to={`/profile/${following._id}`} style={{textDecoration: 'none', color: 'black'}} className="profile-content-itemFriend">
                                                                                     <img src={following.avatar ? (following.avatar) : (PF)} />
                                                                                     <span>{following.username}</span>
                                                                             </Link>)
@@ -261,7 +261,7 @@ function Profile() {
                                     </div>
                             </div>
                             <div className="profile-content-bottom-right">
-                                {dataUser._id === user._id && <div className="profile-content-createPost">
+                                {dataUser?._id === user?._id && <div className="profile-content-createPost">
                                                                     <CreatePost />
                                                             </div>
                                     }
@@ -320,8 +320,8 @@ function Profile() {
                         <form className="modalEdit-content-form" onSubmit = {handleSubmitUpdateUser}>
                             <div className="modalEdit-content-form-avatar">
                                 <label htmlFor="chooseAvatar" >
-                                    {user.avatar && <img src={file ? URL.createObjectURL(file) : (user?.avatar)} alt="avatar" title="Bấm vào đây để thay đổi avatar"/>}
-                                    {!user.avatar && <img src={file ? URL.createObjectURL(file) : (PF)} alt="avatar" title="Bấm vào đây để thay đổi avatar"/>}
+                                    {user?.avatar && <img src={file ? avatarUrl : (user?.avatar)} alt="avatar" title="Bấm vào đây để thay đổi avatar"/>}
+                                    {!user?.avatar && <img src={file ? avatarUrl : (PF)} alt="avatar" title="Bấm vào đây để thay đổi avatar"/>}
                                     <input type="file" id="chooseAvatar" style={{display: "none"}}  onChange={handleChooseAvatarProfile} />
                                 </label>
                             </div>

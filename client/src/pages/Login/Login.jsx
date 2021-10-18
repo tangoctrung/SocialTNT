@@ -47,7 +47,7 @@ function Login() {
                 userId: user?.userId,
                 isLogin: true,
             })
-            dispatch({type: "LOGIN_SUCCESS", payload: res.data});
+            dispatch({type: "LOGIN_SUCCESS", payload: {newUser: res.data.newUser, accessToken: res.data.token}});
             window.location.replace("/");
         } catch (err) {
             dispatch({type: "LOGIN_FAILURE"});
@@ -71,16 +71,18 @@ function Login() {
                     password: passwordRef.current.value,
                 });  
                 console.log(res.data);
-    
-    
-                dispatch({type: "LOGIN_SUCCESS", payload: res.data});
+                const {newUser} = res.data;
+
+                dispatch({type: "LOGIN_SUCCESS", payload: {
+                    newUser: res.data.newUser, 
+                    accessToken: res.data.token
+                }});
                 window.location.replace("/");    
-                
-                
+                               
                 // lưu id vào localStorage
                 let i = -10;
                 userLoginLocal.map((user, index) => {
-                    if (user.userId === res.data._id) {
+                    if (user.userId === newUser._id) {
                         i = index;
                     }
                 })
@@ -90,16 +92,14 @@ function Login() {
                 } else {
                     let listId;
                     if (userLoginLocal === null) {
-                        listId = [{userId: res.data._id, avatar: res.data.avatar, username: res.data.username}];
+                        listId = [{userId: newUser._id, avatar: newUser.avatar, username: newUser.username}];
                     } else {
-                        listId = [{userId: res.data._id, avatar: res.data.avatar, username: res.data.username}, ...userLoginLocal];
+                        listId = [{userId: newUser._id, avatar: newUser.avatar, username: newUser.username}, ...userLoginLocal];
                     }
                     setUserLoginLocal(listId);
                     localStorage.setItem("userLogin", JSON.stringify(listId));
                 }
-                
-                
-                
+             
             } catch (err) {
                 setError("Sai email hoặc mật khẩu.")
                 dispatch({type: "LOGIN_FAILURE"});
@@ -113,7 +113,7 @@ function Login() {
             <div className="login-left-container">       
                 <h2>Các tài khoản đăng nhập gần đây</h2>            
                 <div className="login-left">
-                    {userLoginLocal && userLoginLocal.map((user, index) => (
+                    {userLoginLocal.length > 0 && userLoginLocal.map((user, index) => (
                         <div class="login-left-fast">
                             <div className="login-left-fast-close" onClick={() => handleDeleteUserLogin(user, index)}>
                                 <i className="far fa-times"></i>

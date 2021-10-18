@@ -2,7 +2,6 @@
     margin-left: 3px;
 }
 
-
 .comment-container{
     position: relative;
 }
@@ -83,7 +82,7 @@
     
 }
 .post-itemComment-menu i{
-    padding: 8px 13px;
+    padding: 10px 10px;
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3 ease;
@@ -101,12 +100,13 @@
     position: absolute;
     width: 90px;
     z-index: 10;
-    top: 0px;
-    right: -70px;
+    top: 30px;
+    right: -30px;
     border-radius: 10px;
     background-color: rgb(255, 255, 255);
     box-shadow: 0 0 2px 2px rgba(0,0,0,0.2);
 }
+
 .post-itemComment-menu i:hover~.post-itemComment-menu-content{
     display: flex;
 }
@@ -179,9 +179,9 @@
 }
 .post-replyComment-picker{
     position: absolute;
-    top: 30px;
+    top: -330px;
     left: -230px;
-    z-index: 10000000;
+    z-index: 100000;
 }
 
 /* EDIT COMMENT */
@@ -191,10 +191,12 @@
     display:  flex;
     align-items: center;
 }
-.form-EditComment textarea{
-    resize: none;
+.form-EditComment input{
     outline: none;
+    padding: 6px 10px;
+    border-radius: 20px;
     width: 80%;
+    border: 1px solid #000;
 }
 .form-EditComment button{
     padding: 5px;
@@ -253,3 +255,14 @@
     animation:s7 1s infinite;
   }
   @keyframes s7 {to{transform: rotate(.5turn)}}
+
+@media screen and (min-width: 1201px) and (max-width: 1550px){
+    .post-itemComment-body{
+        max-width: 75%;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1200px){
+    .post-itemComment-body{
+        max-width: 73%;
+    }
+}

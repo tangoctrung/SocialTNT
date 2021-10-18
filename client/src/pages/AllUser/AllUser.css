@@ -67,3 +67,16 @@
     color: gray;
     margin-top: 10px;
 }
+
+@media (min-width: 768px) and (max-width: 1200px) {
+    .all-user-left{
+        width: 300px;
+    }
+    .all-user-container{
+        margin-left: 300px;
+        width: calc(100vw - 300px);
+    }
+    .all-user-container-input input{
+        width: 50%;
+    }
+}

@@ -4,15 +4,62 @@ import { Context } from 'context/Context';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import URL from 'config/config';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
 
 function Leftbar() {
     const PF = URL.urlNoAvatar;
-    const { user} = useContext(Context);
+    const { user, socket} = useContext(Context);
+    const [listNoti, setListNoti] = useState([]);
+
+    useEffect(() => {
+        const fetchNoti = async () => {
+            const res = await axios.get(`/notifications/getNotification/${user?._id}`);
+            // const list = res.data;
+            const list = [...listNoti];
+            res.data.forEach( (noti) => {
+                if (!noti.readNotiId.includes(user?._id) && !noti.deleteNotiId.includes(user?._id)) {
+                    list.push(noti); 
+                }
+            });
+            setListNoti(list);
+        }
+        fetchNoti();
+    }, [user?._id])
+    useEffect(() => {
+        socket?.on("createPostToClient", (noti) => {
+            let newNoti = [...listNoti];
+            newNoti.push(noti);
+            setListNoti(newNoti);
+        });
+        socket?.on("likePostNotiToClient", (noti) => {
+            let newNoti = [...listNoti];
+            newNoti.push(noti);
+            setListNoti(newNoti);
+        });
+        socket?.on("commentPostNotiToClient", (noti) => {
+            let newNoti = [...listNoti];
+            newNoti.push(noti);
+            setListNoti(newNoti);
+        })
+        socket?.on("replyCommentPostNotiToClient", (noti) => {
+            let newNoti = [...listNoti];
+            newNoti.push(noti);
+            setListNoti(newNoti);
+        })
+        socket?.on("likeCommentNotiToClient", (noti) => {
+            let newNoti = [...listNoti];
+            newNoti.push(noti);
+            setListNoti(newNoti);
+        })
+    }, [listNoti]) 
+
     return (
         <div className="leftbar">
-            <Link to={`/profile/${user._id}`} style={{textDecoration: "none"}} className="leftbar-item image">
-                <img src={user.avatar ? (user.avatar) : (PF)} />
-                <span>{user.username}</span>
+            <Link to={`/profile/${user?._id}`} style={{textDecoration: "none"}} className="leftbar-item image">
+                <img src={user?.avatar ? (user?.avatar) : (PF)} />
+                <span>{user?.username}</span>
             </Link>
             <div className="leftbar-top">
                 <Link to="/" style={{textDecoration: "none"}} className="leftbar-item">
@@ -20,7 +67,12 @@ function Leftbar() {
                     <span>Trang chủ</span>
                 </Link>
                 <Link to="/notification" style={{textDecoration: "none"}} className="leftbar-item">
-                    <i className="fas fa-bell"></i>
+                    <div className="leftbar-item-div">
+                        <i className="fas fa-bell"></i>
+                        {listNoti.length > 0 && <strong>
+                            {listNoti.length > 99 ? "99+" : listNoti.length}
+                        </strong>}
+                    </div>
                     <span>Thông báo</span>
                 </Link>
                 <Link to="/alluser" style={{textDecoration: "none"}} className="leftbar-item">
@@ -34,6 +86,9 @@ function Leftbar() {
                 <Link to="/postSaved" style={{textDecoration: "none"}} className="leftbar-item">
                     <i className="fas fa-bookmark"></i>
                     <span>Đã lưu</span>
+                    {user?.postSaved.length > 0 && <strong>
+                        {user?.postSaved.length > 20 ? "20+" : user?.postSaved.length}
+                    </strong>}
                 </Link>
         
             </div>

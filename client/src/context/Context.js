@@ -1,36 +1,51 @@
+import axios from "axios";
 import { createContext, useEffect, useReducer } from "react";
 import { io } from "socket.io-client";
 import Reducer from "./Reducer";
 
 const INITIAL_STATE = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: null,
   isFetching: false,
   isLoadPost: false,
   socket : io("ws://localhost:8900"),
   error: false,
+  accessToken: JSON.parse(localStorage.getItem("accessToken")) || null,
 };
-
+// JSON.parse(localStorage.getItem("user")) || 
 export const Context = createContext(INITIAL_STATE);
 
 export const ContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(Reducer, INITIAL_STATE);
-  useEffect(() => {
-    state.socket?.emit("addUser", state.user?._id); 
-  }, [state.user])
+
   useEffect(()=> {
-    localStorage.setItem("user", JSON.stringify(state.user));
+    // localStorage.setItem("user", JSON.stringify(state.user));
+    localStorage.setItem("accessToken", JSON.stringify(state.accessToken));
+    console.log(state.userTest);
   }, [state.user]);
-  return (
-    <Context.Provider
-      value={{
-        user: state.user,
-        socket: state.socket,
-        isFetching: state.isFetching,
-        error: state.error,
-        dispatch,
-      }}
-    >
-      {children}
-    </Context.Provider>
+
+  useEffect( async () => {
+    if (state.accessToken) {
+        const res = await axios.get('/auth/', {
+            headers: {
+              Authorization: 'Bearer ' + state.accessToken //the token is a variable which holds the token
+            }
+        });
+        state.user = res.data;
+    }
+  }, []);
+
+  return (   
+      <Context.Provider
+        value={{
+          user: state.user,
+          socket: state.socket,
+          isFetching: state.isFetching,
+          error: state.error,
+          accessToken: state.accessToken,
+          dispatch,
+        }}
+      >
+        {children}
+      </Context.Provider>
   );
 };

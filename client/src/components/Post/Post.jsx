@@ -14,6 +14,8 @@ import { useRef } from 'react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ModalEditPost from 'components/ModalEditPost/ModalEditPost';
 import URL from 'config/config';
+import { Tooltip } from '@material-ui/core';
+import ReactTooltip from 'react-tooltip';
 
 function createNoti(user, socket, post, typeNoti, content ) {
     const dataNoti = {
@@ -39,19 +41,34 @@ function createNoti(user, socket, post, typeNoti, content ) {
 }
 
 function Post({post}) {
+    const { user, dispatch, socket } = useContext(Context);
+    // dataPost
+    const [titlePost, setTitlePost] = useState();
+    const [bodyPost, setBodyPost] = useState();
+    const [imagesPost, setImagesPost] = useState();
+    const [themenPost, setThemenPost] = useState();
+    const [hashtagsPost, setHashtagsPost] = useState();
+
+    // is modal, emoji, save, ...
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
     const [imageModal, setImageModal] = useState();
-    const [isLiked, setIsLiked] = useState(false);
-    const [comments, setComments] = useState([]);
-    const [isDisliked, setIsDisliked] = useState(false);
-    const [totalLike, setTotalLike] = useState();
-    const [totalDislike, setTotalDislike] = useState();
     const [isOpenModalEditPost, setIsOpenModalEditPost] = useState(false);
     const [isDeletePost, setIsDeletePost] = useState(false);
+
+    // isliked, isdisliked
+    const [isLiked, setIsLiked] = useState(false);
+    const [isDisliked, setIsDisliked] = useState(false);
+
+    // total like, dislike, comment
+    const [comments, setComments] = useState([]);
+    const [totalLike, setTotalLike] = useState(post?.likes.length);
+    const [totalDislike, setTotalDislike] = useState(post?.dislikes.length);
+
+    
     const PF = URL.urlNoAvatar;
-    const { user, dispatch, socket } = useContext(Context);
+    
     const inputCommentRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
     const settings = {
@@ -62,6 +79,22 @@ function Post({post}) {
         slidesToScroll: 1,
         autoplay: true,
     };
+    // set giá trị cho post (title, body, images, ...)
+    useEffect(() => {
+        setTitlePost(post?.title);
+        setBodyPost(post?.body);
+        let listImages = [];
+        post?.images.forEach((image) => {
+            listImages.push(image);
+        })
+        setImagesPost(listImages);
+        setThemenPost(post?.themen);
+        let listHashtags = [];
+        post?.hashtags.forEach((hashtag) => {
+            listHashtags.push(hashtag);
+        })
+        setHashtagsPost(listHashtags);
+    }, [post])
 
     // khi có người khác comment vào post
     useEffect(() => {
@@ -73,22 +106,18 @@ function Post({post}) {
         })
     }, [comments]);
     
-    // khi comment bị edit
+    // khi post được edit
     useEffect(() => {
-        socket?.on("editCommentToClient", newComment => {        
-            if (newComment?.postId === post?._id) {
-                let listComment = [...comments];
-                
-                listComment.map(comment => {
-                    if (comment?._id === newComment?._id) {
-                        comment.content = newComment.content;
-                        console.log(comment.content);
-                    }
-                })
-                setComments(listComment);
+        socket?.on("editPostToClient", (newPost)=> {
+            if (newPost?._id === post?._id) {
+                setTitlePost(newPost.title);
+                setBodyPost(newPost.body);
+                setImagesPost(newPost.images);
+                setThemenPost(newPost.themen);
+                setHashtagsPost([...newPost.hashtags]);
             }
         })
-    }, [comments])
+    }, [])
 
     // khi người dùng like post
     useEffect(() => {
@@ -130,14 +159,13 @@ function Post({post}) {
         const setLike = () => {
             setTotalLike(post?.likes?.length);
             setTotalDislike(post?.dislikes?.length);
-            setIsLiked(post?.likes?.includes(user._id));
-            setIsDisliked(post?.dislikes?.includes(user._id));
+            setIsLiked(post?.likes?.includes(user?._id));
+            setIsDisliked(post?.dislikes?.includes(user?._id));
             setIsSaved(user?.postSaved?.includes(post?._id));
         }
         setLike();
-
         return (()=> setLike());
-    }, [user._id, post?.likes, post?.dislikes]);
+    }, [post]);
 
     // lấy comments
     useEffect(() => {
@@ -191,7 +219,9 @@ function Post({post}) {
             // tạo thông báo likePost
             const typeNoti = "likePost";
             const content = `đã yêu thích bài viết của bạn - "${post?.body.slice(0,60)}" `;
-            createNoti(user, socket, post, typeNoti, content ) ;
+            if (user?._id !== post?.authorId?._id) {
+                createNoti(user, socket, post, typeNoti, content ) ;
+            }
         }
         
     }
@@ -232,7 +262,9 @@ function Post({post}) {
             // tạo thông báo likePost
             const typeNoti = "likePost";
             const content = `đã thất vọng về bài viết của bạn - "${post?.body.slice(0,60)}" `;
-            createNoti(user, socket, post, typeNoti, content ) ;
+            if (user?._id !== post?.authorId?._id) {
+                createNoti(user, socket, post, typeNoti, content ) ;
+            }
 
         }
     }
@@ -253,24 +285,29 @@ function Post({post}) {
         try{
             const newComment = await axios.post(`/comment/`, dataComment_Post);
 
+
             // tạo thông báo commentPost
-            const dataNoti = {
-                typeNoti: "commentPost",
-                senderNotiId: user?._id,
-                receiverNotiId: [post?.authorId],
-                postNotiId: post?._id,
-                content: `đã bình luận về bài viết của bạn - "${post?.body.slice(0,60)}" `,
-            }
-            const noti = await axios.post('/notifications/createNotification', dataNoti);
-            const newNoti = {
-                ...noti.data,
-                senderNotiId: {
-                    _id: user?._id,
-                    username: user?.username,
-                    avatar: user?.avatar
+            if (user?._id !== post?.authorId?._id) {
+                const dataNoti = {
+                    typeNoti: "commentPost",
+                    senderNotiId: user?._id,
+                    receiverNotiId: [post?.authorId],
+                    postNotiId: post?._id,
+                    content: `đã bình luận về bài viết của bạn - "${post?.body.slice(0,60)}" `,
                 }
+
+                const noti = await axios.post('/notifications/createNotification', dataNoti);
+                const newNoti = {
+                    ...noti.data,
+                    senderNotiId: {
+                        _id: user?._id,
+                        username: user?.username,
+                        avatar: user?.avatar
+                    }
+                }
+                socket?.emit('commentPostNoti', newNoti); 
+
             }
-            socket?.emit('commentPostNoti', newNoti); 
 
             const c = {
                 ...newComment.data,
@@ -325,7 +362,7 @@ function Post({post}) {
                 <div className="post-infoAuthor-menu">
                     <i className="fas fa-ellipsis-h"></i>
                     <div className="post-infoAuthor-menu-content">
-                        {user._id === post?.authorId._id && <>
+                        {user?._id === post?.authorId._id && <>
                             <span onClick={() => setIsOpenModalEditPost(true)} ><i className="fas fa-pen"></i> Chỉnh sửa</span>
                             <span onClick={() => setIsDeletePost(true)} ><i className="fas fa-trash"></i> Xóa bài viết</span>
                         </>}
@@ -338,27 +375,28 @@ function Post({post}) {
             
             <div className="post-textContent">
                 <div className="post-textContent-body">
-                    <h2>{post ? post.title : ""}</h2>
-                    <span>{post ? post.body : ""}</span>
+                    <h2>{titlePost}</h2>
+                    <span>{bodyPost}</span>
                 </div>
-                {post?.hashtags.length !== 0 && post?.hashtags[0] !== "" && 
                     <>
                         <hr />
-                        <div className="post-textContent-hashtag">
-                            {post?.themen ? <p>Chủ đề: <b>{post?.themen}</b></p> : ""}
-                        </div>
-                        <div className="post-textContent-hashtag">
-                            { post &&
-                                post.hashtags.map((hashtag, index) => <Link to={`/postcondition?hashtag=${hashtag}`} key={index} href="">#{hashtag}</Link>)
-                            }         
-                        </div> 
+                        {themenPost !== "" && <div className="post-textContent-hashtag">
+                            {themenPost ? <p>Chủ đề: <b>{themenPost}</b></p> : ""}
+                        </div>}
+                        
+                        {hashtagsPost?.length !== 0  && 
+                            <div className="post-textContent-hashtag">
+                                        { hashtagsPost &&
+                                            hashtagsPost.map((hashtag, index) => <Link to={`/postcondition?hashtag=${hashtag}`} key={index} href="">#{hashtag}</Link>)
+                                        }         
+                            </div> }
                     </>
-                }
+                
             </div>
             
-            {post?.images?.length > 0 && <div className="post-listImage">
+            {imagesPost?.length > 0 && <div className="post-listImage">
                 <Slider {...settings} className="post-listImage-slide">
-                    {post && post.images.map((image, index) => <div className="post-listImage-slide-item" key={index} onClick={()=> {setIsOpenModal(true); setImageModal(image)}}>
+                    {imagesPost.map((image, index) => <div className="post-listImage-slide-item" key={index} onClick={()=> {setIsOpenModal(true); setImageModal(image)}}>
                                                             <img src={image} />
                                                        </div>)}
                     
@@ -366,11 +404,20 @@ function Post({post}) {
             </div>}
             
             <div className="post-like-dislike-comments">
-                <div className="post-common post-like" onClick={handleLikePost}>
+                <div 
+                    className="post-common post-like" 
+                    onClick={handleLikePost} 
+                    // data-tip={post?.likes.map((like, index) => `<p>${like?.username}</p>`)} data-html="true"
+                >
                     <span style={{color: isLiked ? "red" : ""}} >{totalLike}</span>
                     <i className={isLiked ? "fas fa-heart" : "far fa-heart"} style={{color: isLiked ? "red" : ""}} title="Yêu thích"></i>
+                    {/* <ReactTooltip place="bottom" type="dark" effect="solid" delayShow={1000}/> */}
                 </div>
-                <div className="post-common post-dislike" onClick={handleDislikePost}>
+                <div 
+                    className="post-common post-dislike" 
+                    onClick={handleDislikePost} 
+                    // data-tip={post?.dislikes.map((dislike, index) => `<p>${dislike?.username}</p>`)} data-html="true"
+                >
                     <span>{totalDislike}</span>
                     <i className={isDisliked ? "fas fa-heart-broken" : "far fa-heart-broken"} style={{color: isDisliked ? "black" : ""}} title="Thất vọng"></i>
                 </div>
@@ -382,7 +429,7 @@ function Post({post}) {
             
             <form className="post-writeComment" onSubmit={handleSubmitComment}>
                 <div className="post-writeComment-avatar">
-                    <img src={user.avatar ? (user.avatar) : (PF)} alt="Avatar" />
+                    <img src={user?.avatar ? (user?.avatar) : (PF)} alt="Avatar" />
                 </div>
                 <div className="post-writeComment-input">
                     <input ref={inputCommentRef} type="text" placeholder="Hãy bình luận về bài viết này..." onFocus={()=> setIsOpenEmoji(false)} />

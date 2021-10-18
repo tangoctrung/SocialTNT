@@ -48,6 +48,7 @@ function PostSaved() {
                     </div>
                     <div className="postSaved-content-right">  
                         {posts?.length > 0 && <h2>Bài viết đã lưu</h2>}
+                        {posts?.length === 0 && <h2>Danh sách bài viết đã lưu(nếu có).</h2>}
                         {posts && !isLoading && posts.map((post, index) =>(
                             <div className="postSaved-top-content-item" onClick={()=>setPostSave(post)}>
                             <PostSaveSmall post={post} key={index} />  

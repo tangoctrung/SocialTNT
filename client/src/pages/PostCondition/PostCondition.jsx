@@ -47,15 +47,17 @@ function PostCondition() {
                     </div>
                 </div>
                 <div className="postCondition-center">
-                    {!isLoading && posts.length > 0 && posts.map((post, index) => (
-                        <Post post={post} post={post} key={index}/>
-                    ))}
-                    {posts.length === 0 && !isLoading &&  <span className="postCondition-center-text">Không tìm thấy bài viết nào</span>}
-                    {isLoading && <div className="postCondition-center-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
+                    <div className="postCondition-center-1">
+                        {!isLoading && posts.length > 0 && posts.map((post, index) => (
+                            <Post post={post} post={post} key={index}/>
+                        ))}
+                        {posts.length === 0 && !isLoading &&  <span className="postCondition-center-text">Không tìm thấy bài viết nào</span>}
+                        {isLoading && <div className="postCondition-center-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
+                    </div>
                 </div>
-                <div className="postCondition-right">
+                {/* <div className="postCondition-right">
                     
-                </div>
+                </div> */}
             </div>
         </>
     );

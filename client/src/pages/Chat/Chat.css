@@ -167,7 +167,7 @@
     color: rgb(68, 199, 68);
 }
 .chat-left-4-member-item-text{
-    width: 80%;
+    width: 70%;
     height: 100%;
     display: flex;
     margin-left: 20px;
@@ -374,3 +374,22 @@
     animation:s2 1s infinite linear;
 }
 @keyframes s2 {to{transform: rotate(1turn)}}
+
+@media (min-width: 768px) and (max-width: 1300px){
+    .chat-right{
+        display: none;
+    }
+    .chat-left{
+        width: 35%;
+    }
+    .chat-center{
+        width: 65%;
+    }
+    .chat-left-4-member-item-img, .chat-left-4-group-item-img{
+        width: 50px;
+        height: 50px;
+    }
+    .chat-left-4-member-item-text{
+        width: 70%;
+    }
+}

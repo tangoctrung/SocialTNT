@@ -32,6 +32,20 @@ function ReplyComment({
   const [isDeleteReplyComment, setIsDeleteReplyComment] = useState(false);
   const [contentReplyComment, setContentReplyComment] = useState(replyComment?.content);
 
+  // khi replyComment bị edit, delete
+  useEffect(() => {
+    socket?.on("editCommentToClient", newComment => {        
+      if (newComment?._id === replyComment?._id) {          
+          setContentReplyComment(newComment?.content);
+      }
+    })
+    socket?.on("deleteCommentToClient", newComment => {        
+      if (newComment?._id === replyComment?._id) {          
+        setContentReplyComment(newComment?.content);
+      }
+    }) 
+  }, []);
+
   useEffect(() => {
     socket?.on('LikeCommentToClient', ({commentId, likesComment}) => {
       if (commentId === replyComment?._id) {
@@ -66,23 +80,25 @@ function ReplyComment({
         });
 
         // tạo thông báo  like replyComment
-        const dataNoti = {
-          typeNoti: "likeReplyCommentPost",
-          senderNotiId: user?._id,
-          receiverNotiId: [replyComment?.userId],
-          postNotiId: postId,
-          content: `đã yêu thích phản hồi của bạn`,
+        if (user?._id !== replyComment?.userId?._id) {
+          const dataNoti = {
+            typeNoti: "likeReplyCommentPost",
+            senderNotiId: user?._id,
+            receiverNotiId: [replyComment?.userId],
+            postNotiId: postId,
+            content: `đã yêu thích phản hồi của bạn`,
+          }
+          const noti = await axios.post('/notifications/createNotification', dataNoti);
+          const newNoti = {
+              ...noti.data,
+              senderNotiId: {
+                  _id: user?._id,
+                  username: user?.username,
+                  avatar: user?.avatar
+              }
+          }
+          socket?.emit('likeCommentNoti', newNoti); 
         }
-        const noti = await axios.post('/notifications/createNotification', dataNoti);
-        const newNoti = {
-            ...noti.data,
-            senderNotiId: {
-                _id: user?._id,
-                username: user?.username,
-                avatar: user?.avatar
-            }
-        }
-        socket?.emit('likeCommentNoti', newNoti); 
       }
       setTotalLikeComment(
         !isLikeComment ? totalLikeComment + 1 : totalLikeComment - 1
@@ -101,7 +117,9 @@ function ReplyComment({
       content: "d!e!l!e!t!e",
     }
     await axios.put(`/replycomment/${replyComment?._id}/delete`, dataComment);
-    window.location.reload();
+    setContentReplyComment("d!e!l!e!t!e");
+    setIsDeleteReplyComment(false);
+    // window.location.reload();
   }
 
   // submit edit replycomment
@@ -150,7 +168,7 @@ function ReplyComment({
               </div>
             </div>
             <div className="post-listReplyComment-menu">
-              <i className="fas fa-ellipsis-v"></i>
+              <i className="fas fa-ellipsis-h"></i>
               <div className="post-listReplyComment-menu-content">
                   {(replyComment?.userId?._id === user._id) && (
                     <>

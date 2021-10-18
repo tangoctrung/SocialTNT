@@ -103,13 +103,12 @@
     margin-bottom: 10px;
 }
 .post-textContent-body::-webkit-scrollbar{
-    width: 3px;
+    width: 5px;
 }
-.post-textContent-body::-webkit-scrollbar-track{
-    background-color: aliceblue;
-}
+
 .post-textContent-body::-webkit-scrollbar-thumb{
-    background-color: rgb(192, 190, 190);
+    background-color: rgb(223, 223, 223);
+    border-radius: 10px;
 }
 .post-textContent-body h2{
     font-size: 20px;
@@ -266,16 +265,15 @@
     width: 100%;
     max-height: 500px;
     overflow-y: scroll;
-    padding: 20px 10px 0px 10px;
+    padding: 30px 10px 70px 10px;
 }
 .post-listComment::-webkit-scrollbar{
-    width: 3px;
+    width: 8px;
 }
-.post-listComment::-webkit-scrollbar-track{
-    background-color: rgb(241, 237, 237);
-}
+
 .post-listComment::-webkit-scrollbar-thumb{
-    background-color: rgb(197, 196, 196);
+    background-color: rgb(155, 153, 153);
+    border-radius: 10px;
 }
 
 
@@ -423,3 +421,23 @@
     animation:s2 1s infinite linear;
 }
 @keyframes s2 {to{transform: rotate(1turn)}}
+
+@media screen and (min-width: 1201px) and (max-width: 1500px){
+    .post-listImage{
+        width: 100%;
+        height: 450px;
+    }  
+    .post-listImage-slide-item img{
+        height: 450px;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1200px){
+    .post-listImage{
+        width: 100%;
+        height: 400px;
+    }
+    .post-listImage-slide-item img{
+        height: 400px;
+    }
+}

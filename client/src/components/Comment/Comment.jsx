@@ -52,21 +52,22 @@ function Comment({ comment, authorId }) {
     });
   }, [totalLikeComment]);
 
-  // khi replyComment bị edit
+
+
+  // khi comment bị edit, delete
   useEffect(() => {
     socket?.on("editCommentToClient", newComment => {        
-        if (newComment?.commentId === comment?._id) {
-            let listComment = [...replyComments];
-            
-            listComment.map(comment => {
-                if (comment?._id === newComment?._id) {
-                    comment.content = newComment.content;
-                }
-            })
-            setReplyComments(listComment);
-        }
+      if (newComment?._id === comment?._id) {          
+          setContentComment(newComment?.content);
+      }
     })
-  }, [replyComments])
+    socket?.on("deleteCommentToClient", newComment => {        
+      if (newComment?._id === comment?._id) {          
+        setContentComment(newComment?.content);
+      }
+    }) 
+  }, []);
+
 
   useEffect(() => {
     const fetchReplyComment = async () => {
@@ -109,24 +110,25 @@ function Comment({ comment, authorId }) {
         });
 
         // tạo thông báo like comment
-        const dataNoti = {
-          typeNoti: "likeCommentPost",
-          senderNotiId: user?._id,
-          receiverNotiId: [comment?.writerId],
-          postNotiId: comment?.postId,
-          content: `đã yêu thích bình luận của bạn`,
+        if (user?._id !== comment?.writerId?._id) {
+          const dataNoti = {
+            typeNoti: "likeCommentPost",
+            senderNotiId: user?._id,
+            receiverNotiId: [comment?.writerId],
+            postNotiId: comment?.postId,
+            content: `đã yêu thích bình luận của bạn`,
+          }
+          const noti = await axios.post('/notifications/createNotification', dataNoti);
+          const newNoti = {
+              ...noti.data,
+              senderNotiId: {
+                  _id: user?._id,
+                  username: user?.username,
+                  avatar: user?.avatar
+              }
+          }
+          socket?.emit('likeCommentNoti', newNoti); 
         }
-        const noti = await axios.post('/notifications/createNotification', dataNoti);
-        const newNoti = {
-            ...noti.data,
-            senderNotiId: {
-                _id: user?._id,
-                username: user?.username,
-                avatar: user?.avatar
-            }
-        }
-        socket?.emit('likeCommentNoti', newNoti); 
-
 
       }
       setTotalLikeComment(
@@ -162,23 +164,25 @@ function Comment({ comment, authorId }) {
         const newReplyComment = await axios.post(`/replycomment/`, dataReply);
 
         // tạo thông báo commentPost
-        const dataNoti = {
-          typeNoti: "replyCommentPost",
-          senderNotiId: user?._id,
-          receiverNotiId: [authorId, comment?.writerId],
-          postNotiId: comment?.postId,
-          content: `đã phản hồi một bình luận trong bài viết của bạn`,
+        if (user?._id !== authorId) {
+          const dataNoti = {
+            typeNoti: "replyCommentPost",
+            senderNotiId: user?._id,
+            receiverNotiId: [authorId, comment?.writerId],
+            postNotiId: comment?.postId,
+            content: `đã phản hồi một bình luận trong bài viết của bạn`,
+          }
+          const noti = await axios.post('/notifications/createNotification', dataNoti);
+          const newNoti = {
+              ...noti.data,
+              senderNotiId: {
+                  _id: user?._id,
+                  username: user?.username,
+                  avatar: user?.avatar
+              }
+          }
+          socket?.emit('replyCommentPostNoti', newNoti); 
         }
-        const noti = await axios.post('/notifications/createNotification', dataNoti);
-        const newNoti = {
-            ...noti.data,
-            senderNotiId: {
-                _id: user?._id,
-                username: user?.username,
-                avatar: user?.avatar
-            }
-        }
-        socket?.emit('replyCommentPostNoti', newNoti); 
 
 
         const c = {
@@ -219,8 +223,11 @@ function Comment({ comment, authorId }) {
     const dataComment = {
       content: "d!e!l!e!t!e",
     }
-    await axios.put(`/comment/${comment?._id}/delete`, dataComment);
-    window.location.reload();
+    const newComment = await axios.put(`/comment/${comment?._id}/delete`, dataComment);
+    setContentComment("d!e!l!e!t!e");
+    setIsDeleteComment(false);
+    socket?.emit("deleteComment", newComment.data);
+    // window.location.reload();
   }
   return (
      
@@ -265,7 +272,7 @@ function Comment({ comment, authorId }) {
               
             </div>
             <div className="post-itemComment-menu">
-              <i className="fas fa-ellipsis-v"></i>
+              <i className="fas fa-ellipsis-h"></i>
               <div className="post-itemComment-menu-content">
                 {(comment.writerId?._id === user?._id) && (
                   <>         
@@ -284,13 +291,13 @@ function Comment({ comment, authorId }) {
             </>}
 
             {isEditComment &&          
-                  <form className="form-EditComment">
-                    <textarea 
+                  <form className="form-EditComment" onSubmit={handleSubmitEditComment} >
+                    <input 
                       ref={inputEditComment} 
                       value={contentComment} 
                       onChange={(e) => setContentComment(e.target.value)} 
-                    ></textarea>
-                    <button onClick={handleSubmitEditComment}>Update</button>
+                    ></input>
+                    {/* <button onClick={handleSubmitEditComment}>Update</button> */}
                     <button onClick={() => setIsEditComment(false)}>Cancel</button>
                   </form>      
             }

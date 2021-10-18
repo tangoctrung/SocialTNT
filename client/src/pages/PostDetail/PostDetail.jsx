@@ -17,9 +17,7 @@ function PostDetail() {
             const resPost = await axios.get(`/posts/post/${postId}`);
             setPost(resPost.data);        
         }
-        if (postId !== "undefined") {
             FetchAuthorPost();
-        }
     }, [postId]);
 
 

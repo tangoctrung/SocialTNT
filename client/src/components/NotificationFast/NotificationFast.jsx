@@ -21,15 +21,15 @@ function NotificationFast({noti}) {
             <div className="notificationFast-info">
                 <p className="notificationFast-content">
                     <b style={{marginRight: "5px"}}>{noti?.senderNotiId?.username}</b> 
-                    <span>{noti.typeNoti !== "commentPost" && noti.typeNoti !== "replyCommentPost" && noti?.content.slice(0, 50)}</span>  
+                    <span>{noti.typeNoti !== "commentPost" && noti.typeNoti !== "replyCommentPost" && noti?.content?.slice(0, 50)}</span>  
                     <span>{noti.typeNoti === "commentPost"                     
-                        && "đã bình luận bài viết của bạn."}</span>
+                        && `đã bình luận bài viết của bạn.`}</span>
                     <span>{noti.typeNoti === "replyCommentPost"
                         && user?._id === noti.receiverNotiId[0] && user?._id === noti.receiverNotiId[1]
-                        && "đã bình luận trong bài viết của bạn."}</span> 
+                        && `đã bình luận bài viết của bạn.`}</span> 
                     <span>{noti.typeNoti === "replyCommentPost"
                         && user?._id === noti.receiverNotiId[0] && user?._id !== noti.receiverNotiId[1]
-                        && "đã trả lời một bình luận trong bài viết của bạn."}</span> 
+                        && `đã trả lời một bình luận bài viết của bạn.`}</span> 
                     <span>{noti.typeNoti === "replyCommentPost"
                         && user?._id === noti.receiverNotiId[1] && user?._id !== noti.receiverNotiId[0]
                         && "đã trả lời bình luận của bạn."}</span> 
@@ -38,5 +38,6 @@ function NotificationFast({noti}) {
         </Link>
     );
 }
+// "${noti.postNotiId.body.slice(0, 30)}..."
 
 export default NotificationFast;

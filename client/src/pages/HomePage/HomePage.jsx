@@ -1,4 +1,6 @@
+import { Context } from 'context/Context';
 import React from 'react';
+import { useContext } from 'react';
 import HomePageContent from '../../components/HomePageContent/HomePageContent';
 import Leftbar from '../../components/Leftbar/Leftbar';
 import Rightbar from '../../components/Rightbar/Rightbar';

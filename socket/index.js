@@ -95,11 +95,11 @@ io.on('connection', (socket) =>{
     });
 
     // khi người dùng edit post
-    // socket.on("editPost", (post) => {
-    //     users.forEach( user => {
-    //         socket.to(user.socketId).emit("editPostToClient", post);
-    //     })
-    // });
+    socket.on("editPost", (post) => {
+        users.forEach( user => {
+            socket.to(user.socketId).emit("editPostToClient", post);
+        })
+    });
 
     // khi người dùng tạo bài viết thì gửi đến thông báo
     socket.on("createPost", (noti) => {

@@ -48,6 +48,7 @@ router.get("/post/:id", async (req, res) => {
       const post = await Post.findById(req.params.id).populate('authorId', [
         'username', 'avatar'
       ]);
+      // .populate('likes', ['username']).populate('dislikes', ['username']);
       res.status(200).json(post);
     } catch (err) {
       res.status(500).json(err);
@@ -61,6 +62,7 @@ router.get("/profile/:id", async (req, res) => {
       const posts = await Post.find({ authorId: req.params.id }).populate('authorId', [
         'username', 'avatar'
       ]);
+      // .populate('likes', ['username']).populate('dislikes', ['username']);
       res.status(200).json(posts);
     } catch (err) {
       res.status(500).json(err);
@@ -75,6 +77,7 @@ router.get("/timeline/:userId", async (req, res) => {
     const userPosts = await Post.find({ authorId: currentUser._id }).populate('authorId', [
       'username', 'avatar'
     ]);
+    // .populate('likes', ['username']).populate('dislikes', ['username']);
     const friendPosts = await Promise.all(
       currentUser.following.map((friendId) => {
         return Post.find({ authorId: friendId }).populate('authorId', [
@@ -95,6 +98,7 @@ router.get('/', async (req, res) => {
       const posts = await Post.find({ hashtags : { $all : [hashtag] }}).populate('authorId', [
         'username', 'avatar'
       ]);
+      // .populate('likes', ['username']).populate('dislikes', ['username']);
       res.status(200).json(posts);
   }catch(err){
       res.status(500).json(err);
@@ -108,6 +112,7 @@ router.get('/themen/', async (req, res) => {
       const posts = await Post.find({ themen: themen }).populate('authorId', [
         'username', 'avatar'
       ]);
+      // .populate('likes', ['username']).populate('dislikes', ['username']);
       res.status(200).json(posts);
   }catch(err){
       res.status(500).json(err);

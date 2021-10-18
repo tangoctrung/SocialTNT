@@ -91,3 +91,15 @@ DELETE http://localhost:8800/api/userlogin/delete HTTP/1.1
 {
     "userLoginId": "6164e11f8210d348c019e60a",
 }
+
+###
+POST http://localhost:8800/api/auth/login/ HTTP/1.1
+content-type: application/json
+
+{
+    "email": "trung@gmail.com",
+    "password": "12345678"
+}
+###
+GET http://localhost:8800/api/auth/ HTTP/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTQwYTA2YjNmZWUwOTU1ODg3NTZkNjkiLCJpYXQiOjE2MzQ1MjE4MDl9.Irlv9NCCKDPVJGd3XwC8ubE-aCxOcJSo2i84uAsWRmI

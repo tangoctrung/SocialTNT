@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const User = require('../models/Users');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const verifyToken = require('../middleware/auth');
 
 // CREATE A USER / REGISTER
 router.post("/register", async (req, res) => {
@@ -23,6 +25,19 @@ router.post("/register", async (req, res) => {
     }
 })
 
+// VERIFY TOKEN
+router.get('/', verifyToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select('-password')
+        if (!user)
+            return res.status(400).json('User not found')
+        res.status(200).json(user);
+	} catch (error) {
+		res.status(500).json('Internal server error')
+	}
+});
+
+
 // LOGIN
 router.post("/login", async (req, res) => {
     try {
@@ -32,7 +47,10 @@ router.post("/login", async (req, res) => {
         const validate = await bcrypt.compare(req.body.password, newUser.password);
         !validate && res.status(400).json('Sai email hoặc mật khẩu.');          
 
-        res.status(200).json(newUser);
+        // tạo token
+        const token = jwt.sign({_id: newUser._id}, process.env.ACCESS_TOKEN_SECRET);
+        // res.header('auth-token', token);
+        res.status(200).json({newUser, token});
 
     } catch (error) {
         res.status(500).json(error);
@@ -44,12 +62,10 @@ router.post("/loginwithid", async (req, res) => {
     try {
         const newUser = await User.findById({_id: req.body.userId});
         !newUser && res.status(400).json("Sai email hoặc mật khẩu.");  
-        if (!req.body.isLogin) {
-            const validate = await bcrypt.compare(req.body.password, newUser.password);
-            !validate && res.status(400).json("Sai email hoặc mật khẩu.");
-        }
+        // tạo token
+        const token = jwt.sign({_id: newUser._id}, process.env.ACCESS_TOKEN_SECRET);
 
-        res.status(200).json(newUser);
+        res.status(200).json({newUser, token});
 
     } catch (error) {
         res.status(500).json(error);

@@ -11,14 +11,12 @@ const PostSchema = new Schema({
         type: String,
         default: '',
     },
-    likes: {
-        type: Array,
-        default: [],
-    },
-    dislikes: {
-        type: Array,
-        default: [],
-    },
+    likes: [
+        {ref: 'User', type: String}     
+    ],
+    dislikes: [
+        {type: String, ref: 'User'}
+    ],
     images: {
         type: Array,
         default: [],

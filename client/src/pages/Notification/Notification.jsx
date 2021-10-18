@@ -44,16 +44,41 @@ function Notification() {
         await axios.put(`/notifications/updateNotification`, dataNoti);
     }
 
+    // khi người dùng xóa thông báo
+    const handleDeleteNotification = async (noti, index) => {
+        const dataNoti = {
+            userId: user?._id,
+            notiId: noti?._id
+        }
+        await axios.put(`/notifications/deleteNotification`, dataNoti);
+
+        // hiển thị giao diện
+        let listNoti = [...notifications];
+        let notis = [...listNoti.slice(0,index), ...listNoti.slice(index+1)];
+        setNotifications(notis);
+    }
+
     return (
         <div className="notification">
             <div className="notification-container">
                 <h2>Thông báo của bạn</h2>
 
-                {notifications && !isLoading && notifications.map((noti, index) => (
-                    <div onClick={()=> handleClickNotification(noti)}>
-                        <NotificationType key={index} noti={noti} />
+                {notifications && !isLoading && notifications.map((noti, index) =>    
+                    <div className="noti-fast-container">                 
+                        <div onClick={()=> handleClickNotification(noti)}>
+                            <NotificationType key={index} noti={noti} />
+                        </div>
+                        <div className="notification-item-menu">
+                            <i className="fas fa-ellipsis-h"></i>
+                            <div className="notification-item-listMenu">
+                                <div className="notification-item-itemMenu" onClick={() => handleDeleteNotification(noti, index)}>
+                                    <i className="fas fa-trash"></i>
+                                    <span>Xóa thông báo</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                ))}
+                )}
                 {notifications.length === 0 && !isLoading && <p>Bạn chưa có thông báo nào</p>}
                 {isLoading && <div className="notification-container-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}  
             </div>

@@ -132,7 +132,7 @@ function CreatePost() {
             <div className="createPost-info" onClick={()=> setIsOpenCreatePost(true)}>
                 <div className="createPost-info-top">
                     <div className="createPost-info-top-image">
-                        <img src={user.avatar ? (user.avatar) : (PF)} alt="Hình ảnh"/>
+                        <img src={user?.avatar ? (user?.avatar) : (PF)} alt="Hình ảnh"/>
                     </div>
                     <div className="createPost-info-top-input">
                         <div className="input">Hãy cập nhật trạng thái bây giờ của bạn!</div>
@@ -162,7 +162,7 @@ function CreatePost() {
                     <form className="createPost-content-post" onSubmit={handleSubmitCreatePost}>
                         <div className="createPost-content-image-title">
                             <div className="createPost-content-image">
-                                <img src={user.avatar ? (user.avatar) : (PF)} alt="Hình ảnh" />
+                                <img src={user?.avatar ? (user?.avatar) : (PF)} alt="Hình ảnh" />
                             </div>
                             <div className="createPost-content-title">
                                 <input type="text" placeholder="Tiêu đề bài viết" onChange={e => setTitlePost(e.target.value)} />

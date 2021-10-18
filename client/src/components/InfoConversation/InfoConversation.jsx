@@ -57,7 +57,7 @@ function InfoConversation ({currentChat}) {
                             </Link> }                  
                         </div>
                     </div>
-                <div className="chat-right-2">
+                {/* <div className="chat-right-2">
                     {friend && 
                     <>
                         <div className="chat-right-2-selection">
@@ -90,7 +90,7 @@ function InfoConversation ({currentChat}) {
                         </div>
                     </>
                     }
-                </div>
+                </div> */}
             </>
             }
             {isLoading && <div className="chat-right-2-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}

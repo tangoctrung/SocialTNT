@@ -15,9 +15,9 @@ function formatTime(time) {
 function MessageReceiver({message, friendAvatar}) {
     return (
         <div className="chat-center-2-itemMessage">
-            <div className="chat-center-2-itemMessage-img">
+            {/* <div className="chat-center-2-itemMessage-img">
                 <img src={friendAvatar} alt="image"/>
-            </div>
+            </div> */}
             <div className="chat-center-2-itemMessage-text" title={formatTime(message.createdAt)}>
                 <p>{message.content}</p>
             </div>
