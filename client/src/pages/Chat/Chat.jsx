@@ -22,21 +22,27 @@ function Chat() {
   const [followings, setFollowings] = useState([]);
   const [noFollowings, setNoFollowings] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
-  const { user } = useContext(Context);
-  const [chatId, setChatId] = useState();
-  const location = useLocation();
+  const { user, accessToken, socket } = useContext(Context);
+  // const [chatId, setChatId] = useState();
+  // const location = useLocation();
   const [isCreateGroup, setIsCreateGroup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGroup, setIsLoadingGroup] = useState(false);
-  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [listMembers, setListMembers] = useState([user?._id]);
   const [nameGroup, setNameGroup] = useState("");
   const PF = URL.urlNoAvatar;
+  const [colorChat, setColorChat] = useState(-1);
+
+
 
   // Lấy thông tin các following
   useEffect(() => {
     const fetchFollowings = async () => {
-      const res = await axios.get(`/users/profile/followings/${user?._id}`);
+      const res = await axios.get(`/users/profile/followings/${user?._id}`, {
+        headers: {
+            Authorization: 'Bearer ' + accessToken
+          }
+    });
       setFollowings(res.data);
     };
     fetchFollowings();
@@ -45,7 +51,11 @@ function Chat() {
   // Lấy thông tin các user mà người dùng chưa follow
   useEffect(() => {
     const fetchFollowings = async () => {
-      const res = await axios.get(`/users/nofollowings/${user?._id}`);
+      const res = await axios.get(`/users/nofollowings/${user?._id}`, {
+        headers: {
+            Authorization: 'Bearer ' + accessToken
+          }
+    });
       setNoFollowings(res.data);
     };
     fetchFollowings();
@@ -55,7 +65,11 @@ function Chat() {
   useEffect(() => {
     setIsLoading(true);
     const FetchUser = async () => {
-      const res = await axios.get(`/conversations/${user && user._id}`);
+      const res = await axios.get(`/conversations/${user && user._id}`, {
+        headers: {
+            Authorization: 'Bearer ' + accessToken
+          }
+    });
       setConversations(res.data);
       setIsLoading(false);
     };
@@ -63,34 +77,45 @@ function Chat() {
   }, [user && user._id]);
 
   // NẾU ĐƯỜNG DẪN CÓ ID CỦA CUỘC NÓI CHUYỆN THÌ LẤY CUỘC NCH ĐÓ
-  useEffect(() => {
-    setChatId(location.pathname.split("/")[2]);
-    const fetchDataChat = async () => {
-      const res = await axios.get(`/conversations/chat/${chatId && chatId}`);
-      setCurrentChat(res.data);
-    };
-    fetchDataChat();
-  }, [location, chatId]);
+  // useEffect(() => {
+  //   setChatId(location.pathname.split("/")[2]);
+  //   const fetchDataChat = async () => {
+  //     const res = await axios.get(`/conversations/chat/${chatId && chatId}`, {
+  //       headers: {
+  //           Authorization: 'Bearer ' + accessToken
+  //         }
+  //   });
+  //     setCurrentChat(res.data);
+  //   };
+  //   fetchDataChat();
+  // }, [location, chatId]);
 
   // LẤY TIN NHẮN CỦA MỘT CUỘC TRÒ CHUYỆN
-  useEffect(() => {
-    setIsLoadingMessages(true);
+  const handleSetCurrentChat = (conversation) => {
+    setCurrentChat(conversation);
     const FetchMessage = async () => {
       try {
-        const res = await axios.get(`/messages/${currentChat?._id}`);
+        const res = await axios.get(`/messages/${conversation?._id}`, {
+          headers: {
+              Authorization: 'Bearer ' + accessToken
+            }
+        });
+        console.log(res.data);
         setMessages(res.data);
-        setIsLoadingMessages(false);
       } catch (e) {}
     };
     FetchMessage();
-  }, [currentChat]);
-
+  }
   
  //  Chuyển sang list group
  const handleClickGroup = async (e) => {
     setIsOpenChatMember(false);
     setIsLoadingGroup(true);
-    const res = await axios.get(`/conversationsgroup/${user?._id}`);
+    const res = await axios.get(`/conversationsgroup/${user?._id}`, {
+      headers: {
+          Authorization: 'Bearer ' + accessToken
+        }
+  });
     setGroupChats(res.data);
     setIsLoadingGroup(false);
  }   
@@ -231,11 +256,15 @@ function Chat() {
               <div className="chat-left-4-member">
                 {conversations && !isLoading &&
                   conversations.map((conversation, index) => (
-                    <div onClick={() => setCurrentChat(conversation)}>
+                    <div 
+                      onClick={() => {handleSetCurrentChat(conversation); setColorChat(index)}}
+                      style={{backgroundColor: colorChat===index ? "rgb(231, 229, 227)" : "transparent", borderRadius: '5px'}}
+                    >
                       <Conversation
                         key={index}
                         conversation={conversation}
                         currentUser={user}
+                        colorChat={colorChat}
                       />
                     </div>
                   ))}
@@ -275,7 +304,6 @@ function Chat() {
               messages={messages}
               currentChat={currentChat}
               setMessages={setMessages}
-              isLoadingMessages={isLoadingMessages}
             />
           ) : (
             <span className="chat-text">

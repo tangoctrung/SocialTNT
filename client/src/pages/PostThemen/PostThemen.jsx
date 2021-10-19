@@ -7,8 +7,11 @@ import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import "./PostThemen.css";
 import dataThemes from '../../data/index';
+import { useContext } from 'react';
+import { Context } from 'context/Context';
 
 function PostThemen() {
+    const { accessToken } = useContext(Context);
     const [posts, setPosts] = useState([]);
     const location = useLocation();
     const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +21,11 @@ function PostThemen() {
     useEffect(() => {
         setIsLoading(true);
         const fetchPost = async () => {
-            const res = await axios.get(`/posts/themen/?themen=${themen}`);
+            const res = await axios.get(`/posts/themen/?themen=${themen}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             // setPosts(res.data);
             setPosts(
                 res.data.sort((p1, p2) => {

@@ -19,12 +19,16 @@
     display: flex;
     flex-direction: column;
 }
-.chat-center-2-itemMessage-text p{
+.itemMessage-text{
+    width: 100%;
+    display: flex;
+}
+.itemMessage-text p{
     /* width: 100%; */
     max-inline-size: 500px;
     overflow-wrap: break-word;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 6px;
     background-color: rgb(230, 230, 230);
     white-space: pre-line;
 }
@@ -38,13 +42,55 @@
 }
 .chat-center-2-itemMessage:hover .chat-center-2-itemMessage-infoMessage{
     display: flex;
+    align-items: center;
 }
 .chat-center-2-itemMessage-infoMessage i{
-    padding: 7px;
+    padding: 4px 6px;
+    border-radius: 50%;
     cursor: pointer;
-    color:rgb(194, 193, 193);
+    color:rgb(136, 133, 133);
+}
+.chat-center-2-itemMessage-infoMessage i:hover{
+    background-color:rgb(212, 211, 211);
+}
+.itemMessage-image{
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 400px;
+}
+.itemMessage-image img{
+    width: 120px;
+    margin: 3px;
+    border-radius: 5px;
+    object-fit: cover;
+    cursor: pointer;
 }
 
+.chat-center-2-receiver-textReply div{
+    display: flex;
+    justify-content: flex-start;
+}
+.chat-center-2-receiver-textReply div:first-child p{
+    font-size: 12px;
+    font-style: italic;
+    color: rgb(77, 76, 76);
+}
+
+.chat-center-2-receiver-textReply div:last-child p{
+    font-size: 14px;
+    padding: 10px 10px 15px 10px;
+    border-radius: 20px;
+    margin-left: 5px;
+    margin-bottom: -10px;
+    color:rgb(104, 102, 102);
+    max-inline-size: 400px;
+    overflow-wrap: break-word;
+    white-space: pre-line;
+    background-color: rgb(245, 241, 241);
+}
+.chat-center-2-receiver-textReply p{
+    display: inline-block;
+}
 
 @media screen and (min-width: 768px) and (max-width: 1200px){
     .chat-center-2-itemMessage{
@@ -53,4 +99,17 @@
     .chat-center-2-itemMessage-infoMessage{
         width: 10%;
     }
+}
+
+.chat-center-2-itemMessage-delete{
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+.chat-center-2-itemMessage-delete p{
+    display: inline-block;
+    padding: 8px 10px;
+    border-radius: 20px;
+    border: 1px solid rgb(161, 159, 159);
+    color:rgb(148, 145, 145);
 }

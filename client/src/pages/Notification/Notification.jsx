@@ -8,7 +8,7 @@ import NotificationType from "components/NotificationType/NotificationType";
 
 function Notification() {
 
-    const { user, socket } = useContext(Context); 
+    const { user, socket, accessToken } = useContext(Context); 
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 

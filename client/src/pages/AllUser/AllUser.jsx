@@ -5,9 +5,11 @@ import { useState } from 'react';
 import UserSmall from 'components/UserSmall/UserSmall';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { Context } from 'context/Context';
+import { useContext } from 'react';
 
 function AllUser() {
-
+    const { accessToken } = useContext(Context);
     const [listUser, setListUser] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
    
@@ -15,7 +17,11 @@ function AllUser() {
     useEffect(() => {
         setIsLoading(true);
         const FetchAllUser = async () => {
-            const res = await axios.get("/users/alluser");
+            const res = await axios.get("/users/alluser", {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             setListUser(res.data);
             setIsLoading(false);
         }

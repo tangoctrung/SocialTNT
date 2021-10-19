@@ -11,19 +11,20 @@ import URL from 'config/config';
 
 function InfoConversation ({currentChat}) {
     const [settingChat, setSettingChat] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
     const [friend, setFriend] = useState(null);
-    const { user } = useContext(Context);
+    const { user, accessToken } = useContext(Context);
     const PF = URL.urlNoAvatar;
 
     useEffect(() => {
-        const friendId = currentChat && currentChat.members.find((m) => m !== user._id);
-        setIsLoading(true);
+        const friendId = currentChat && currentChat.members.find((m) => m !== user?._id);
         const getUser = async () => {
             try {
-                const res = await axios.get(`/users/profile/${friendId}`);
+                const res = await axios.get(`/users/profile/${friendId}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + accessToken
+                      }
+                });
                 setFriend(res.data);
-                setIsLoading(false);
             } catch (err) {
                 console.log(err);
             }
@@ -32,7 +33,6 @@ function InfoConversation ({currentChat}) {
     }, [currentChat])
     return (
         <div>
-            { !isLoading && 
             <>
                 <div className="chat-right-1">
                         <div className="chat-right-1-img">
@@ -92,8 +92,6 @@ function InfoConversation ({currentChat}) {
                     }
                 </div> */}
             </>
-            }
-            {isLoading && <div className="chat-right-2-loading"> <div className="spinner-2"></div><p>Đang tải...</p> </div>}
        
         </div>
     )

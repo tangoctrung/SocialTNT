@@ -17,21 +17,30 @@ const getUser = (userId) => {
 
 io.on('connection', (socket) =>{
     // khi người dùng kết nối vào scoket server
-
+    console.log("1 user connection");
     // nhận userId và socketId từ người dùng
     socket.on("addUser", userId => {
         addUser(userId, socket.id);
-        io.emit("getUser", users);
+        socket.emit("getUser", users);
     })
 
     // khi nhắn tin và nhận tin
-    socket.on("sendMessage", ({senderId, receivedId, content}) => {
+    socket.on("sendMessage", ({m, receivedId}) => {
         const user = getUser(receivedId);
-        io.to(user?.socketId).emit("getMessage", {
-            senderId,
-            content,   
-        });
+        socket.to(user?.socketId).emit("getMessage", m);
     });
+
+    // xóa tin nhắn
+    socket.on("deleteMessage", ({messageId, receivedId}) => {
+        const user = getUser(receivedId);
+        socket.to(user?.socketId).emit("deleteMessageToClient", {messageId});
+    })
+
+    // gửi ám hiệu typing khi chat 2 người
+    socket.on("typing", ({senderId, receivedId, typing}) => {
+        const user = getUser(receivedId);
+        socket.to(user?.socketId).emit("typingToClient", {senderId, typing});
+    })
 
     // khi người dùng likePost
     socket.on("likePost", ({likes, dislikes, postId}) => {
@@ -144,10 +153,6 @@ io.on('connection', (socket) =>{
             }
         })
     });
-
-
-
-    
 
 
     // khi người dùng ngắt kết nối

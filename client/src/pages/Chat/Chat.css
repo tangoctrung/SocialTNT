@@ -99,7 +99,7 @@
 .chat-left-4-member::-webkit-scrollbar-track,
 .chat-left-4-group::-webkit-scrollbar-track{
     border-radius: 10px;
-    background-color: rgb(221, 219, 219);
+    background-color: rgb(255, 255, 255);
 }
 .chat-left-4-member::-webkit-scrollbar-thumb,
 .chat-left-4-group::-webkit-scrollbar-thumb{
@@ -107,14 +107,15 @@
     background-color: rgb(139, 134, 134);
 }
 .chat-left-4-member-item, .chat-left-4-group-item{
-    padding: 0 10px 0 10px;
+    padding: 0 5px 0 5px;
     width: 100%;
-    height: 80px;
+    height: 75px;
     display: flex;
     align-items: center;
     position: relative;
     transition: all 0.3s ease;
-    border-radius: 10px;
+    border-radius: 5px;
+    margin: 5px 0px;
 }
 .chat-left-4-member-item:hover, .chat-left-4-group-item:hover{
     background-color: rgb(231, 229, 227);
@@ -150,8 +151,8 @@
 }
 .chat-left-4-member-item-img i{
     position: absolute;
-    top: 55px;
-    left: 53px;
+    top: 50px;
+    left: 42px;
     border: 2px solid white;
     border-radius: 50%;
     font-size: 10px;
@@ -186,6 +187,7 @@
     color: gray;
 }
 .chat-left-4-member-item-noti i{
+    font-size: 12px;
     color:rgb(51, 112, 204);
 }
 
@@ -302,7 +304,7 @@
 }
 .createGroup-listUser::-webkit-scrollbar-track{
     border-radius: 10px;
-    background-color: aliceblue;
+    background-color: rgb(255, 255, 255);
 }
 .createGroup-listUser::-webkit-scrollbar-thumb{
     border-radius: 10px;

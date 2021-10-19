@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Notification = require("../models/Notifications");
+const verifyToken = require("../middleware/auth");
 
 // CREATE NOTIFICATION
 router.post('/createNotification', async (req, res) => {

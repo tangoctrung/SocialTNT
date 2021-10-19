@@ -28,11 +28,7 @@ function CreatePost() {
     const [titlePost, setTitlePost] = useState("");
     const [bodyPost, setBodyPost] = useState("");
     const [hashtag, setHashtag] = useState("");
-    const [themenPost, setThemenPost] = useState("");
-
-    useEffect(() => {
-        console.log(themenPost);
-    }, [themenPost]);
+    const [themenPost, setThemenPost] = useState("");;
 
     // useEffect(() => {
     //     socket?.on("createPostToClient", (noti) => {
@@ -52,14 +48,12 @@ function CreatePost() {
         files.forEach(file => {
             // return newImages.push(file);
             const uploadTask = storage.ref(`imagePost/${user._id},${user.username}/${date1}/${file.name}`).put(file);
-            console.log("loading");
             uploadTask.on('state_changed', 
                 (snapshot) => {}, 
                 (error) => { alert(error)}, 
                 () => {
                     // complete function ....
                     storage.ref(`imagePost/${user._id},${user.username}/${date1}`).child(file.name).getDownloadURL().then(url => {
-                        console.log(url);
                         newImages.push(url);
                         setImages([...newImages]);
                     })
@@ -104,7 +98,6 @@ function CreatePost() {
                 content: `đã thêm một bài viết mới - "${bodyPost.slice(0,60)}" `
             }
             const noti = await axios.post('/notifications/createNotification', dataNoti);
-            console.log(noti.data);
             const newNoti = {
                 ...noti.data,
                 senderNotiId: {

@@ -38,13 +38,13 @@ GET http://localhost:8800/api/users/nofollowings/6140a06b3fee095588756d69 HTTP/1
 
 
 ###
-POST http://localhost:8800/api/conversationsgroup/ HTTP/1.1
+POST http://localhost:8800/api/conversations/ HTTP/1.1
 content-type: application/json
 
 {
     "members": [
-        "6140a06b3fee095588756d69",
         "6140a0d63fee095588756d6b",
+        "6140a11c3fee095588756d6f",
     ],
 }
 

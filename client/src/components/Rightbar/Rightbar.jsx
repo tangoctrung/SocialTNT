@@ -13,9 +13,11 @@ function Rightbar() {
     
 
     useEffect(() => {
+        console.log("lalla");
         socket?.emit("addUser", user?._id);
         socket?.on("getUser", (users) => {
-            setListFriendOnline([...users])
+            setListFriendOnline([...users]);
+            console.log(users);
         });
     }, [user?._id])
 

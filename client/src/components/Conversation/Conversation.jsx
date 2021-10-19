@@ -6,18 +6,24 @@ import { useState } from 'react';
 import axios from 'axios';
 import { format } from 'timeago.js';
 import URL from 'config/config';
+import { useContext } from 'react';
+import { Context } from 'context/Context';
 
 
 function Conversation({conversation, currentUser}) {
     const [friend, setFriend] = useState(null);
     const PF = URL.urlNoAvatar;
-
+    const { accessToken } = useContext(Context);
 
     useEffect(() => {
         const friendId = conversation.members.find((m) => m !== currentUser?._id);
         const getUser = async () => {
         try {
-            const res = await axios.get(`/users/profile/${friendId}`);
+            const res = await axios.get(`/users/profile/${friendId}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             setFriend(res.data);
         } catch (err) {
             console.log(err);
@@ -36,13 +42,13 @@ function Conversation({conversation, currentUser}) {
                     <h3>{friend ? friend.username : ""}</h3>
                     {conversation?.senderId === currentUser?._id 
                         && conversation?.messageLast 
-                        && <p><b>You:</b> {conversation?.messageLast.length > 30 ? conversation?.messageLast.slice(0, 30) + "..." : conversation?.messageLast} - <span>{format(conversation.updatedAt)}</span></p>}
+                        && <p>You: {conversation?.messageLast.length > 30 ? conversation?.messageLast.slice(0, 30) + "..." : conversation?.messageLast} - <span>{format(conversation.updatedAt)}</span></p>}
                     {conversation?.senderId !== currentUser?._id 
                         && conversation?.messageLast 
                         && <p>{conversation?.messageLast.length > 35 ? conversation?.messageLast.slice(0, 35) + "..." : conversation?.messageLast}  - <span>{format(conversation.updatedAt)}</span></p>}                 
                 </div>
                 <div className="chat-left-4-member-item-noti">
-                    <i className="fas fa-circle"></i>
+                    {/* <i className="fas fa-circle"></i> */}
                 </div>
             </div>
         </Link>

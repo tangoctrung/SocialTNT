@@ -10,7 +10,7 @@ import { useContext } from 'react';
 import './PostSaved.css';
 
 function PostSaved() {
-    const { user } = useContext(Context);
+    const { user, accessToken } = useContext(Context);
     const [postSave, setPostSave] = useState(null);
     const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +18,11 @@ function PostSaved() {
     useEffect(() => {
         setIsLoading(true);
         const fetchPostSave = async () => {
-            const res = await axios.get(`/users/savepost/${user?._id}`);
+            const res = await axios.get(`/users/savepost/${user?._id}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             // setPosts(res.data);
             setPosts(
                 res.data.sort((p1, p2) => {

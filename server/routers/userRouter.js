@@ -1,9 +1,10 @@
 const router = require("express").Router();
 const User = require("../models/Users");
 const Post = require("../models/Posts");
+const verifyToken = require("../middleware/auth");
 
 // TÌM KIẾM NGƯỜI DÙNG THEO USERNAME OR EMAIL
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   const username = req.query.username;
   let userArray = [];
   try {
@@ -22,7 +23,7 @@ router.get('/', async (req, res) => {
 
 
 // GET A USER
-router.get("/profile/:id", async (req, res) => {
+router.get("/profile/:id", verifyToken, async (req, res) => {
   const id = req.params.id;
   try {
     const user = await User.findById(id);
@@ -33,7 +34,7 @@ router.get("/profile/:id", async (req, res) => {
 });
 
 // GET ALL USER
-router.get("/alluser", async (req, res) => {
+router.get("/alluser", verifyToken, async (req, res) => {
   try {
     const user = await User.find();
     res.status(200).json(user);
@@ -61,7 +62,7 @@ router.put("/profile/:id", async (req, res) => {
 
 //GET FOLLOWERS
 
-router.get("/profile/followers/:userId", async (req, res) => {
+router.get("/profile/followers/:userId", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     const friends = await Promise.all(
@@ -82,7 +83,7 @@ router.get("/profile/followers/:userId", async (req, res) => {
 
 // GET FOLLOWINGS
 
-router.get("/profile/followings/:userId", async (req, res) => {
+router.get("/profile/followings/:userId", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     const friends = await Promise.all(
@@ -211,7 +212,7 @@ router.put("/savepost/", async (req, res) => {
 
 // GET ALL POST SAVED
 
-router.get("/savepost/:userId", async (req, res) => {
+router.get("/savepost/:userId", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     const posts = await Promise.all(

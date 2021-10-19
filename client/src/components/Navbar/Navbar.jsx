@@ -13,13 +13,10 @@ function Navbar() {
     const [isSearch, setIsSearch] = useState(false);
     const [users, setUsers] = useState([]);
     const [posts, setPosts] = useState([]);
-    const { user, dispatch, isFetching } = useContext(Context);
+    const { user, dispatch, isFetching, accessToken } = useContext(Context);
     const inputRef = useRef();
     const [searchs, setSearchs] = useState(user?.searchHistorys);
     const PF = URL.urlNoAvatar;
-
-    console.log(user);
-    console.log(searchs);
     
     const handleClickLogout = () => {
         dispatch({type: "LOGOUT"});
@@ -43,9 +40,17 @@ function Navbar() {
         dispatch({ type: "SEARCH_START"});
 
         const fetchDataUserPost = async () => {
-            const resUser = await axios.get(`/users?username=${inputRef.current.value}`);
+            const resUser = await axios.get(`/users?username=${inputRef.current.value}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             setUsers(resUser.data);
-            const resPost = await axios.get(`/posts?hashtag=${inputRef.current.value}`);
+            const resPost = await axios.get(`/posts?hashtag=${inputRef.current.value}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             setPosts(resPost.data);
             await axios.put("/users/addSearchHistory", {
                 userId: user?._id,

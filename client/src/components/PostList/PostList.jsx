@@ -8,13 +8,19 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 function PostList() {
 
     const [posts, setPosts] = useState([]);
-    const { user, socket } = useContext(Context);
+    const { user, accessToken } = useContext(Context);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
         const FetchPostTimeLine = async () => {
-            const res = await axios.get(`/posts/timeline/${user?._id}`);
+            console.log("res");
+            const res = await axios.get(`/posts/timeline/${user?._id}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken //the token is a variable which holds the token
+                  }
+            });
+            console.log(res);
             setPosts(
                 res.data.sort((p1, p2) => {
                   return new Date(p2.createdAt) - new Date(p1.createdAt);

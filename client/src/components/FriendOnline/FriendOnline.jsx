@@ -6,19 +6,25 @@ import { format } from 'timeago.js';
 import "./FriendOnline.css";
 import URL from 'config/config';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { Context } from 'context/Context';
 
 function FriendOnline({friendId}) {
-
+    const { accessToken } = useContext(Context);
     const [friend, setFriend] = useState();
     const PF = URL.urlNoAvatar;
 
     useEffect( async () => {
-        const resFriend = await axios.get(`/users/profile/${friendId}`);
+        const resFriend = await axios.get(`/users/profile/${friendId}`, {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+              }
+        });
         setFriend(resFriend.data);
     }, [friendId])
     return (
         <div>
-            <div className="rightbar-item">
+            {friendId && <div className="rightbar-item">
                     <Link to={`/profile/${friendId}`} style={{textDecoration: "none", color: "black"}}  className="rightbar-item-friend">
                         <div className="rightbar-item-friend-image">
                             <img src={friend?.avatar || (PF) } alt="Hình ảnh" />
@@ -39,7 +45,7 @@ function FriendOnline({friendId}) {
                             <span className="rightbar-item-info-span2"><i className="fas fa-map-marked-alt"></i> Đến từ <b>{friend?.hometown}</b></span>
                         </div>
                     </div>
-                </div>
+                </div>}
         </div>
     );
 }

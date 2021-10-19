@@ -16,7 +16,7 @@ function Profile() {
     const [dataUser, setDateUser] = useState({});
     const [isPostList, setIsPostList] = useState(true);
     const [isModalEdit, setIsModalEdit] = useState(false);
-    const { user, dispatch } = useContext(Context);
+    const { user, dispatch, accessToken } = useContext(Context);
     const PF = URL.urlNoAvatar;
     const PFcover = URL.urlCover;
     const [username, setUsername] = useState(user?.username);
@@ -47,19 +47,31 @@ function Profile() {
     useEffect(() => {
         setIsLoading(true);
         const fetchUser = async () => {
-            const res = await axios.get(`/users/profile/${paramID}`);
+            const res = await axios.get(`/users/profile/${paramID}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             setDateUser(res.data);
             setIsLoading(false);
         }
         fetchUser();
         const fetchDataFollowers = async()=>{
-            const res1 = await axios.get(`/users/profile/followers/${paramID}`);
+            const res1 = await axios.get(`/users/profile/followers/${paramID}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             setFollowers(res1.data);
             console.log(res1.data);
         }
         fetchDataFollowers();
         const fetchDataFollowings = async()=>{
-            const res2 = await axios.get(`/users/profile/followings/${paramID}`);
+            const res2 = await axios.get(`/users/profile/followings/${paramID}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             setFollowings(res2.data);
           console.log(res2.data);
         }
@@ -69,7 +81,11 @@ function Profile() {
     
     useEffect(() => {
         const fetchPost = async () => {
-            const res3 = await axios.get(`/posts/profile/${paramID}`);
+            const res3 = await axios.get(`/posts/profile/${paramID}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                  }
+            });
             setPosts(
                 res3.data.sort((p1, p2) => {
                   return new Date(p2.createdAt) - new Date(p1.createdAt);

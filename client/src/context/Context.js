@@ -20,7 +20,6 @@ export const ContextProvider = ({ children }) => {
   useEffect(()=> {
     // localStorage.setItem("user", JSON.stringify(state.user));
     localStorage.setItem("accessToken", JSON.stringify(state.accessToken));
-    console.log(state.userTest);
   }, [state.user]);
 
   useEffect( async () => {

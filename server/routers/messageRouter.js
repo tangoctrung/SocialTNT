@@ -13,8 +13,19 @@ router.post("/", async (req, res) => {
     } catch (err) {
       res.status(500).json(err);
     }
-  });
-  
+});
+
+// XÓA MỘT TIN NHẮN
+
+router.put("/delete", async (req, res) => {
+
+  try {
+    const savedMessage = await Message.findByIdAndUpdate({_id: req.body.messageId}, {isDelete: true}, {new: true});
+    res.status(200).json(savedMessage);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 // LẤY TOÀN BỘ TIN NHẮN CỦA MỘT CUỘC TRÒ CHUYỆN
   
@@ -22,7 +33,7 @@ router.get("/:conversationId", async (req, res) => {
     try {
         const messages = await Message.find({
         conversationId: req.params.conversationId,
-        });
+        }).populate('senderId', ["username"]);
         res.status(200).json(messages);
     } catch (err) {
         res.status(500).json(err);

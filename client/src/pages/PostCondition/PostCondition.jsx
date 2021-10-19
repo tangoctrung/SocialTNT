@@ -1,6 +1,8 @@
 import axios from 'axios';
 import Post from 'components/Post/Post';
+import { Context } from 'context/Context';
 import React from 'react';
+import { useContext } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
@@ -8,6 +10,7 @@ import { Link } from 'react-router-dom';
 import "./PostCondition.css";
 
 function PostCondition() {
+    const { accessToken } = useContext(Context);
     const [posts, setPosts] = useState([]);
     const location = useLocation();
     const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +19,11 @@ function PostCondition() {
     useEffect(() => {
         setIsLoading(true);
         const fetchPost = async () => {
-            const res = await axios.get(`/posts?hashtag=${hashtag}`);
+            const res = await axios.get(`/posts?hashtag=${hashtag}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken 
+                  }
+            });
             // setPosts(res.data);
             setPosts(
                 res.data.sort((p1, p2) => {

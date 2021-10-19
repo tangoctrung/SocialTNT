@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Post = require("../models/Posts");
 const User = require("../models/Users");
+const verifyToken = require("../middleware/auth");
 
 // TẠO MỘT BÀI VIẾT
 
@@ -43,7 +44,7 @@ router.delete("/:id", async (req, res) => {
 
 // LẤY MỘT BÀI VIẾT CÓ ID
 
-router.get("/post/:id", async (req, res) => {
+router.get("/post/:id", verifyToken, async (req, res) => {
     try {
       const post = await Post.findById(req.params.id).populate('authorId', [
         'username', 'avatar'
@@ -56,7 +57,7 @@ router.get("/post/:id", async (req, res) => {
 });
 
 // LẤY TẤT CẢ BÀI VIẾT CỦA MỘT NGƯỜI DÙNG
-router.get("/profile/:id", async (req, res) => {
+router.get("/profile/:id", verifyToken, async (req, res) => {
   // const id = req.params.id;
     try {
       const posts = await Post.find({ authorId: req.params.id }).populate('authorId', [
@@ -71,7 +72,7 @@ router.get("/profile/:id", async (req, res) => {
 
 // LẤY TẤT CẢ BÀI VIẾT LIÊN QUAN ĐẾN NGƯỜI DÙNG HOẶC BẠN BÈ NGƯỜI DÙNG
 
-router.get("/timeline/:userId", async (req, res) => {
+router.get("/timeline/:userId", verifyToken , async (req, res) => {
   try {
     const currentUser = await User.findById(req.params.userId);
     const userPosts = await Post.find({ authorId: currentUser._id }).populate('authorId', [
@@ -92,7 +93,7 @@ router.get("/timeline/:userId", async (req, res) => {
 });
 
 // TÌM KIẾM BÀI VIẾT THEO HASHTAG
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   const hashtag = req.query.hashtag;
   try{
       const posts = await Post.find({ hashtags : { $all : [hashtag] }}).populate('authorId', [
@@ -106,7 +107,7 @@ router.get('/', async (req, res) => {
 })
 
 // TÌM KIẾM BÀI VIẾT THEO CHỦ ĐỀ
-router.get('/themen/', async (req, res) => {
+router.get('/themen/', verifyToken, async (req, res) => {
   const themen = req.query.themen;
   try{
       const posts = await Post.find({ themen: themen }).populate('authorId', [
@@ -152,18 +153,6 @@ router.put("/post/:id/dislike", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-});
-
-// COMMENT POST
-
-router.put("/post/:id/comment", async (req, res) => {
-  try{
-
-  } catch (err) {
-    res.status(500).json(err);
-  }
-
-
 });
 
 
