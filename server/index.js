@@ -24,7 +24,7 @@ app.use("/images", express.static(path.join(__dirname, "/images")));
 // mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority
 // connect to the database
 mongoose
-  .connect("mongodb://localhost:27017/SocialTNT", {
+  .connect("mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,

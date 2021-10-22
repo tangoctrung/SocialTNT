@@ -37,9 +37,11 @@ io.on('connection', (socket) =>{
     })
 
     // gửi ám hiệu typing khi chat 2 người
-    socket.on("typing", ({senderId, receivedId, typing}) => {
+    socket.on("typing", ({senderId, receivedId, conversationId, typing}) => {
         const user = getUser(receivedId);
-        socket.to(user?.socketId).emit("typingToClient", {senderId, typing});
+        socket.to(user?.socketId).emit("typingToClient", {
+            senderId, receivedId, conversationId, typing
+        });
     })
 
     // khi người dùng likePost
