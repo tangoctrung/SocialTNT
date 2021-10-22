@@ -26,7 +26,7 @@ function MessageSender({message, receivedId, setIsReply, setNameReply, setTextRe
        
         if (message?.typeMessage !== "text") {
             if (message?.content === "") {
-                setTextReply(`${message?.typeMessage} đính kèm`)
+                setTextReply(`File đính kèm`)
             } else {
                 if (message?.content?.length >= 100) {
                     setTextReply(message?.content?.slice(0,100) + "...");
@@ -71,7 +71,6 @@ function MessageSender({message, receivedId, setIsReply, setNameReply, setTextRe
                         </div>
                     </div>
                     <div className="chat-center-2-itemMessage-sender-text" title={formatTime(message.createdAt)}>
-                        {/* {message.typeMessage==="text" && <p>{message.content}</p>} */}
                         {message?.isReply && 
                             <div className="chat-center-2-textReply">
                                 <div>
@@ -89,7 +88,27 @@ function MessageSender({message, receivedId, setIsReply, setNameReply, setTextRe
                         </div>
                         <div className="itemMessage-sender-image">
                             {message?.url?.length > 0 && message?.url.map((itemUrl, index) => (
-                                    <img src={itemUrl} alt="image" key={index} />
+                                <>
+                                    {(itemUrl.typeDoc === "image") && <img src={itemUrl.urlDoc} alt="image" key={index} />}
+                                    
+                                    {(itemUrl.typeDoc === "video") &&    
+                                        <video autoPlay={false} controls>
+                                            <source src={itemUrl.urlDoc} alt=""></source>
+                                        </video>           
+                                    }    
+                                    {(itemUrl.typeDoc === "document") &&    
+                                        <div className="showDocument-sender-content">
+                                            <div className="showDocument-sender-content-1">
+                                                <a className="showDocument-sender" href={itemUrl.urlDoc} >
+                                                    <div className="showDocument-sender-icon">
+                                                        <i className="fad fa-file-alt"></i>
+                                                    </div>
+                                                    <p >{itemUrl.nameDoc}</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }                    
+                                </>
                             ))}
                         </div>
         

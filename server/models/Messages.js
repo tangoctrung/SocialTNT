@@ -7,7 +7,11 @@ const MessageSchema = new mongoose.Schema({
         default: '',
     },
     url: [
-        {type: String, default: ''}
+        {
+            urlDoc: {type: String, default: ''},
+            typeDoc: {type: String, default: ''},
+            nameDoc: {type: String, default: ''}
+        }
     ],
     conversationId: {
         type: String,

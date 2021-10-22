@@ -103,16 +103,11 @@ function Navbar() {
                                 </Link>
                                 <div className="navbar-center-find">
                                     {!isSearch && 
-                                        <>
-                                            <i className="fas fa-search" data-tip="Tìm kiếm" onClick={handleClickOpenFind}></i> 
-                                            <ReactTooltip place="bottom" effect="solid" />
-                                        </>}
-                                    {isSearch && 
-                                        <>
-                                            <i class="fas fa-times" data-tip="Tắt tìm kiếm" onClick={handleClickCloseFind}></i>
-                                            <ReactTooltip place="left"  effect="solid" />
-                                        </>
+                                        <Tooltip title="Tìm kiếm" placement={isSearch ? "left" : "bottom"} enterDelay={1000} arrow>
+                                            <i className="fas fa-search" onClick={handleClickOpenFind}></i>                                           
+                                        </Tooltip>
                                     }
+                                    {isSearch && <i class="fas fa-times" onClick={handleClickCloseFind}></i>}
                                     <form className="navbar-center-form" style={{width: isSearch ? "350px" : "30px"}} onSubmit={handleSubmitFind}>
                                         <input ref={inputRef} onChange={handleChangeFind} placeholder="Tìm kiếm người dùng hoặc bài viết theo hashtag"/>
                                     </form>

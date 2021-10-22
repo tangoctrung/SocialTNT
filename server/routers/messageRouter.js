@@ -30,15 +30,30 @@ router.put("/delete", async (req, res) => {
 // LẤY TOÀN BỘ TIN NHẮN CỦA MỘT CUỘC TRÒ CHUYỆN
   
 router.get("/:conversationId", async (req, res) => {
-    try {
-        const messages = await Message.find({
-        conversationId: req.params.conversationId,
-        }).populate('senderId', ["username"]);
-        res.status(200).json(messages);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+  try {
+      const messages = await Message.find({
+      conversationId: req.params.conversationId,
+      }).populate('senderId', ["username"]);
+      res.status(200).json(messages);
+  } catch (err) {
+      res.status(500).json(err);
+  }
 });
 
+// LẤY TOÀN BỘ URL CỦA MESSAGE CỦA 1 CUỘC TRÒ CHUYỆN
+
+// router.get("/:conversationId/urlmessage", async (req, res) => {
+
+//   try {
+//     let listUrl = [];
+//     const messages = await Message.find({
+//       conversationId: req.params.conversationId,
+//     });
+
+//     res.status(200).json(messages);
+//   } catch (err) {
+//     res.status(500).json(err);
+// }
+// });
 
 module.exports = router;

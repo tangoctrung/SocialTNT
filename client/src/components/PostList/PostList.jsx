@@ -15,11 +15,7 @@ function PostList() {
         setIsLoading(true);
         const FetchPostTimeLine = async () => {
             console.log("res");
-            const res = await axios.get(`/posts/timeline/${user?._id}`, {
-                headers: {
-                    Authorization: 'Bearer ' + accessToken //the token is a variable which holds the token
-                  }
-            });
+            const res = await axios.get(`/posts/timeline/${user?._id}`);
             console.log(res);
             setPosts(
                 res.data.sort((p1, p2) => {

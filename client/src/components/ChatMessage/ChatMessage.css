@@ -126,7 +126,7 @@
     height: 100%;
     margin-right: 20px;
 }
-.chat-center-3-top-item i{
+.chat-center-3-top-item .removeDoc{
     position: absolute;
     padding: 2px;
     top: -5px;
@@ -136,20 +136,43 @@
     color:rgb(65, 64, 64);
     background-color: #fff;
 }
-.chat-center-3-top-item i:hover{
+.chat-center-3-top-item .removeDoc:hover{
     color: red;
     cursor: pointer;
 }
 .chat-center-3-top-item img{
     height: 100%;
 }
+.chat-center-3-top-item video{
+    height: 100%;
+}
+.documentUpload{
+    width: 150px;
+    display: flex;
+    padding: 5px;
+    align-items: center;
+    border-radius: 10px;
+    border: 1.5px solid #000;
+}
+.documentUpload p{
+    display: inline-block;
+    overflow-wrap: break-word;
+    width: 70%;
+    font-size: 13px;
+}
+.documentUpload .documentUpload-icon{
+    font-size: 24px;
+    padding: 10px;
+}
+
+
 /* css typing */
 .typing{
     margin-left: 10px;
 }
 .typing .balls {
-    width: 4em;
-    padding: 15px;
+    width: 3.5em;
+    padding: 15px 8px;
     border-radius: 10px;
     background-color: rgb(230, 230, 230);
     display: flex;
@@ -159,8 +182,8 @@
 }
   
 .typing .balls div {
-    width: 0.6em;
-    height: 0.6em;
+    width: 0.5em;
+    height: 0.5em;
     border-radius: 50%;
     background-color: #807e80;
     transform: translateY(-100%);

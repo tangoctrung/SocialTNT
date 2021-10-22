@@ -72,7 +72,7 @@ router.get("/profile/:id", verifyToken, async (req, res) => {
 
 // LẤY TẤT CẢ BÀI VIẾT LIÊN QUAN ĐẾN NGƯỜI DÙNG HOẶC BẠN BÈ NGƯỜI DÙNG
 
-router.get("/timeline/:userId", verifyToken , async (req, res) => {
+router.get("/timeline/:userId" , async (req, res) => {
   try {
     const currentUser = await User.findById(req.params.userId);
     const userPosts = await Post.find({ authorId: currentUser._id }).populate('authorId', [

@@ -2,7 +2,7 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 .chat-center-2-itemMessage-sender-infoMessage{
     width: 50px;
@@ -54,6 +54,48 @@
     border-radius: 5px;
     cursor: pointer;
 }
+.itemMessage-sender-image video{
+    max-width: 200px;
+    max-height: 200px;
+    margin: 3px;
+    cursor: pointer;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.showDocument-sender-content{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+.showDocument-sender-content-1{
+    display: inline-block;
+}
+.showDocument-sender{
+    margin: 3px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+    max-height: 50px;
+    color: #000;
+    text-decoration: none;
+    background-color: #d8d9cf;
+    border-radius: 30px;
+    font-weight: 500;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.showDocument-sender:hover p{
+    text-decoration: underline;
+}
+.showDocument-sender-icon{
+    font-size: 24px;
+    margin-right: 5px;
+}
+.showDocument-sender p{
+    font-size: 16px;
+}
+
 
 .chat-center-2-textReply div{
     display: flex;
@@ -93,4 +135,7 @@
     border-radius: 20px;
     border: 1px solid rgb(161, 159, 159);
     color:rgb(148, 145, 145);
+}
+.chat-center-2-itemMessage-sender-delete p:hover{
+    cursor: not-allowed;
 }

@@ -13,6 +13,7 @@ import ReactTooltip from "react-tooltip";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
 import URL from 'config/config';
+import { Tooltip } from '@material-ui/core';
 
 function Chat() {
   const [isOpenChatMember, setIsOpenChatMember] = useState(true);
@@ -23,7 +24,7 @@ function Chat() {
   const [noFollowings, setNoFollowings] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const { user, accessToken, socket } = useContext(Context);
-  // const [chatId, setChatId] = useState();
+  const [lastMessage, setLastMessage] = useState();
   // const location = useLocation();
   const [isCreateGroup, setIsCreateGroup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +35,21 @@ function Chat() {
   const [colorChat, setColorChat] = useState(-1);
 
 
+  // khi có người nhắn tin thì đưa cuộc trò chuyện đó lên đầu
+  useEffect(() => {
+    let listConversation = [...conversations];
+    let index = 0, i;
+    for (i = 0; i < listConversation.length; i++){
+      if (listConversation[i]?._id === lastMessage?.conversationId) {
+        index = i;
+        break;
+      }
+    }
+    console.log(index);
+    const conversation = listConversation[index];
+    const newListConversation = [conversation, ...listConversation.slice(0, index), ...listConversation.slice(index + 1)];
+    setConversations(newListConversation);
+  }, [lastMessage])
 
   // Lấy thông tin các following
   useEffect(() => {
@@ -69,12 +85,15 @@ function Chat() {
         headers: {
             Authorization: 'Bearer ' + accessToken
           }
-    });
-      setConversations(res.data);
+      });
+      setConversations(res.data.sort((p1, p2) => {
+            return new Date(p2.updatedAt) - new Date(p1.updatedAt);
+      }));
       setIsLoading(false);
     };
     FetchUser();
   }, [user && user._id]);
+
 
   // NẾU ĐƯỜNG DẪN CÓ ID CỦA CUỘC NÓI CHUYỆN THÌ LẤY CUỘC NCH ĐÓ
   // useEffect(() => {
@@ -90,7 +109,10 @@ function Chat() {
   //   fetchDataChat();
   // }, [location, chatId]);
 
+
+
   // LẤY TIN NHẮN CỦA MỘT CUỘC TRÒ CHUYỆN
+  
   const handleSetCurrentChat = (conversation) => {
     setCurrentChat(conversation);
     const FetchMessage = async () => {
@@ -152,13 +174,13 @@ function Chat() {
         <div className="chat-left">
           <div className="chat-left-1">
             <h2>Chat</h2>
-            <div className="chat-left-1-createGroup">
-              <i
-                className="far fa-users-medical"
-                data-tip="Tạo nhóm chat"
-                onClick={() => setIsCreateGroup(true)}
-              ></i>
-              <ReactTooltip place="bottom" type="dark" effect="solid" />
+            <div className="chat-left-1-createGroup">             
+              <Tooltip title="Tạo nhóm chat" placement={"bottom"} enterDelay={1000} arrow>
+                <i
+                  className="far fa-users-medical"
+                  onClick={() => setIsCreateGroup(true)}
+                ></i>
+              </Tooltip>
               {isCreateGroup && (
                 <div className="createGroup">
                   <div
@@ -257,14 +279,15 @@ function Chat() {
                 {conversations && !isLoading &&
                   conversations.map((conversation, index) => (
                     <div 
-                      onClick={() => {handleSetCurrentChat(conversation); setColorChat(index)}}
-                      style={{backgroundColor: colorChat===index ? "rgb(231, 229, 227)" : "transparent", borderRadius: '5px'}}
+                      onClick={() => {handleSetCurrentChat(conversation); setColorChat(conversation?._id)}}
+                      style={{backgroundColor: colorChat===conversation?._id ? "rgb(231, 229, 227)" : "transparent", borderRadius: '5px'}}
                     >
                       <Conversation
                         key={index}
                         conversation={conversation}
                         currentUser={user}
                         colorChat={colorChat}
+                        lastMessage={lastMessage}
                       />
                     </div>
                   ))}
@@ -304,6 +327,7 @@ function Chat() {
               messages={messages}
               currentChat={currentChat}
               setMessages={setMessages}
+              setLastMessage={setLastMessage}
             />
           ) : (
             <span className="chat-text">
@@ -313,7 +337,7 @@ function Chat() {
         </div>
 
         <div className="chat-right">
-          <InfoConversation currentChat={currentChat && currentChat} />
+          <InfoConversation currentChat={currentChat} messages={messages} />
         </div>
       </div>
     </>
