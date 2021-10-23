@@ -49,5 +49,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://boring-colden-32fce7.netlify.app/api"
+  "proxy": "http://localhost:8800/api"
 }
