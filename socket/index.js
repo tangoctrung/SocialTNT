@@ -1,6 +1,6 @@
 const io = require('socket.io')(8900, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: 'http://localhost:3000' || 'https://617404041e109c0007b3dbac--boring-colden-32fce7.netlify.app/',
     },
 });
 let users = [];
