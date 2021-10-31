@@ -30,7 +30,7 @@ app.use("/images", express.static(path.join(__dirname, "/images")));
 const httpServer = require('http').createServer(app);
 const io = require('socket.io')(httpServer,{
   cors: {
-      origin: 'http://localhost:3000',
+      origin: 'http://localhost:3000' || 'https://socialtnt.netlify.app',
   },
 });
 
