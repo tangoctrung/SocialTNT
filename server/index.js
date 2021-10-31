@@ -24,7 +24,11 @@ dotenv.config();
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
+app.use(express.static(path.join(__dirname, "/client")));
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
+})
 
 // Socket
 const httpServer = require('http').createServer(app);
@@ -43,7 +47,7 @@ io.on("connection", (socket) => {
 // mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority
 // connect to the database, mongodb://localhost:27017/SocialTNT
 mongoose
-  .connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority`, {
+  .connect(process.env.URL_DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
