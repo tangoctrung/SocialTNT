@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import { axiosInstance} from '../../config/configUrl';
 import { Context } from 'context/Context';
 import { useContext } from 'react';
-import { axiosInstance } from 'config/configUrl';
 
 function AllUser() {
     const { accessToken } = useContext(Context);
