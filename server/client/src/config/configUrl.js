@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-    baseUrl: "https://socialtnt.herokuapp.com/api"
+    baseUrl: "https://socialtntv0.herokuapp.com/api"
 });
