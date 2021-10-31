@@ -13,18 +13,37 @@ const messageGroupRouter = require("./routers/messageGroupRouter");
 const conversationGroupRouter = require("./routers/conversationGroupRouter");
 const notificationRouter = require("./routers/notificationRouter");
 const fileConversationRouter = require("./routers/fileConversationRouter");
+const socketServer = require("./socketServer");
+const cors = require('cors');
 const multer = require("multer");
 
 const app = express();
 
+app.use(cors());
 dotenv.config();
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
+
+
+// Socket
+const httpServer = require('http').createServer(app);
+const io = require('socket.io')(httpServer,{
+  cors: {
+      origin: 'http://localhost:3000',
+  },
+});
+
+io.on("connection", (socket) => {
+    socketServer(socket);
+});
+
+
+
 // mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority
-// connect to the database
+// connect to the database, mongodb://localhost:27017/SocialTNT
 mongoose
-  .connect("mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority", {
+  .connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -41,6 +60,8 @@ const storage = multer.diskStorage({
     cb(null, req.body.name);
   },
 });
+
+
 
 const upload = multer({ storage: storage });
 app.post("/api/upload", upload.single("file"), (req, res) => {
@@ -60,6 +81,6 @@ app.use("/api/notifications", notificationRouter);
 app.use("/api/fileconversation", fileConversationRouter);
 
 const PORT = process.env.PORT || 8800;
-app.listen(8800, () => {
+httpServer.listen(PORT, () => {
   console.log("server is running on port 8800");
 });

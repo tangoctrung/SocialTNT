@@ -114,6 +114,7 @@ function Chat() {
   // LẤY TIN NHẮN CỦA MỘT CUỘC TRÒ CHUYỆN
   
   const handleSetCurrentChat = (conversation) => {
+    console.log(conversation._id);
     setCurrentChat(conversation);
     const FetchMessage = async () => {
       try {
@@ -122,7 +123,6 @@ function Chat() {
               Authorization: 'Bearer ' + accessToken
             }
         });
-        console.log(res.data);
         setMessages(res.data);
       } catch (e) {}
     };

@@ -30,7 +30,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
     const [textReply, setTextReply] = useState("");
     const [nameReply, setNameReply] = useState("");
     const receivedId = currentChat.members.find(member => member !== user?._id);
-
+    console.log(currentChat?._id);
 
     useEffect(() => {
         socket?.emit("addUser", user?._id);
@@ -41,11 +41,20 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
     // lấy tin nhắn
     useEffect(() => {
         socket?.on('typingToClient', ({senderId, typing}) => {
-            if (currentChat?.members.includes(senderId) && senderId !== user?._id) {
+            if (currentChat?.members.includes(senderId)) {
                  setIsTyping(typing);
+            } else {
+                setIsTyping(false);
             }
         })
         socket?.on("getMessage", data => {
+
+            console.log(currentChat?._id);
+            if (currentChat?.members.includes(data?.senderId?._id) 
+                && currentChat?._id === data?.conversationId) {
+                console.log(data.conversationId, " ", currentChat?._id);
+                setMessages((prev) => [...prev, data]);
+            }
             // console.log(data);
             // tin nhắn lastMessage
             const newLastMessage = {
@@ -56,16 +65,14 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
             }
             setLastMessage(newLastMessage);
 
-            let listImage=[], i;
-            for (i=0; i<data?.url?.length; i++) {
-                listImage.push(data.url[i]);
-            }
-            const newMessage = data;
-            if (currentChat?.members.includes(newMessage?.senderId?._id)) {
-                setMessages((prev) => [...prev, newMessage]);
-            }
+            // let listImage=[], i;
+            // for (i=0; i<data?.url?.length; i++) {
+            //     listImage.push(data.url[i]);
+            // }
+            // const newMessage = data;
+            
         })
-    }, [])
+    }, [currentChat?._id])
 
 
 
@@ -98,7 +105,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
         // tin nhắn đưa lên database
         const message = {
             senderId: user?._id,
-            conversationId: currentChat._id,
+            conversationId: currentChat?._id,
             content: newMessage,
             typeMessage: images.length>0 ? "image" : "text",
             url: [...images],
@@ -116,7 +123,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
         }
         setLastMessage(newLastMessage);
 
-        const receivedId = currentChat.members.find(member => member !== user?._id)
+        const receivedId = currentChat?.members.find(member => member !== user?._id)
         
         if (newMessage || images){
             const res = await axios.post(`/messages/`, message);
@@ -199,7 +206,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
 
     }
      
-    // khi người dùng đang gõ phím thì gửi đến cho người kia
+    // khi người dùng đang gõ phím thì gửi typing đến cho người kia
     const handleTyping = () => {
 
         setIsOpenEmoji(false);

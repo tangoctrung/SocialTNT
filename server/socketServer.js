@@ -1,46 +1,44 @@
-const io = require('socket.io')(8900, {
-    cors: {
-        origin: 'http://localhost:3000' || 'https://boring-colden-32fce7.netlify.app/',
-    },
-});
+
 let users = [];
 
-const addUser = (userId, socketId) => {
-    !users.some((user) => user.userId === userId) && users.push({userId, socketId});
-}
-const removeUser = (socketId) => {
-    users = users.filter((user) => user.socketId !== socketId)
-}
-const getUser = (userId) => {
-    return users.find((user) => user.userId === userId)
-}
+// const addUser = (userId, socketId) => {
+//     !users.some((user) => user.userId === userId) && users.push({userId, socketId});
+// }
+// const removeUser = (socketId) => {
+//     users = users.filter((user) => user.socketId !== socketId)
+// }
+// const getUser = (userId) => {
+//     return users.find((user) => user.userId === userId)
+// }
 
-io.on('connection', (socket) =>{
+const socketServer = (socket) =>{
     // khi người dùng kết nối vào scoket server
     console.log("1 user connection");
     // nhận userId và socketId từ người dùng
     socket.on("addUser", userId => {
-        addUser(userId, socket.id);
+        // addUser(userId, socket.id);
+        !users.some((user) => user.userId === userId) && users.push({userId, socketId: socket.id});
         socket.emit("getUser", users);
     })
 
     // khi nhắn tin và nhận tin
     socket.on("sendMessage", ({m, receivedId}) => {
-        const user = getUser(receivedId);
+        // const user = getUser(receivedId);
+        const user = users.find((user) => user.userId === receivedId)
         socket.to(user?.socketId).emit("getMessage", m);
     });
 
     // xóa tin nhắn
     socket.on("deleteMessage", ({messageId, receivedId}) => {
-        const user = getUser(receivedId);
+        const user = users.find((user) => user.userId === receivedId)
         socket.to(user?.socketId).emit("deleteMessageToClient", {messageId});
     })
 
     // gửi ám hiệu typing khi chat 2 người
-    socket.on("typing", ({senderId, receivedId, conversationId, typing}) => {
-        const user = getUser(receivedId);
+    socket.on("typing", ({senderId, receivedId, typing}) => {
+        const user = users.find((user) => user.userId === receivedId)
         socket.to(user?.socketId).emit("typingToClient", {
-            senderId, receivedId, conversationId, typing
+            senderId, typing
         });
     })
 
@@ -159,7 +157,9 @@ io.on('connection', (socket) =>{
 
     // khi người dùng ngắt kết nối
     socket.on("disconnect", () =>{
-        removeUser(socket.id);
-        io.emit("getUsers", users);
+        users = users.filter((user) => user.socketId !== socket.id)
+        socket.emit("getUsers", users);
     })
-})
+}
+
+module.exports = socketServer;
