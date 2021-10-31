@@ -19,7 +19,7 @@ const multer = require("multer");
 
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 dotenv.config();
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "/images")));
@@ -27,11 +27,7 @@ app.use("/images", express.static(path.join(__dirname, "/images")));
 
 // Socket
 const httpServer = require('http').createServer(app);
-const io = require('socket.io')(httpServer,{
-  cors: {
-      origin: 'http://localhost:3000' || 'https://socialtnt.netlify.app',
-  },
-});
+const io = require('socket.io')(httpServer);
 
 io.on("connection", (socket) => {
     socketServer(socket);
