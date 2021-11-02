@@ -1,8 +1,6 @@
-import axios from "axios";
 import { Context } from "context/Context";
 import { useState } from "react";
 import { useContext } from "react";
-import { useEffect } from "react";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import URL from 'config/config';

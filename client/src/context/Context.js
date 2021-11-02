@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   user: null,
   isFetching: false,
   isLoadPost: false,
-  socket : io("https://shocking-vault-91423.herokuapp.com"),
+  socket : io(),
   error: false,
   accessToken: JSON.parse(localStorage.getItem("accessToken")) || null,
 };

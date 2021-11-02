@@ -9,7 +9,7 @@ import axios from "axios";
 import { useRef } from "react";
 import { useEffect } from "react";
 import URL from 'config/config';
-import { axiosInstance } from "config/configUrl";
+import { baseUrl } from "config/configUrl";
 
 function ReplyComment({
   replyComment,
@@ -63,7 +63,7 @@ function ReplyComment({
   // LIKE/UNLIKE COMMENT
   const handleLikedComment = async () => {
       const fetchLikedComment = async () => {
-        await axiosInstance.put(`/replycomment/likereplyComment`, {
+        await axios.put( baseUrl + `/replycomment/likereplyComment`, {
           replyCommentId: replyComment?._id,
           userId: user?._id,
         });
@@ -89,7 +89,7 @@ function ReplyComment({
             postNotiId: postId,
             content: `đã yêu thích phản hồi của bạn`,
           }
-          const noti = await axiosInstance.post('/notifications/createNotification', dataNoti);
+          const noti = await axios.post( baseUrl + '/notifications/createNotification', dataNoti);
           const newNoti = {
               ...noti.data,
               senderNotiId: {
@@ -117,7 +117,7 @@ function ReplyComment({
     const dataComment = {
       content: "d!e!l!e!t!e",
     }
-    await axiosInstance.put(`/replycomment/${replyComment?._id}/delete`, dataComment);
+    await axios.put( baseUrl + `/replycomment/${replyComment?._id}/delete`, dataComment);
     setContentReplyComment("d!e!l!e!t!e");
     setIsDeleteReplyComment(false);
     // window.location.reload();
@@ -130,7 +130,7 @@ function ReplyComment({
       content: contentReplyComment,
     }
     try {
-      const res = await axiosInstance.put(`/replycomment/${replyComment?._id}`, dataComment);
+      const res = await axios.put( baseUrl + `/replycomment/${replyComment?._id}`, dataComment);
       socket?.emit("editComment", res.data);
       setIsEditReplyComment(false);
     } catch (err) {

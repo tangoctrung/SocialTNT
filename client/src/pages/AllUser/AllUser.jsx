@@ -4,7 +4,8 @@ import "./AllUser.css";
 import { useState } from 'react';
 import UserSmall from 'components/UserSmall/UserSmall';
 import { useEffect } from 'react';
-import { axiosInstance} from '../../config/configUrl';
+import { baseUrl} from '../../config/configUrl';
+import axios from 'axios';
 import { Context } from 'context/Context';
 import { useContext } from 'react';
 
@@ -17,7 +18,7 @@ function AllUser() {
     useEffect(() => {
         setIsLoading(true);
         const FetchAllUser = async () => {
-            const res = await axiosInstance.get("/users/alluser", {
+            const res = await axios.get(baseUrl + "/users/alluser", {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }

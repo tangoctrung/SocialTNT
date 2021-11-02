@@ -8,7 +8,7 @@ import { Context } from 'context/Context';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import URL from 'config/config';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function InfoConversation ({currentChat, messages}) {
     const [settingChat, setSettingChat] = useState(0);
@@ -21,7 +21,7 @@ function InfoConversation ({currentChat, messages}) {
         const friendId = currentChat && currentChat.members.find((m) => m !== user?._id);
         const getUser = async () => {
             try {
-                const res = await axiosInstance.get(`/users/profile/${friendId}`, {
+                const res = await axios.get( baseUrl + `/users/profile/${friendId}`, {
                     headers: {
                         Authorization: 'Bearer ' + accessToken
                       }

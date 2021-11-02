@@ -11,7 +11,7 @@ import Picker from "emoji-picker-react";
 import { useRef } from "react";
 import ReplyComment from "components/ReplyComment/ReplyComment";
 import URL from "../../config/config";
-import { axiosInstance } from "config/configUrl";
+import { baseUrl } from "config/configUrl";
 
 function Comment({ comment, authorId }) {
   const { user, socket } = useContext(Context);
@@ -72,7 +72,7 @@ function Comment({ comment, authorId }) {
 
   useEffect(() => {
     const fetchReplyComment = async () => {
-      const resReplyComment = await axiosInstance.get(`/replycomment/comment/${comment?._id}`);
+      const resReplyComment = await axios.get( baseUrl + `/replycomment/comment/${comment?._id}`);
       setReplyComments(resReplyComment.data);
       setIsLoading(false);
   }
@@ -93,7 +93,7 @@ function Comment({ comment, authorId }) {
   // LIKE/UNLIKE COMMENT
   const handleLikedComment = async () => {
       const fetchLikedComment = async () => {
-        await axiosInstance.put(`/comment/likecomment`, {
+        await axios.put( baseUrl + `/comment/likecomment`, {
           commentId: comment?._id,
           userId: user?._id,
         });
@@ -119,7 +119,7 @@ function Comment({ comment, authorId }) {
             postNotiId: comment?.postId,
             content: `đã yêu thích bình luận của bạn`,
           }
-          const noti = await axiosInstance.post('/notifications/createNotification', dataNoti);
+          const noti = await axios.post( baseUrl + '/notifications/createNotification', dataNoti);
           const newNoti = {
               ...noti.data,
               senderNotiId: {
@@ -161,8 +161,8 @@ function Comment({ comment, authorId }) {
         commentId: comment?._id,
     }
     const fetchSubmitReplyComment = async () => {
-        await axiosInstance.put(`/comment/reply/${comment?._id}`);
-        const newReplyComment = await axiosInstance.post(`/replycomment/`, dataReply);
+        await axios.put( baseUrl + `/comment/reply/${comment?._id}`);
+        const newReplyComment = await axios.post( baseUrl + `/replycomment/`, dataReply);
 
         // tạo thông báo commentPost
         if (user?._id !== authorId) {
@@ -173,7 +173,7 @@ function Comment({ comment, authorId }) {
             postNotiId: comment?.postId,
             content: `đã phản hồi một bình luận trong bài viết của bạn`,
           }
-          const noti = await axiosInstance.post('/notifications/createNotification', dataNoti);
+          const noti = await axios.post( baseUrl + '/notifications/createNotification', dataNoti);
           const newNoti = {
               ...noti.data,
               senderNotiId: {
@@ -211,7 +211,7 @@ function Comment({ comment, authorId }) {
       content: contentComment,
     }
     try {
-      const res = await axiosInstance.put(`/comment/${comment?._id}`, dataComment);
+      const res = await axios.put( baseUrl + `/comment/${comment?._id}`, dataComment);
       socket?.emit("editComment", res.data);
       setIsEditComment(false);
     } catch (err) {
@@ -224,7 +224,7 @@ function Comment({ comment, authorId }) {
     const dataComment = {
       content: "d!e!l!e!t!e",
     }
-    const newComment = await axiosInstance.put(`/comment/${comment?._id}/delete`, dataComment);
+    const newComment = await axios.put( baseUrl + `/comment/${comment?._id}/delete`, dataComment);
     setContentComment("d!e!l!e!t!e");
     setIsDeleteComment(false);
     socket?.emit("deleteComment", newComment.data);

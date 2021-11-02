@@ -8,7 +8,7 @@ import URL from 'config/config';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { Context } from 'context/Context';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function FriendOnline({friendId}) {
     const { accessToken } = useContext(Context);
@@ -16,7 +16,7 @@ function FriendOnline({friendId}) {
     const PF = URL.urlNoAvatar;
 
     useEffect( async () => {
-        const resFriend = await axiosInstance.get(`/users/profile/${friendId}`, {
+        const resFriend = await axios.get( baseUrl + `/users/profile/${friendId}`, {
             headers: {
                 Authorization: 'Bearer ' + accessToken
               }

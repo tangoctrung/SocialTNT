@@ -6,7 +6,7 @@ import { useState } from 'react';
 import Post from 'components/Post/Post';
 import { Context } from 'context/Context';
 import { useContext } from 'react';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function PostDetail() {
     const location = useLocation();
@@ -18,7 +18,7 @@ function PostDetail() {
         const FetchAuthorPost = async () => {
 
             // API GET POST
-            const resPost = await axiosInstance.get(`/posts/post/${postId}`, {
+            const resPost = await axios.get( baseUrl + `/posts/post/${postId}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken //the token is a variable which holds the token
                   }

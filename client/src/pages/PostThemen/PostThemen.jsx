@@ -9,7 +9,7 @@ import "./PostThemen.css";
 import dataThemes from '../../data/index';
 import { useContext } from 'react';
 import { Context } from 'context/Context';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function PostThemen() {
     const { accessToken } = useContext(Context);
@@ -22,7 +22,7 @@ function PostThemen() {
     useEffect(() => {
         setIsLoading(true);
         const fetchPost = async () => {
-            const res = await axiosInstance.get(`/posts/themen/?themen=${themen}`, {
+            const res = await axios.get( baseUrl + `/posts/themen/?themen=${themen}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }

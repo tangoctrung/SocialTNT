@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useContext } from 'react';
 import './PostSaved.css';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function PostSaved() {
     const { user, accessToken } = useContext(Context);
@@ -19,7 +19,7 @@ function PostSaved() {
     useEffect(() => {
         setIsLoading(true);
         const fetchPostSave = async () => {
-            const res = await axiosInstance.get(`/users/savepost/${user?._id}`, {
+            const res = await axios.get( baseUrl + `/users/savepost/${user?._id}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }

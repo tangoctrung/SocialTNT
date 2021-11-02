@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import "./Notification.css";
 import NotificationType from "components/NotificationType/NotificationType";
-import { axiosInstance } from "config/configUrl";
+import { baseUrl } from "config/configUrl";
 
 function Notification() {
 
@@ -26,7 +26,7 @@ function Notification() {
     useEffect(() => {
         setIsLoading(true);
         const fetchNoti = async () => {
-            const res = await axiosInstance.get(`/notifications/getNotification/${user?._id}`);
+            const res = await axios.get(baseUrl + `/notifications/getNotification/${user?._id}`);
             console.log(res.data);
             setNotifications(res.data.sort((p1, p2) => {
                 return new Date(p2.createdAt) - new Date(p1.createdAt);
@@ -51,7 +51,7 @@ function Notification() {
             userId: user?._id,
             notiId: noti?._id
         }
-        await axiosInstance.put(`/notifications/deleteNotification`, dataNoti);
+        await axios.put(baseUrl + `/notifications/deleteNotification`, dataNoti);
 
         // hiển thị giao diện
         let listNoti = [...notifications];

@@ -15,7 +15,7 @@ import ReactTooltip from 'react-tooltip';
 import URL from 'config/config';
 import {formatTime} from '../../config/reserveArr';
 import {storage} from '../../firebase';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
     const [isOpenEmoji, setIsOpenEmoji] = useState(false);
@@ -82,7 +82,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
         const friendId = currentChat?.members.find((m) => m !== user?._id);
         const getUser = async () => {
             try {
-                const res = await axiosInstance.get(`/users/profile/${friendId}`, {
+                const res = await axios.get( baseUrl + `/users/profile/${friendId}`, {
                     headers: {
                         Authorization: 'Bearer ' + accessToken
                       }
@@ -127,7 +127,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
         const receivedId = currentChat?.members.find(member => member !== user?._id)
         
         if (newMessage || images){
-            const res = await axiosInstance.post(`/messages/`, message);
+            const res = await axios.post( baseUrl + `/messages/`, message);
             const m = {
                 ...res.data,
                 senderId: {
@@ -136,7 +136,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
                 }
             };
             setMessages([...messages, m]);
-            await axiosInstance.put(`/conversations/${currentChat?._id}`, {
+            await axios.put( baseUrl + `/conversations/${currentChat?._id}`, {
                 messageLast: images.length > 0 ? "Đã gửi file đính kèm" : newMessage,
                 senderId: user?._id
             })          

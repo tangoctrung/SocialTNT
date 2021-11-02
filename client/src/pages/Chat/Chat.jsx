@@ -1,19 +1,18 @@
 import React from "react";
 import { useState } from "react";
 import "./Chat.css";
-import { useLocation } from "react-router";
 import { useEffect } from "react";
 import { Context } from "context/Context";
 import { useContext } from "react";
-import { axiosInstance} from '../../config/configUrl';
 import Conversation from "components/Conversation/Conversation";
 import ChatMessage from "components/ChatMessage/ChatMessage";
 import InfoConversation from "components/InfoConversation/InfoConversation";
-import ReactTooltip from "react-tooltip";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
 import URL from 'config/config';
 import { Tooltip } from '@material-ui/core';
+import { baseUrl } from "../../config/configUrl";
+import axios from "axios";
 
 function Chat() {
   const [isOpenChatMember, setIsOpenChatMember] = useState(true);
@@ -54,7 +53,7 @@ function Chat() {
   // Lấy thông tin các following
   useEffect(() => {
     const fetchFollowings = async () => {
-      const res = await axiosInstance.get(`/users/profile/followings/${user?._id}`, {
+      const res = await axios.get(baseUrl + `/users/profile/followings/${user?._id}`, {
         headers: {
             Authorization: 'Bearer ' + accessToken
           }
@@ -67,7 +66,7 @@ function Chat() {
   // Lấy thông tin các user mà người dùng chưa follow
   useEffect(() => {
     const fetchFollowings = async () => {
-      const res = await axiosInstance.get(`/users/nofollowings/${user?._id}`, {
+      const res = await axios.get(baseUrl + `/users/nofollowings/${user?._id}`, {
         headers: {
             Authorization: 'Bearer ' + accessToken
           }
@@ -81,7 +80,7 @@ function Chat() {
   useEffect(() => {
     setIsLoading(true);
     const FetchUser = async () => {
-      const res = await axiosInstance.get(`/conversations/${user && user._id}`, {
+      const res = await axios.get(baseUrl + `/conversations/${user && user._id}`, {
         headers: {
             Authorization: 'Bearer ' + accessToken
           }
@@ -99,7 +98,7 @@ function Chat() {
   // useEffect(() => {
   //   setChatId(location.pathname.split("/")[2]);
   //   const fetchDataChat = async () => {
-  //     const res = await axios.get(`/conversations/chat/${chatId && chatId}`, {
+  //     const res = await axios.get(baseUrl + `/conversations/chat/${chatId && chatId}`, {
   //       headers: {
   //           Authorization: 'Bearer ' + accessToken
   //         }
@@ -118,7 +117,7 @@ function Chat() {
     setCurrentChat(conversation);
     const FetchMessage = async () => {
       try {
-        const res = await axiosInstance.get(`/messages/${conversation?._id}`, {
+        const res = await axios.get(baseUrl + `/messages/${conversation?._id}`, {
           headers: {
               Authorization: 'Bearer ' + accessToken
             }
@@ -133,7 +132,7 @@ function Chat() {
  const handleClickGroup = async (e) => {
     setIsOpenChatMember(false);
     setIsLoadingGroup(true);
-    const res = await axiosInstance.get(`/conversationsgroup/${user?._id}`, {
+    const res = await axios.get(baseUrl + `/conversationsgroup/${user?._id}`, {
       headers: {
           Authorization: 'Bearer ' + accessToken
         }
@@ -161,7 +160,7 @@ function Chat() {
       membersGroup: [...listMembers],
       nameGroup: nameGroup,
     }
-    const res = await axiosInstance.post(`/conversationsgroup/`, dataGroup);
+    const res = await axios.postbaseUrl + (`/conversationsgroup/`, dataGroup);
     console.log(res.data);
     window.location.reload();
     // setIsCreateGroup(false);

@@ -8,7 +8,7 @@ import URL from 'config/config';
 import { Tooltip } from '@material-ui/core';
 import ReactTooltip from 'react-tooltip';
 import { reserveArr } from "../../config/reserveArr";
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function Navbar() {
     const [isSearch, setIsSearch] = useState(false);
@@ -41,19 +41,19 @@ function Navbar() {
         dispatch({ type: "SEARCH_START"});
 
         const fetchDataUserPost = async () => {
-            const resUser = await axiosInstance.get(`/users?username=${inputRef.current.value}`, {
+            const resUser = await axios.get( baseUrl + `/users?username=${inputRef.current.value}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }
             });
             setUsers(resUser.data);
-            const resPost = await axiosInstance.get(`/posts?hashtag=${inputRef.current.value}`, {
+            const resPost = await axios.get( baseUrl + `/posts?hashtag=${inputRef.current.value}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }
             });
             setPosts(resPost.data);
-            await axiosInstance.put("/users/addSearchHistory", {
+            await axios.put( baseUrl + "/users/addSearchHistory", {
                 userId: user?._id,
                 history: inputRef.current.value
             });
@@ -80,7 +80,7 @@ function Navbar() {
         const nh = newHistory.filter(h => h !== history);
         dispatch({ type: "DELETE_HISTORY", payload: history });
         const fetchDeleteHistory = async () => {
-            await axiosInstance.put("/users/deleteSearchHistory", {
+            await axios.put( baseUrl + "/users/deleteSearchHistory", {
                 userId: user?._id,
                 history: history,
             })

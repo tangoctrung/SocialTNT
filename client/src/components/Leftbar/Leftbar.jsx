@@ -2,12 +2,11 @@ import React, { useContext } from 'react';
 import "./Leftbar.css";
 import { Context } from 'context/Context';
 import { Link } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 import URL from 'config/config';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function Leftbar() {
     const PF = URL.urlNoAvatar;
@@ -16,7 +15,7 @@ function Leftbar() {
 
     useEffect(() => {
         const fetchNoti = async () => {
-            const res = await axiosInstance.get(`/notifications/getNotification/${user?._id}`);
+            const res = await axios.get(baseUrl + `/notifications/getNotification/${user?._id}`);
             // const list = res.data;
             const list = [...listNoti];
             res.data.forEach( (noti) => {

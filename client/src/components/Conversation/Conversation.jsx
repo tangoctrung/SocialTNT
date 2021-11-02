@@ -8,7 +8,7 @@ import { format } from 'timeago.js';
 import URL from 'config/config';
 import { useContext } from 'react';
 import { Context } from 'context/Context';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 
 function Conversation({conversation, currentUser, lastMessage}) {
@@ -19,7 +19,7 @@ function Conversation({conversation, currentUser, lastMessage}) {
         const friendId = conversation.members.find((m) => m !== currentUser?._id);
         const getUser = async () => {
             try {
-                const res = await axiosInstance.get(`/users/profile/${friendId}`, {
+                const res = await axios.get( baseUrl + `/users/profile/${friendId}`, {
                     headers: {
                         Authorization: 'Bearer ' + accessToken
                     }

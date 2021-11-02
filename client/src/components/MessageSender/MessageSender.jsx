@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 import { Context } from 'context/Context';
 import React from 'react'
 import { useState } from 'react';
@@ -50,7 +50,7 @@ function MessageSender({message, receivedId, setIsReply, setNameReply, setTextRe
         const newMessage = {
             messageId: message?._id,
         }
-        await axiosInstance.put('/messages/delete', newMessage);
+        await axios.put( baseUrl + '/messages/delete', newMessage);
 
         socket?.emit('deleteMessage', {
             messageId: message?._id,

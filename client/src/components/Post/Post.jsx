@@ -14,9 +14,7 @@ import { useRef } from 'react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ModalEditPost from 'components/ModalEditPost/ModalEditPost';
 import URL from 'config/config';
-import { Tooltip } from '@material-ui/core';
-import ReactTooltip from 'react-tooltip';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function createNoti(user, socket, post, typeNoti, content ) {
     const dataNoti = {
@@ -27,7 +25,7 @@ function createNoti(user, socket, post, typeNoti, content ) {
         content: content,
     }
     const fetchNoti = async () => {
-        const noti = await axiosInstance.post('/notifications/createNotification', dataNoti);
+        const noti = await axios.post( baseUrl + '/notifications/createNotification', dataNoti);
         const newNoti = {
             ...noti.data,
             senderNotiId: {
@@ -172,7 +170,7 @@ function Post({post}) {
     useEffect(() => {
         setIsLoading(true);
         const fetchAuthorPost = async () => {
-            const resComment = await axiosInstance.get(`/comment/post/${post?._id}`);           
+            const resComment = await axios.get( baseUrl + `/comment/post/${post?._id}`);           
             setComments(resComment.data);
             setIsLoading(false);
         }
@@ -195,7 +193,7 @@ function Post({post}) {
             if (isDisliked){
                 setIsDisliked(false);
                 let dislikes = totalDislike - 1; setTotalDislike(dislikes);
-                await axiosInstance.put(`/posts/post/${post ? post._id : ""}/dislike`, {
+                await axios.put(baseUrl + `/posts/post/${post ? post._id : ""}/dislike`, {
                     userId: user ? user._id : ""
                 });
                 socket?.emit('likePost', {
@@ -212,7 +210,7 @@ function Post({post}) {
                 
             }
         }    
-        await axiosInstance.put(`/posts/post/${post ? post._id : ""}/like`, {
+        await axios.put( baseUrl + `/posts/post/${post ? post._id : ""}/like`, {
             userId: user ? user._id : ""
         });  
 
@@ -240,7 +238,7 @@ function Post({post}) {
             if (isLiked) {
                 setIsLiked(false);
                 let likes = totalLike - 1; setTotalLike(likes);
-                await axiosInstance.put(`/posts/post/${post ? post._id : ""}/like`, {
+                await axios.put( baseUrl + `/posts/post/${post ? post._id : ""}/like`, {
                     userId: user ? user._id : ""
                 });
                 socket?.emit('disLikePost', {
@@ -256,7 +254,7 @@ function Post({post}) {
                 }); 
             }
         }
-        await axiosInstance.put(`/posts/post/${post ? post._id : ""}/dislike`, {
+        await axios.put( baseUrl + `/posts/post/${post ? post._id : ""}/dislike`, {
             userId: user ? user._id : ""
         });
         if (!isLiked && !isDisliked) {
@@ -284,7 +282,7 @@ function Post({post}) {
             content: inputCommentRef.current.value,
         }
         try{
-            const newComment = await axiosInstance.post(`/comment/`, dataComment_Post);
+            const newComment = await axios.post( baseUrl + `/comment/`, dataComment_Post);
 
 
             // tạo thông báo commentPost
@@ -297,7 +295,7 @@ function Post({post}) {
                     content: `đã bình luận về bài viết của bạn - "${post?.body.slice(0,60)}" `,
                 }
 
-                const noti = await axiosInstance.post('/notifications/createNotification', dataNoti);
+                const noti = await axios.post( baseUrl + '/notifications/createNotification', dataNoti);
                 const newNoti = {
                     ...noti.data,
                     senderNotiId: {
@@ -330,7 +328,7 @@ function Post({post}) {
     // SAVE / UNSAVE POST
     const handleSaveOrUnSavePost = () => {
         const fetchPost = async () => {
-            await axiosInstance.put(`/users/savepost`, {
+            await axios.put( baseUrl + `/users/savepost`, {
                 userId: user?._id,
                 postId: post?._id
             });
@@ -346,7 +344,7 @@ function Post({post}) {
 
     // DELETE POST
     const handleDeletePost = async () => {
-        await axiosInstance.delete(`/posts/${post?._id}`);
+        await axios.delete( baseUrl + `/posts/${post?._id}`);
         window.location.reload();
     }
 
@@ -380,7 +378,6 @@ function Post({post}) {
                     <span>{bodyPost}</span>
                 </div>
                     <>
-                        <hr />
                         {themenPost !== "" && <div className="post-textContent-hashtag">
                             {themenPost ? <p>Chủ đề: <b>{themenPost}</b></p> : ""}
                         </div>}

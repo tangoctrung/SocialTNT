@@ -8,7 +8,7 @@ import { useRef } from 'react';
 import dataThemes from '../../data/index';
 import { useEffect } from 'react';
 import URL from 'config/config';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function formatTime (date) {
     var hour = new Date(date).getHours(); 
@@ -90,7 +90,7 @@ function CreatePost() {
             dataPost.images = [...images];  
         }
         try{
-            const newPost = await axiosInstance.post("/posts", dataPost);
+            const newPost = await axios.post( baseUrl + "/posts", dataPost);
             const dataNoti = {
                 typeNoti: "createPost",
                 senderNotiId: user?._id,
@@ -98,7 +98,7 @@ function CreatePost() {
                 postNotiId: newPost.data._id,
                 content: `đã thêm một bài viết mới - "${bodyPost.slice(0,60)}" `
             }
-            const noti = await axiosInstance.post('/notifications/createNotification', dataNoti);
+            const noti = await axios.post( baseUrl + '/notifications/createNotification', dataNoti);
             const newNoti = {
                 ...noti.data,
                 senderNotiId: {

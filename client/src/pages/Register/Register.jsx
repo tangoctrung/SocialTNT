@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./Register.css";
@@ -21,7 +21,7 @@ function Register() {
             setError("Bạn chưa điền đầy đủ thông tin");
         } else {
             try {
-                const res = await axiosInstance.post("/auth/register", {
+                const res = await axios.post( baseUrl + "/auth/register", {
                     username: username,
                     email: email,
                     password: password,

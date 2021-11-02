@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Post from 'components/Post/Post';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 import { Context } from 'context/Context';
 import React from 'react';
 import { useContext } from 'react';
@@ -20,7 +20,7 @@ function PostCondition() {
     useEffect(() => {
         setIsLoading(true);
         const fetchPost = async () => {
-            const res = await axiosInstance.get(`/posts?hashtag=${hashtag}`, {
+            const res = await axios.get( baseUrl + `/posts?hashtag=${hashtag}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken 
                   }

@@ -18,7 +18,7 @@ import Notification from 'pages/Notification/Notification';
 import NotificationFast from 'components/NotificationFast/NotificationFast';
 import audioUrl from "../src/sound/SendMessage.wav";
 import { useRef } from 'react';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function App() {
     const audioRef = useRef();
@@ -72,7 +72,7 @@ function App() {
 
     useEffect( async () => {
         if (accessToken) {
-            const res = await axiosInstance.get('/auth/', {
+            const res = await axios.get( baseUrl + '/auth/', {
                 headers: {
                   Authorization: 'Bearer ' + accessToken //the token is a variable which holds the token
                 }
@@ -86,7 +86,7 @@ function App() {
             userId: user?._id,
             notiId: noti?._id
         }
-        await axiosInstance.put(`/notifications/updateNotification`, dataNoti);
+        await axios.put( baseUrl + `/notifications/updateNotification`, dataNoti);
     }
 
   return (

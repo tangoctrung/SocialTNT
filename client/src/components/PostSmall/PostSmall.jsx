@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function PostSmall({post}) {
     const [comments, setComments] = useState([])
     useEffect(() => {
         const fetchComment = async () => {
-            const resComment = await axiosInstance.get(`/comment/post/${post._id}`);
+            const resComment = await axios.get( baseUrl + `/comment/post/${post._id}`);
             setComments(resComment.data.sort((p1, p2) => {
                 return new Date(p2.createdAt) - new Date(p1.createdAt);
             }));

@@ -3,8 +3,7 @@ import { Context } from 'context/Context';
 import React, { useContext, useEffect, useState } from 'react';
 import Post from '../Post/Post';
 import "./PostList.css";
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function PostList() {
 
@@ -16,7 +15,7 @@ function PostList() {
         setIsLoading(true);
         const FetchPostTimeLine = async () => {
             console.log("res");
-            const res = await axiosInstance.get(`/posts/timeline/${user?._id}`);
+            const res = await axios.get( baseUrl + `/posts/timeline/${user?._id}`);
             console.log(res);
             setPosts(
                 res.data.sort((p1, p2) => {

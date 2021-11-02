@@ -11,7 +11,7 @@ import PostSmall from 'components/PostSmall/PostSmall';
 import {storage} from '../../firebase';
 import ReactTooltip from 'react-tooltip';
 import URL from 'config/config';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function Profile() {
     const [dataUser, setDateUser] = useState({});
@@ -48,7 +48,7 @@ function Profile() {
     useEffect(() => {
         setIsLoading(true);
         const fetchUser = async () => {
-            const res = await axiosInstance.get(`/users/profile/${paramID}`, {
+            const res = await axios.get( baseUrl + `/users/profile/${paramID}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }
@@ -58,7 +58,7 @@ function Profile() {
         }
         fetchUser();
         const fetchDataFollowers = async()=>{
-            const res1 = await axiosInstance.get(`/users/profile/followers/${paramID}`, {
+            const res1 = await axios.get( baseUrl + `/users/profile/followers/${paramID}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }
@@ -68,7 +68,7 @@ function Profile() {
         }
         fetchDataFollowers();
         const fetchDataFollowings = async()=>{
-            const res2 = await axiosInstance.get(`/users/profile/followings/${paramID}`, {
+            const res2 = await axios.get( baseUrl + `/users/profile/followings/${paramID}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }
@@ -82,7 +82,7 @@ function Profile() {
     
     useEffect(() => {
         const fetchPost = async () => {
-            const res3 = await axiosInstance.get(`/posts/profile/${paramID}`, {
+            const res3 = await axios.get( baseUrl + `/posts/profile/${paramID}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                   }
@@ -131,7 +131,7 @@ function Profile() {
 
 
         try{            
-            const res = await axiosInstance.put(`/users/profile/${paramID}`, infoUserCurrent);
+            const res = await axios.put( baseUrl + `/users/profile/${paramID}`, infoUserCurrent);
             dispatch({type: "UPDATE_SUCCESS", payload: res.data});
             window.location.reload();              
         } catch(error){
@@ -166,12 +166,12 @@ function Profile() {
         const fetchFollow = async () => {
             try {
                 if (isFollow) {
-                  await axiosInstance.put(`/users/profile/${paramID}/unfollow`, {
+                  await axios.put( baseUrl + `/users/profile/${paramID}/unfollow`, {
                     userId: user?._id,
                   });
                   dispatch({ type: "UNFOLLOW", payload: paramID });
                 } else {
-                  await axiosInstance.put(`/users/profile/${paramID}/follow`, {
+                  await axios.put( baseUrl + `/users/profile/${paramID}/follow`, {
                     userId: user?._id,
                   });
                   dispatch({ type: "FOLLOW", payload: paramID });
@@ -185,7 +185,7 @@ function Profile() {
 
     const handleClickChat = () => {
         const fetchChat = async () => {
-            const res = await axiosInstance.get(`/conversations/find/${user?._id}/${paramID}`);
+            const res = await axios.get( baseUrl + `/conversations/find/${user?._id}/${paramID}`);
             setChat(res.data);
         }
         fetchChat();

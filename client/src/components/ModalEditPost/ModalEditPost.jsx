@@ -10,7 +10,7 @@ import {storage} from '../../firebase';
 import axios from 'axios';
 import dataThemes from '../../data/index';
 import URL from 'config/config';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function formatTime (date) {
     var hour = new Date(date).getHours(); 
@@ -63,7 +63,7 @@ function ModalEditPost({post}) {
         }
         console.log(dataPost);
         try{
-            const res = await axiosInstance.put(`/posts/${post?._id}`, dataPost);
+            const res = await axios.put( baseUrl + `/posts/${post?._id}`, dataPost);
             socket?.emit("editPost", res.data);
             window.location.reload();
         } catch(error){

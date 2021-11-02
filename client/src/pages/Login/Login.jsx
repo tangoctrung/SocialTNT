@@ -6,7 +6,7 @@ import { Context } from "context/Context";
 import axios from "axios";
 import UserLoginSmall from 'components/UserLoginSmall/UserLoginSmall';
 import { useState } from 'react';
-import { axiosInstance } from 'config/configUrl';
+import { baseUrl } from 'config/configUrl';
 
 function Number(userLoginLocal, index) {
     let listUser = [...userLoginLocal];
@@ -44,7 +44,7 @@ function Login() {
         dispatch({type: "LOGIN_START"});
         
         try {
-            const res = await axiosInstance.post("/auth/loginwithid", {
+            const res = await axios.post(baseUrl + "/auth/loginwithid", {
                 userId: user?.userId,
                 isLogin: true,
             })
@@ -67,7 +67,7 @@ function Login() {
             dispatch({type: "LOGIN_START"});
             try {
                 
-                const res = await axiosInstance.post("/auth/login", {
+                const res = await axios.post(baseUrl + "/auth/login", {
                     email: emailRef.current.value,
                     password: passwordRef.current.value,
                 });  
