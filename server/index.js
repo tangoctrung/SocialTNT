@@ -27,7 +27,11 @@ app.use("/images", express.static(path.join(__dirname, "/images")));
 
 // Socket
 const httpServer = require('http').createServer(app);
-const io = require("socket.io")(httpServer);
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: "https://socialtnt.netlify.app",
+  },
+});
 
 io.on("connection", (socket) => {
     socketServer(socket);

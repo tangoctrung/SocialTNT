@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   user: null,
   isFetching: false,
   isLoadPost: false,
-  socket : io(),
+  socket : io("http://localhost:8800"),
   error: false,
   accessToken: JSON.parse(localStorage.getItem("accessToken")) || null,
 };
