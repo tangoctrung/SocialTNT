@@ -11,12 +11,18 @@ import { Context } from 'context/Context';
 import { baseUrl } from 'config/configUrl';
 
 
-function Conversation({conversation, currentUser, lastMessage}) {
+function Conversation({conversation, currentUser, lastMessage, listUserOnline}) {
     const [friend, setFriend] = useState(null);
     const PF = URL.urlNoAvatar;
     const { accessToken } = useContext(Context);
+    const [isActive, setIsActive] = useState(false);
     useEffect(() => {
         const friendId = conversation.members.find((m) => m !== currentUser?._id);
+        listUserOnline.forEach(user => {
+            if (user.userId === friendId) {
+                setIsActive(true);
+            }
+        });
         const getUser = async () => {
             try {
                 const res = await axios.get( baseUrl + `/users/profile/${friendId}`, {
@@ -35,8 +41,8 @@ function Conversation({conversation, currentUser, lastMessage}) {
         <Link to={`/chat/${conversation?._id}`} style={{textDecoration: 'none', color: 'black'}} >
             <div className="chat-left-4-member-item">
                 <div className="chat-left-4-member-item-img">
-                    <img src={friend ? (friend.avatar) : (PF)} alt="image" />
-                    <i className="fas fa-circle"></i>
+                    <img src={friend?.avatar ? (friend?.avatar) : (PF)} alt="image" />
+                    {isActive && <i className="fas fa-circle"></i>}
                 </div>
                 <div className="chat-left-4-member-item-text">
                     <h3>{friend ? friend.username : ""}</h3>

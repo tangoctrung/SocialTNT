@@ -32,6 +32,14 @@ function Chat() {
   const [nameGroup, setNameGroup] = useState("");
   const PF = URL.urlNoAvatar;
   const [colorChat, setColorChat] = useState(-1);
+  const [listUserOnline, setListUserOnline] = useState([]);
+
+  useEffect(() => {
+      socket?.emit("addUser", user?._id);
+      socket?.on("getUser", (users) => {
+          setListUserOnline([...users]);
+      });
+  }, [user?._id])
 
 
   // khi có người nhắn tin thì đưa cuộc trò chuyện đó lên đầu
@@ -44,7 +52,6 @@ function Chat() {
         break;
       }
     }
-    console.log(index);
     const conversation = listConversation[index];
     const newListConversation = [conversation, ...listConversation.slice(0, index), ...listConversation.slice(index + 1)];
     setConversations(newListConversation);
@@ -113,7 +120,6 @@ function Chat() {
   // LẤY TIN NHẮN CỦA MỘT CUỘC TRÒ CHUYỆN
   
   const handleSetCurrentChat = (conversation) => {
-    console.log(conversation._id);
     setCurrentChat(conversation);
     const FetchMessage = async () => {
       try {
@@ -287,6 +293,7 @@ function Chat() {
                         currentUser={user}
                         colorChat={colorChat}
                         lastMessage={lastMessage}
+                        listUserOnline = {listUserOnline}
                       />
                     </div>
                   ))}
@@ -327,6 +334,7 @@ function Chat() {
               currentChat={currentChat}
               setMessages={setMessages}
               setLastMessage={setLastMessage}
+              listUserOnline={listUserOnline}
             />
           ) : (
             <span className="chat-text">

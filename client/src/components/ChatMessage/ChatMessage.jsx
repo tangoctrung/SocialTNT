@@ -4,7 +4,7 @@ import { Context } from 'context/Context';
 import { useContext } from 'react';
 import MessageSender from 'components/MessageSender/MessageSender';
 import MessageReceiver from 'components/MessageReceiver/MessageReceiver';
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { format } from 'timeago.js';
 import axios from 'axios';
 import { useState } from 'react';
@@ -22,6 +22,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
     const [friend, setFriend] = useState(null);
     const { user, socket, accessToken } = useContext(Context);
     const [newMessage, setNewMessage] = useState("");
+    const [arrivalMessage, setArrivalMessage] = useState(null);
     const listMessageRef = useRef();
     const inputChatRef = useRef();
     const PF = URL.urlNoAvatar;
@@ -31,13 +32,20 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
     const [textReply, setTextReply] = useState("");
     const [nameReply, setNameReply] = useState("");
     const receivedId = currentChat.members.find(member => member !== user?._id);
-    console.log(currentChat?._id);
 
     useEffect(() => {
         socket?.emit("addUser", user?._id);
-        // socket?.on("getUser", (users) => {
-        // });
+        
     }, [user?._id])
+
+    // setup tin nhắn đến
+    useEffect(() => {
+        socket?.on("getMessage", data => {
+            setArrivalMessage(data);
+            
+        })
+        
+    }, [])
 
     // lấy tin nhắn
     useEffect(() => {
@@ -47,33 +55,24 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
             } else {
                 setIsTyping(false);
             }
-        })
-        socket?.on("getMessage", data => {
+        });
+        
+        arrivalMessage &&
+        currentChat?.members.includes(arrivalMessage?.senderId?._id) &&
+        setMessages((prev) => [...prev, arrivalMessage]);
 
-            console.log(currentChat?._id);
-            if (currentChat?.members.includes(data?.senderId?._id) 
-                && currentChat?._id === data?.conversationId) {
-                console.log(data.conversationId, " ", currentChat?._id);
-                setMessages((prev) => [...prev, data]);
-            }
-            // console.log(data);
-            // tin nhắn lastMessage
-            const newLastMessage = {
-                messageLast: data?.url.length>0 ? "Gửi file đính kèm" : data?.content,
-                senderId: data?.senderId?._id,
-                conversationId: data?.conversationId,
-                updatedAt: data?.updatedAt,
-            }
-            setLastMessage(newLastMessage);
+        // tin nhắn lastMessage
+        const newLastMessage = {
+            messageLast: arrivalMessage?.url.length>0 ? "Gửi file đính kèm" : arrivalMessage?.content,
+            senderId: arrivalMessage?.senderId?._id,
+            conversationId: arrivalMessage?.conversationId,
+            updatedAt: arrivalMessage?.updatedAt,
+        }
+        arrivalMessage &&
+        setLastMessage(newLastMessage);
 
-            // let listImage=[], i;
-            // for (i=0; i<data?.url?.length; i++) {
-            //     listImage.push(data.url[i]);
-            // }
-            // const newMessage = data;
-            
-        })
-    }, [currentChat?._id])
+        
+    }, [arrivalMessage, currentChat])
 
 
 
@@ -196,9 +195,6 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
         });
     }
 
-
-    
-
     // delete image is selected
     const handleRemoveImageItem = (index) => {
         let newImages = [...images];
@@ -238,12 +234,12 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
                 <div className="chat-center-1">
                     <div className="chat-center-1-infoUser">
                         <div className="chat-center-1-infoUser-img">
-                            <Link to={`/profile/${friend ? friend._id : ""}`} style={{textDecoration: "none", color: "black"}}><img src={friend ? friend.avatar : (PF)} alt="image" /></Link>
-                            <i className="fas fa-circle"></i>
+                            <Link to={`/profile/${friend ? friend?._id : ""}`} style={{textDecoration: "none", color: "black"}}><img src={friend?.avatar ? friend?.avatar : (PF)} alt="image" /></Link>
+                            {/* <i className="fas fa-circle"></i> */}
                         </div>
                         <div className="chat-center-1-infoUser-name">
-                            <Link to={`/profile/${friend ? friend._id : ""}`} style={{textDecoration: "none", color: "black"}}><b>{friend && friend.username}</b> <br/></Link>
-                            <span>Đang hoạt động</span>
+                            <Link to={`/profile/${friend ? friend._id : ""}`} style={{textDecoration: "none", color: "black"}}><b>{friend && friend?.username}</b> <br/></Link>
+                            {/* <span>Đang hoạt động</span> */}
                         </div>
                     </div>
                     <div className="chat-center-1-call-call">
@@ -253,7 +249,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
                 <div className="chat-center-2">
                     <div className="chat-center-2-container" >
                         <div className="chat-center-2-infoUser">
-                            <img src={friend ? friend.avatar : (PF)} alt="image"/>
+                            <img src={friend?.avatar ? friend?.avatar : (PF)} alt="image"/>
                             <h3>{friend && friend.username}</h3>
                             <p>Tham gia từ <b>{friend && format(friend.createdAt)}</b> trước.</p>
                         </div>
@@ -340,8 +336,8 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
                             </div>               
                         </div>
                         
-                        <form className="chat-center-3-input" >
-                            <textarea type="text" 
+                        <form className="chat-center-3-input" onSubmit={handleSubmitFormSendMessage} >
+                            <input type="text" 
                                 ref={inputChatRef} 
                                 placeholder="Nhập tin nhắn muốn gửi" 
                                 onChange={(e) => handleChangeTextChat(e)} 
@@ -350,7 +346,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
                                 onBlur={handleNotTyping}
                                 // onClick={handlePressKey}
                                 // onKeyPress={handlePressKey}
-                            ></textarea>
+                            />
                         </form>
                         <div className="chat-center-3-emoji chat-center-3-itemIcon">
                             <><i className="fas fa-smile" data-tip="Gửi biểu tượng cảm xúc" onClick={()=> setIsOpenEmoji(!isOpenEmoji)}></i><ReactTooltip place="bottom" type="dark" effect="solid"/></>
@@ -367,6 +363,6 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
     )
 }
 
-export default ChatMessage;
+export default memo(ChatMessage);
 
 

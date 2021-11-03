@@ -3,11 +3,12 @@ import { createContext, useEffect, useReducer } from "react";
 import { io } from "socket.io-client";
 import Reducer from "./Reducer";
 
+// https://socialtnt.herokuapp.com
 const INITIAL_STATE = {
   user: null,
   isFetching: false,
   isLoadPost: false,
-  socket : io("https://socialtnt.herokuapp.com"),
+  socket : io("http://localhost:8800"),
   error: false,
   accessToken: JSON.parse(localStorage.getItem("accessToken")) || null,
 };

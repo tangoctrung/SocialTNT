@@ -58,7 +58,7 @@ function InfoConversation ({currentChat, messages}) {
                         style={{textDecoration: "none", color: "black"}}
                         >
                             <img 
-                                src={friend ? friend.avatar : (PF)} 
+                                src={friend.avatar ? friend.avatar : (PF)} 
                                 alt="image" 
                                 data-tip={`Đi đến trang cá nhân của ${friend?.username}`}
                             ></img>
