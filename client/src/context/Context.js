@@ -4,11 +4,12 @@ import { io } from "socket.io-client";
 import Reducer from "./Reducer";
 
 // https://socialtnt.herokuapp.com
+// http://localhost:8800
 const INITIAL_STATE = {
   user: null,
   isFetching: false,
   isLoadPost: false,
-  socket : io("http://localhost:8800"),
+  socket : io("https://socialtnt.herokuapp.com"),
   error: false,
   accessToken: JSON.parse(localStorage.getItem("accessToken")) || null,
 };
