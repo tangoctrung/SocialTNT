@@ -42,7 +42,7 @@ function Notification() {
             userId: user?._id,
             notiId: noti?._id
         }
-        await axios.put(`/notifications/updateNotification`, dataNoti);
+        await axios.put(baseUrl + `/notifications/updateNotification`, dataNoti);
     }
 
     // khi người dùng xóa thông báo

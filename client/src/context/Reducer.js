@@ -129,6 +129,11 @@ const Reducer = (state, action) => {
                 isFetching: false,
                 error: true,
             };
+        case "SEND_MESSAGE_GROUP": 
+            return {
+                ...state,
+                messagesCallVideo: [...state.messagesCallVideo, action.payload], 
+            };
     }
 };
 

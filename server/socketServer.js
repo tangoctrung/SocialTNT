@@ -154,6 +154,16 @@ const socketServer = (socket) =>{
         })
     });
 
+    // tạo một cuộc gọi video
+    socket.on('createCallVideo', (dataCall) => {
+        console.log(dataCall);
+        users.forEach( user => {
+            if (dataCall.receiver?._id === user.userId)  {
+                 socket.to(user.socketId).emit("createCallVideoToClient", dataCall);
+            }
+        })
+    })
+
 
     // khi người dùng ngắt kết nối
     socket.on("disconnect", () =>{

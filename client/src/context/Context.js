@@ -9,9 +9,10 @@ const INITIAL_STATE = {
   user: null,
   isFetching: false,
   isLoadPost: false,
-  socket : io("https://socialtnt.herokuapp.com"),
+  socket : io("http://localhost:8800"),
   error: false,
   accessToken: JSON.parse(localStorage.getItem("accessToken")) || null,
+  messagesCallVideo: [],
 };
 // JSON.parse(localStorage.getItem("user")) || 
 export const Context = createContext(INITIAL_STATE);
@@ -22,7 +23,7 @@ export const ContextProvider = ({ children }) => {
   useEffect(()=> {
     // localStorage.setItem("user", JSON.stringify(state.user));
     localStorage.setItem("accessToken", JSON.stringify(state.accessToken));
-  }, [state.user]);
+  }, [state?.user]);
 
   useEffect( async () => {
     if (state.accessToken) {
@@ -44,6 +45,7 @@ export const ContextProvider = ({ children }) => {
           error: state.error,
           accessToken: state.accessToken,
           dispatch,
+          messagesCallVideo: state.messagesCallVideo,
         }}
       >
         {children}

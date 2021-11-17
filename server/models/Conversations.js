@@ -15,6 +15,11 @@ const ConversationSchema = new mongoose.Schema({
         type: String,
         default: '',
     }
+    // ,
+    // isRead: {  // xem cuộc hội thoại có tin nhắn chưa đọc hay không
+    //     type: Boolean,
+    //     default: null,
+    // }
 
 }, {timestamps: true})
 

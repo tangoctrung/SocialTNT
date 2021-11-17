@@ -16,6 +16,7 @@ const fileConversationRouter = require("./routers/fileConversationRouter");
 const socketServer = require("./socketServer");
 const cors = require('cors');
 const multer = require("multer");
+const { ExpressPeerServer } = require('peer');
 
 const app = express();
 
@@ -26,11 +27,12 @@ app.use("/images", express.static(path.join(__dirname, "/images")));
 
 // https://socialtnt.netlify.app
 // http://localhost:3000
+
 // Socket
 const httpServer = require('http').createServer(app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "https://socialtnt.netlify.app",
+    origin: "http://localhost:3000",
   },
 });
 
@@ -38,7 +40,12 @@ io.on("connection", (socket) => {
     socketServer(socket);
 });
 
+// Create Peer Sever
+const peerServer = ExpressPeerServer(httpServer, {
+  path: '/'
+});
 
+app.use('/peerjs', peerServer);
 
 // mongodb+srv://tntrung:tnkg23072001@socialtnt.gv0dj.mongodb.net/SocialTNT?retryWrites=true&w=majority
 // connect to the database, mongodb://localhost:27017/SocialTNT

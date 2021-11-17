@@ -173,6 +173,15 @@ function Chat() {
     setListMembers([user?._id]);
   };
 
+  // khi người dùng gọi video
+  const handleCallVideo = () => {
+    // http://localhost:3000/callvideo
+    // https://socialtnt.netlify.app/callvideo
+    var popup = window.open('http://localhost:3000/callvideo',"myWindow", "width=1200,height=1100");
+    // popup.moveTo(0, 0);
+    // popup.resizeTo(window.screen.width, window.screen.height);
+  }
+  
   return (
     <>
       <div className="chat">
@@ -180,7 +189,7 @@ function Chat() {
           <div className="chat-left-1">
             <h2>Chat</h2>
             <div className="chat-left-1-createGroup">             
-              <Tooltip title="Tạo nhóm chat" placement={"bottom"} enterDelay={1000} arrow>
+              <Tooltip title="Tạo nhóm chat" placement={"bottom"} enterDelay={500} arrow>
                 <i
                   className="far fa-users-medical"
                   onClick={() => setIsCreateGroup(true)}
@@ -256,6 +265,9 @@ function Chat() {
                   </form>
                 </div>
               )}
+              <Tooltip title="Call video" placement={"bottom"} enterDelay={500} arrow>
+                <i className="fas fa-video"  onClick={handleCallVideo}></i>
+              </Tooltip>
             </div>
           </div>
           <div className="chat-left-2">

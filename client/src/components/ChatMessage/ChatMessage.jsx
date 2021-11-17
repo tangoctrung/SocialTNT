@@ -41,10 +41,8 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
     // setup tin nhắn đến
     useEffect(() => {
         socket?.on("getMessage", data => {
-            setArrivalMessage(data);
-            
-        })
-        
+            setArrivalMessage(data);         
+        })     
     }, [])
 
     // lấy tin nhắn
@@ -67,9 +65,11 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
             senderId: arrivalMessage?.senderId?._id,
             conversationId: arrivalMessage?.conversationId,
             updatedAt: arrivalMessage?.updatedAt,
+            // isRead: arrivalMessage?.conversationId === currentChat?._id ? true : false,
         }
         arrivalMessage &&
         setLastMessage(newLastMessage);
+        console.log(newLastMessage);
 
         
     }, [arrivalMessage, currentChat])
@@ -96,7 +96,8 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
 
     // lăn chuột đến cuối hộp chat
     useEffect(() => {
-        listMessageRef.current?.scrollIntoView({behavior: "smooth"});
+        listMessageRef.current?.scrollIntoView({block: "end"});
+        // listMessageRef.current?.scrollTop = listMessageRef.current?.scrollHeight;
     }, [messages])
 
     // gửi tin nhắn
@@ -120,6 +121,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
             senderId: user?._id,
             conversationId: currentChat?._id,
             updatedAt: Date.now(),
+            // isRead: true,
         }
         setLastMessage(newLastMessage);
 
@@ -229,6 +231,8 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
         setNewMessage(e.target.value);
     }
 
+
+
     return (       
             <div>
                 <div className="chat-center-1">
@@ -243,7 +247,7 @@ function ChatMessage({messages, currentChat, setMessages, setLastMessage}) {
                         </div>
                     </div>
                     <div className="chat-center-1-call-call">
-                        <i className="fas fa-video"></i>
+                        {/* <i className="fas fa-video"></i> */}
                     </div>
                 </div>
                 <div className="chat-center-2">

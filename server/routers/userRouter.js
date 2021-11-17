@@ -110,7 +110,7 @@ router.get("/nofollowings/:userId/", async (req, res) => {
     const friends = [];
     allUsers.forEach((u) => {
         if(!user.following.includes(u._id)) {
-          friends.push({userId: u._id, username: u.username, avatar: u.avatar});
+          friends.push({_id: u._id, username: u.username, avatar: u.avatar});
         } 
       })
 
