@@ -21,6 +21,7 @@ import { useRef } from 'react';
 import { baseUrl } from 'config/configUrl';
 import ModalCallVideo from 'pages/ModalCallVideo/ModalCallVideo';
 import URL from 'config/config';
+import ChangePassword from 'pages/ChangePassword/ChangePassword';
 
 function App() {
     const audioRef = useRef();
@@ -85,6 +86,7 @@ function App() {
         }
     }, 5000);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect( async () => {
         if (accessToken) {
             const res = await axios.get( baseUrl + '/auth/', {
@@ -141,6 +143,10 @@ function App() {
                 <Route path="/login" exact>
                     <Navbar />
                     <Login />
+                </Route>
+                <Route path="/changepassword" exact>
+                    <Navbar />
+                    <ChangePassword />
                 </Route>
                 <Route path="/register" exact>
                     <Navbar />

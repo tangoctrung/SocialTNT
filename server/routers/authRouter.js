@@ -42,10 +42,10 @@ router.get('/', verifyToken, async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const newUser = await User.findOne({email: req.body.email});
-        !newUser && res.status(400).json('Sai email hoặc mật khẩu.');  
+        if (!newUser) return res.status(400).json('Sai email hoặc mật khẩu.');  
             
         const validate = await bcrypt.compare(req.body.password, newUser.password);
-        !validate && res.status(400).json('Sai email hoặc mật khẩu.');          
+        if (!validate) return res.status(400).json('Sai email hoặc mật khẩu.');          
 
         // tạo token
         const token = jwt.sign({_id: newUser._id}, process.env.ACCESS_TOKEN_SECRET);
@@ -67,6 +67,22 @@ router.post("/loginwithid", async (req, res) => {
 
         res.status(200).json({newUser, token});
 
+    } catch (error) {
+        res.status(500).json(error);
+    }
+})
+
+// CHANGE PASSWORD
+router.put('/changepassword', async (req, res) => {
+    try {
+        const email = req.body.email;
+        console.log(email);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPass = await bcrypt.hash(req.body.password, salt);
+        const user = await User.findOneAndUpdate({email: req.body.email}, {
+            password: hashedPass,
+        }, {new: true});      
+        res.json(user);
     } catch (error) {
         res.status(500).json(error);
     }

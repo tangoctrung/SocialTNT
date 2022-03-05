@@ -177,7 +177,7 @@ function Chat() {
   const handleCallVideo = () => {
     // http://localhost:3000/callvideo
     // https://socialtnt.netlify.app/callvideo
-    var popup = window.open('http://localhost:3000/callvideo',"myWindow", "width=1200,height=1100");
+    var popup = window.open('https://socialtnt.netlify.app/callvideo',"myWindow", "width=1200,height=1100");
     // popup.moveTo(0, 0);
     // popup.resizeTo(window.screen.width, window.screen.height);
   }

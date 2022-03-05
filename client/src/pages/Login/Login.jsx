@@ -82,6 +82,7 @@ function Login() {
                                
                 // lưu id vào localStorage
                 let i = -10;
+                // eslint-disable-next-line array-callback-return
                 userLoginLocal.map((user, index) => {
                     if (user.userId === newUser._id) {
                         i = index;
@@ -135,6 +136,7 @@ function Login() {
                 <p style={{color: 'red'}}>{error}</p>               
                 <button disabled={isFetching}>Đăng nhập</button>
                 <span>Bạn chưa có tài khoản? <Link to="/register">Đăng kí ngay.</Link></span>
+                <span>Bạn quên mật khẩu? <Link to="/changepassword">Click here?</Link></span>
             </form>
         </div>
     );
